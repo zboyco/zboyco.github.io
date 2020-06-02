@@ -539,7 +539,14 @@
 <li>消费者异常怎么处理？<br>消费者采用手动提交，消费者消费成功后再commit offset，如果在处理时报异常，可以尝试固定次数，如果仍然失败，可以先将record保存到数据库中，先提交commit offset，然后再手动处理record。  </li>
 </ol>
 <h3 id="docker"><a href="#docker" class="headerlink" title="docker"></a>docker</h3><ol>
-<li>ADD COPY 区别？  </li>
+<li>ADD COPY 区别？  <ul>
+<li>ADD 可以添加 指定的文件或目录src 到 指定的文件或路径dest</li>
+<li>如果 dest 以<code>/</code>结尾，默认为目录，</li>
+<li>COPY 是 ADD 的一种简化版本，目的在于满足大多数人“复制文件到容器”的需求，没有下面两个功能。  </li>
+<li>ADD src如果是压缩文件，会被解压到dest  </li>
+<li>ADD src如果是url，会下载文件到dest</li>
+</ul>
+</li>
 <li>CMD ENTRYPOINT 区别？  </li>
 <li>docker镜像用什么方式创建？  </li>
 </ol>
