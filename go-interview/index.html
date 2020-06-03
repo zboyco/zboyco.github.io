@@ -544,7 +544,10 @@
 <li>如果 dest 以<code>/</code>结尾，默认为目录，</li>
 <li>COPY 是 ADD 的一种简化版本，目的在于满足大多数人“复制文件到容器”的需求，没有下面两个功能。  </li>
 <li>ADD src如果是压缩文件，会被解压到dest  </li>
-<li>ADD src如果是url，会下载文件到dest</li>
+<li>ADD src如果是url，会下载文件到dest<blockquote>
+<p>参考<a href="https://juejin.im/post/5aa5d08e6fb9a028de4455d1" target="_blank" rel="noopener">Dockerfile:ADD VS COPY</a></p>
+</blockquote>
+</li>
 </ul>
 </li>
 <li>CMD ENTRYPOINT 区别？  </li>
