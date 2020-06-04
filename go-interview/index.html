@@ -255,6 +255,21 @@
 <p>参考<a href="https://blog.csdn.net/qq_38950316/article/details/81087809" target="_blank" rel="noopener">TCP的三次握手与四次挥手理解及面试题（很全面）</a></p>
 </blockquote>
 </li>
+<li><p>TIME_WAIT过多怎么处理，如何避免？<br>短时间内大量并发的短链接会造成大量TIME_WAIT状态，导致其他连接请求不能进入。<br>编辑内核文件/etc/sysctl.conf<br>net.ipv4.tcp_syncookies = 1 表示开启SYN Cookies。当出现SYN等待队列溢出时，启用cookies来处理，可防范少量SYN攻击，默认为0，表示关闭；<br>net.ipv4.tcp_tw_reuse = 1 表示开启重用。允许将TIME-WAIT sockets重新用于新的TCP连接，默认为0，表示关闭；<br>net.ipv4.tcp_tw_recycle = 1 表示开启TCP连接中TIME-WAIT sockets的快速回收，默认为0，表示关闭。<br>net.ipv4.tcp_fin_timeout 修改系默认的 TIMEOUT 时间<br>net.ipv4.tcp_keepalive_time = 1200 表示当keepalive起用的时候，TCP发送keepalive消息的频度。缺省是2小时，改为20分钟。<br>net.ipv4.ip_local_port_range = 1024 65000 表示用于向外连接的端口范围。缺省情况下很小：32768到61000，改为1024到65000。<br>net.ipv4.tcp_max_syn_backlog = 8192 表示SYN队列的长度，默认为1024，加大队列长度为8192，可以容纳更多等待连接的网络连接数。<br>net.ipv4.tcp_max_tw_buckets = 5000 表示系统同时保持TIME_WAIT套接字的最大数量，如果超过这个数字，TIME_WAIT套接字将立刻被清除并打印警告信息。</p>
+<blockquote>
+<p>参考<a href="https://www.cnblogs.com/dadonggg/p/8778318.html" target="_blank" rel="noopener">解决TIME_WAIT过多造成的问题</a>  </p>
+</blockquote>
+</li>
+<li><p>单台服务器并发TCP连接数到底可以有多少?  </p>
+<blockquote>
+<p>参考<a href="http://www.52im.net/thread-561-1-1.html" target="_blank" rel="noopener">单台服务器并发TCP连接数到底可以有多少</a>  </p>
+</blockquote>
+</li>
+<li><p>io多路复用  </p>
+<blockquote>
+<p>参考<a href="https://blog.csdn.net/russell_tao/article/details/17119729" target="_blank" rel="noopener">高性能网络编程5–IO复用与并发编程</a>  </p>
+</blockquote>
+</li>
 <li><p>udp协议</p>
 </li>
 <li><p>http协议</p>
@@ -308,7 +323,10 @@
 </li>
 </ol>
 </li>
-<li><p>nginx 负载均衡？  </p>
+<li><p>nginx 反向代理？负载均衡？  </p>
+<blockquote>
+<p>参考<a href="https://zhuanlan.zhihu.com/p/40689824" target="_blank" rel="noopener">Nginx反向代理和负载均衡</a></p>
+</blockquote>
 </li>
 </ol>
 <h3 id="Mysql"><a href="#Mysql" class="headerlink" title="Mysql"></a>Mysql</h3><ol>
@@ -433,15 +451,18 @@
 </ul>
 </li>
 </ol>
-<h3 id="Redis"><a href="#Redis" class="headerlink" title="Redis"></a>Redis</h3><ol>
-<li>redis好处<ol>
+<h3 id="Redis"><a href="#Redis" class="headerlink" title="Redis"></a>Redis</h3><p>参考<a href="https://zhuanlan.zhihu.com/p/81195864" target="_blank" rel="noopener">为什么要用Redis？Redis为什么这么快？</a></p>
+<ol>
+<li><p>redis好处</p>
+<ol>
 <li>速度快</li>
 <li>数据类型丰富</li>
 <li>支持事务，操作都是原子性</li>
 <li>丰富的特性：用于缓存，消息队列，设置过期时间自动删除</li>
 </ol>
 </li>
-<li>如何保证redis中的数据是热点数据/redis存储满了如何处理<br>通过redis的数据淘汰策略<ol>
+<li><p>如何保证redis中的数据是热点数据/redis存储满了如何处理<br>通过redis的数据淘汰策略</p>
+<ol>
 <li>no-enviction（驱逐）：禁止驱逐数据，新增返回no</li>
 <li>volatile-lru：从已设置过期时间的数据集（server.db[i].expires）中挑选最近最少使用的数据淘汰</li>
 <li>volatile-ttl：从已设置过期时间的数据集（server.db[i].expires）中挑选将要过期的数据淘汰</li>
@@ -453,7 +474,8 @@
 <li>如果voltile-lru/volatile-ttl/volatile-random 没有可以淘汰的数据，同no-enviction处理  </li>
 </ul>
 </li>
-<li>Redis与Memcache区别<ol>
+<li><p>Redis与Memcache区别</p>
+<ol>
 <li>存储方式<ul>
 <li>Memcache 全内存</li>
 <li>Redis 支持持久化</li>
@@ -475,8 +497,64 @@
 </li>
 </ol>
 </li>
-<li>Redis的同步机制<br>主从同步。第一次同步时，主节点做一次bgsave，并同时将后续修改操作记录到内存buffer，待完成后将rdb文件全量同步到复制节点，复制节点接受完成后将rdb镜像加载到内存。加载完成后，再通知主节点将期间修改的操作记录同步到复制节点进行重放就完成了同步过程。</li>
-<li>支持的数据类型？  <ol>
+<li><p>Redis为什么能这么快，原因是什么？  </p>
+<ul>
+<li>纯内存操作  </li>
+<li>单线程，避免了不必要的上下文切换和竞争条件</li>
+<li>使用多路I/O复用模型，io阻塞机制    </li>
+<li>高效的数据结构  </li>
+<li>合理的数据编码  </li>
+<li>其他方面的优化</li>
+</ul>
+</li>
+<li><p>Redis 持久化机制？  </p>
+<ol>
+<li>RDB 持久化  </li>
+</ol>
+<ul>
+<li>将某个时间点的所有数据都存放到硬盘上。可以将快照复制到其它服务器从而创建具有相同数据的服务器副本。如果系统发生故障，将会丢失最后一次创建快照之后的数据。如果数据量很大，保存快照的时间会很长。  </li>
+</ul>
+<ol start="2">
+<li>AOF 持久化  </li>
+</ol>
+<ul>
+<li>将写命令添加到 AOF 文件（Append Only File）的末尾。使用 AOF 持久化需要设置同步选项，从而确保写命令同步到磁盘文件上的时机。这是因为对文件进行写入并不会马上将内容同步到磁盘上，而是先存储到缓冲区，然后由操作系统决定什么时候同步到磁盘。有以下同步选项：  </li>
+<li>选项同步频率always每个写命令都同步everysec每秒同步一次no让操作系统来决定何时同步  </li>
+<li>always 选项会严重减低服务器的性能；  </li>
+<li>everysec 选项比较合适，可以保证系统崩溃时只会丢失一秒左右的数据，并且 Redis 每秒执行一次同步对服务器性能几乎没有任何影响；  </li>
+<li>no 选项并不能给服务器性能带来多大的提升，而且也会增加系统崩溃时数据丢失的数量  </li>
+<li>随着服务器写请求的增多，AOF 文件会越来越大。Redis 提供了一种将 AOF 重写的特性，能够去除 AOF 文件中的冗余写命令。  </li>
+</ul>
+</li>
+<li><p>Redis的同步机制<br>主从同步。第一次同步时，主节点做一次bgsave，并同时将后续修改操作记录到内存buffer，待完成后将rdb文件全量同步到复制节点，复制节点接受完成后将rdb镜像加载到内存。加载完成后，再通知主节点将期间修改的操作记录同步到复制节点进行重放就完成了同步过程。</p>
+</li>
+<li><p>缓存穿透、缓存击穿、缓存雪崩  </p>
+<ul>
+<li>缓存穿透：就是客户持续向服务器发起对不存在服务器中数据的请求。客户先在Redis中查询，查询不到后去数据库中查询。  </li>
+<li>缓存击穿：就是一个很热门的数据，突然失效，大量请求到服务器数据库中  </li>
+<li>缓存雪崩：就是大量数据同一时间失效。</li>
+</ul>
+<p>解决办法。  </p>
+<ul>
+<li>缓存穿透：  </li>
+</ul>
+<ol>
+<li>接口层增加校验，对传参进行个校验，比如说我们的id是从1开始的，那么id&lt;=0的直接拦截；  </li>
+<li>缓存中取不到的数据，在数据库中也没有取到，这时可以将key-value对写为key-null，这样可以防止攻击用户反复用同一个id暴力攻击  </li>
+</ol>
+<ul>
+<li><p>缓存击穿：最好的办法就是设置热点数据永不过期  </p>
+</li>
+<li><p>缓存雪崩：  </p>
+</li>
+</ul>
+<ol>
+<li>缓存数据的过期时间设置随机，防止同一时间大量数据过期现象发生。  </li>
+<li>如果缓存数据库是分布式部署，将热点数据均匀分布在不同搞得缓存数据库中。  </li>
+</ol>
+</li>
+<li><p>支持的数据类型？  </p>
+<ol>
 <li>String（字符串）（键值对）  </li>
 <li>List（列表）（双向链表）  </li>
 <li>Hash（字典）（HashMap）  </li>
@@ -484,21 +562,25 @@
 <li>Sorted Set（有序集合）（HashMap和跳跃表(SkipList)）  </li>
 </ol>
 </li>
-<li>应用场景<ol>
+<li><p>应用场景  </p>
+<ol>
 <li>缓存</li>
 <li>计数器 INCRBY</li>
 <li>队列 PUB/SUB</li>
 <li>分布式锁 </li>
 <li>最新列表 List LPUSH</li>
 <li>排行榜 SortedSet ZADD</li>
+<li>好友关系，利用集合的一些命令，比如求交集、并集、差集等。可以方便搞定  </li>
 </ol>
 </li>
-<li>Redis如何一次执行多条指令，节约网络、提升吞吐量？<br>使用pipeline，将请求合并成一次IO  <ul>
+<li><p>Redis如何一次执行多条指令，节约网络、提升吞吐量？<br>使用pipeline，将请求合并成一次IO  </p>
+<ul>
 <li>优点：降低延迟，提升系统吞吐量</li>
-<li>缺点：需要等待所有指令执行完毕后才能返回结果/无法提供原子性保证</li>
+<li>缺点：需要等待所有指令执行完毕后才能返回结果/无法提供原子性保证  </li>
 </ul>
 </li>
-<li>Redis事务<ul>
+<li><p>Redis事务</p>
+<ul>
 <li>MULTI 开始事务</li>
 <li>EXEC 执行事务队列</li>
 <li>DISCARD 取消事务</li>
