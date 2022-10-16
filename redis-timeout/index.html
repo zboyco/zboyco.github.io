@@ -1,0 +1,158 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>StackExchange.Redis timeout异常 解决方案 | 白羊的空间</title>
+
+  
+  <meta name="author" content="zboyco">
+  
+
+  
+  <meta name="description" content="公司项目使用了redis作为缓存数据库，在网上看了很多文章，都指出StackExchange.Redis最好使用单例模式，然而在实际 项目使用过程中，捕捉到timeout事件，如下：
+1Timeout performing EXISTS UserKey-36700, inst: 1, queue: ">
+  
+
+  
+  
+  <meta name="keywords" content="">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="StackExchange.Redis timeout异常 解决方案"/>
+
+  <meta property="og:site_name" content="白羊的空间"/>
+
+  
+  <meta property="og:image" content="/images/favicon.ico"/>
+  
+
+  <link href="/images/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白羊的空间" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白羊的空间</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives">归档</a></li>
+      
+        <li><a href="/categories">分类</a></li>
+      
+        <li><a href="/tags">标签</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>StackExchange.Redis timeout异常 解决方案</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/redis-timeout/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-08-06T17:00:00.000Z">
+          2018-08-07
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>公司项目使用了redis作为缓存数据库，在网上看了很多文章，都指出StackExchange.Redis最好使用单例模式，然而在实际 项目使用过程中，捕捉到timeout事件，如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Timeout performing EXISTS UserKey-36700, inst: 1, queue: 1, qu: 0, qs: 1, qc: 0, wr: 0, wq: 0, in: 4, ar: 0, clientName: , serverEndpoint: 10.66.205.72:6379, keyHashSlot: 15122 (Please take a look at this article for some common client-side issues that can cause timeouts: http://stackexchange.github.io/StackExchange.Redis/Timeouts)</span><br></pre></td></tr></table></figure>
+<p>根据异常提到的连接：<br><a target="_blank" rel="noopener" href="http://stackexchange.github.io/StackExchange.Redis/Timeouts%EF%BC%89">http://stackexchange.github.io/StackExchange.Redis/Timeouts）</a><br>以及在网上查找StackExchange.Redis timeout相关的文章，发现其中两点个解决方法(也是官方提出的方式):</p>
+<ol>
+<li>使用ConnectionMultiplexer Pool<blockquote>
+<p>客户端中使用 ConnectionMultiplexer 对象池，并在发送新请求时选择“最小化加载”ConnectionMultiplexer。 这样可能会防止单个超时导致其他请求也超时。客户端中使用 ConnectionMultiplexer 对象池，并在发送新请求时选择“最小化加载”ConnectionMultiplexer。 这样可能会防止单个超时导致其他请求也超时。</p>
+</blockquote>
+</li>
+<li>修改线程池的最小设置<blockquote>
+<p>建议将 IOCP 和 WORKER 线程的最小配置值设置为大于默认值的值。 我们不能给出一个大小适合所有指导这个值应该是什么，因为一个应用程序的正确价值将太高&#x2F;低为另一个应用程序。<br>此设置也会影响复杂应用程序的其他部分的性能，因此您需要根据您的特定需求调整此设置。<br>一个好的起点是200或300，然后根据需要进行测试和调整。<br>调整方式：<code>System.Threading.ThreadPool.SetMinThreads(200, 200);</code></p>
+</blockquote>
+</li>
+</ol>
+<hr>
+<h4 id="附上官方文档中文译文"><a href="#附上官方文档中文译文" class="headerlink" title="附上官方文档中文译文"></a>附上官方文档中文译文</h4><p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/4dc1ad0abc1c">https://www.jianshu.com/p/4dc1ad0abc1c</a></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/CSharp/">CSharp</a>, <a href="/categories/CSharp/Redis/">Redis</a>
+    </span>
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    <a href="https://beian.miit.gov.cn" target="_blank">蜀ICP备15015945号-2</a> | 
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> | 
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 <a href="https://github.com/zboyco" target="_blank">zboyco</a>
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

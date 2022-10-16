@@ -1,0 +1,173 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Go实现简单的Socket服务端笔记(十) | 白羊的空间</title>
+
+  
+  <meta name="author" content="zboyco">
+  
+
+  
+  <meta name="description" content="添加Session容器,增加超时自动关闭Session功能本文代码查看github:https://github.com/zboyco/go-server/tree/step-10
+
+要实现超时管理,就需要有个地方保存所有的会话(session),我们采用 map 来存储所有的 session ,因为 session 的保存不需要顺序,同时也有删除和增加的功能,map 正好适合.
+增加一个池结构,用map实现
+1234type sessionSource struct &amp;#123;	source map[int64]*AppSession //Seesion池	mutex  sync.Mutex            //锁&amp;#125;
+
+再增加两个参数,分别用来设置超时时间和清理间隔
+代码如下">
+  
+
+  
+  
+  <meta name="keywords" content="Socket">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="Go实现简单的Socket服务端笔记(十)"/>
+
+  <meta property="og:site_name" content="白羊的空间"/>
+
+  
+  <meta property="og:image" content="/images/favicon.ico"/>
+  
+
+  <link href="/images/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白羊的空间" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白羊的空间</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives">归档</a></li>
+      
+        <li><a href="/categories">分类</a></li>
+      
+        <li><a href="/tags">标签</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>Go实现简单的Socket服务端笔记(十)</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/go-server-10/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-12-21T09:21:00.000Z">
+          2018-12-21
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h4 id="添加Session容器-增加超时自动关闭Session功能"><a href="#添加Session容器-增加超时自动关闭Session功能" class="headerlink" title="添加Session容器,增加超时自动关闭Session功能"></a>添加Session容器,增加超时自动关闭Session功能</h4><p>本文代码查看github:<br><a target="_blank" rel="noopener" href="https://github.com/zboyco/go-server/tree/step-10">https://github.com/zboyco/go-server/tree/step-10</a></p>
+<hr>
+<p>要实现超时管理,就需要有个地方保存所有的会话(session),我们采用 map 来存储所有的 session ,因为 session 的保存不需要顺序,同时也有删除和增加的功能,map 正好适合.</p>
+<p>增加一个池结构,用map实现</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> sessionSource <span class="keyword">struct</span> &#123;</span><br><span class="line">	source <span class="keyword">map</span>[<span class="type">int64</span>]*AppSession <span class="comment">//Seesion池</span></span><br><span class="line">	mutex  sync.Mutex            <span class="comment">//锁</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>再增加两个参数,分别用来设置超时时间和清理间隔</p>
+<p>代码如下</p>
+<span id="more"></span>
+
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Server 服务结构</span></span><br><span class="line"><span class="keyword">type</span> Server <span class="keyword">struct</span> &#123;</span><br><span class="line">	ip                       <span class="type">string</span>         <span class="comment">//服务器IP</span></span><br><span class="line">	port                     <span class="type">int</span>            <span class="comment">//服务器端口</span></span><br><span class="line">	clientCounter            <span class="type">int64</span>          <span class="comment">//计数器</span></span><br><span class="line">	sessionSource            *sessionSource <span class="comment">//Seesion池</span></span><br><span class="line">	idleSessionTimeOut       <span class="type">int</span>            <span class="comment">//客户端空闲超时时间</span></span><br><span class="line">	clearIdleSessionInterval <span class="type">int</span>            <span class="comment">//清空空闲会话的时间间隔,为0则不清理</span></span><br><span class="line"></span><br><span class="line">	OnError              <span class="function"><span class="keyword">func</span><span class="params">(<span class="type">error</span>)</span></span>               <span class="comment">//错误方法</span></span><br><span class="line">	OnMessage            <span class="function"><span class="keyword">func</span><span class="params">(*AppSession, []<span class="type">byte</span>)</span></span> <span class="comment">//接收到新消息</span></span><br><span class="line">	OnNewSessionRegister <span class="function"><span class="keyword">func</span><span class="params">(*AppSession)</span></span>         <span class="comment">//新客户端接入</span></span><br><span class="line">	OnSessionClosed      <span class="function"><span class="keyword">func</span><span class="params">(*AppSession, <span class="type">string</span>)</span></span> <span class="comment">//客户端关闭通知</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>server增加 注册session&#x2F;周期性清理闲置Seesion&#x2F;关闭session 三个方法</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// registerSession 注册session</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(server *Server)</span></span> registerSession(sessionID <span class="type">int64</span>, appSession *AppSession) (<span class="type">bool</span>, <span class="type">error</span>) &#123;</span><br><span class="line">	<span class="keyword">if</span> server.sessionSource.source[sessionID] != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">false</span>, errors.New(<span class="string">&quot;SessionID已存在&quot;</span>)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 加入池</span></span><br><span class="line">	server.sessionSource.mutex.Lock()</span><br><span class="line">	server.sessionSource.source[sessionID] = appSession</span><br><span class="line">	server.sessionSource.mutex.Unlock()</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 新客户端接入通知</span></span><br><span class="line">	<span class="keyword">if</span> server.OnNewSessionRegister != <span class="literal">nil</span> &#123;</span><br><span class="line">		server.OnNewSessionRegister(appSession)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> <span class="literal">true</span>, <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// closeSession 关闭session</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(server *Server)</span></span> closeSession(session *AppSession, reason <span class="type">string</span>) &#123;</span><br><span class="line">	session.Close(reason)</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 从池中移除</span></span><br><span class="line">	server.sessionSource.mutex.Lock()</span><br><span class="line">	<span class="built_in">delete</span>(server.sessionSource.source, session.ID)</span><br><span class="line">	server.sessionSource.mutex.Unlock()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// clearTimeoutSession 周期性清理闲置Seesion</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(server *Server)</span></span> clearTimeoutSession(timeoutSecond <span class="type">int</span>, interval <span class="type">int</span>) &#123;</span><br><span class="line">	<span class="keyword">var</span> currentTime time.Time</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> interval == <span class="number">0</span> &#123;</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> &#123;</span><br><span class="line">		time.Sleep(time.Duration(interval) * time.Second)</span><br><span class="line"></span><br><span class="line">		currentTime = time.Now()</span><br><span class="line">		server.mutex.Lock()</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="keyword">for</span> key, session := <span class="keyword">range</span> server.sessionSource &#123;</span><br><span class="line">				<span class="keyword">if</span> session.activeDateTime.Add(time.Duration(timeoutSecond) * time.Second).Before(currentTime) &#123;</span><br><span class="line">					fmt.Println(<span class="string">&quot;客户端[&quot;</span>, key, <span class="string">&quot;]超时关闭&quot;</span>)</span><br><span class="line">					session.Close(<span class="string">&quot;Timeout&quot;</span>)</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		server.mutex.Unlock()</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Golang/">Golang</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Socket/">Socket</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    <a href="https://beian.miit.gov.cn" target="_blank">蜀ICP备15015945号-2</a> | 
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> | 
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 <a href="https://github.com/zboyco" target="_blank">zboyco</a>
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

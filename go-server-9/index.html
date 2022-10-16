@@ -1,0 +1,156 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Go实现简单的Socket服务端笔记(九) | 白羊的空间</title>
+
+  
+  <meta name="author" content="zboyco">
+  
+
+  
+  <meta name="description" content="采用标准库scanner实现数据分离处理粘包参考http://feixiao.github.io/2016/05/08/bufio/使用标准库scanner实现数据分离处理粘包
+本文代码查看github:https://github.com/zboyco/go-server/tree/step-9
+">
+  
+
+  
+  
+  <meta name="keywords" content="Socket">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="Go实现简单的Socket服务端笔记(九)"/>
+
+  <meta property="og:site_name" content="白羊的空间"/>
+
+  
+  <meta property="og:image" content="/images/favicon.ico"/>
+  
+
+  <link href="/images/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白羊的空间" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白羊的空间</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives">归档</a></li>
+      
+        <li><a href="/categories">分类</a></li>
+      
+        <li><a href="/tags">标签</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>Go实现简单的Socket服务端笔记(九)</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/go-server-9/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-12-21T09:07:00.000Z">
+          2018-12-21
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h4 id="采用标准库scanner实现数据分离处理粘包"><a href="#采用标准库scanner实现数据分离处理粘包" class="headerlink" title="采用标准库scanner实现数据分离处理粘包"></a>采用标准库scanner实现数据分离处理粘包</h4><p>参考<a target="_blank" rel="noopener" href="http://feixiao.github.io/2016/05/08/bufio/">http://feixiao.github.io/2016/05/08/bufio/</a><br>使用标准库scanner实现数据分离处理粘包</p>
+<p>本文代码查看github:<br><a target="_blank" rel="noopener" href="https://github.com/zboyco/go-server/tree/step-9">https://github.com/zboyco/go-server/tree/step-9</a></p>
+<hr>
+<p>直接使用scanner处理粘包,不用管理buffer,相对更加简单</p>
+<p>修改socket.go中的handleClient函数</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 读取数据</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">handleClient</span><span class="params">(server *Server, session *AppSession)</span></span> &#123;</span><br><span class="line">	<span class="comment">// 获取连接地址</span></span><br><span class="line">	remoteAddr := session.conn.RemoteAddr()</span><br><span class="line"></span><br><span class="line">	fmt.Println(<span class="string">&quot;客户端[&quot;</span>, session.ID, <span class="string">&quot;]地址:&quot;</span>, remoteAddr)</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 创建scanner</span></span><br><span class="line">	scanner := bufio.NewScanner(session.conn)</span><br><span class="line"></span><br><span class="line">	<span class="comment">//根据协议定义分离规则</span></span><br><span class="line">	split := <span class="function"><span class="keyword">func</span><span class="params">(data []<span class="type">byte</span>, atEOF <span class="type">bool</span>)</span></span> (<span class="type">int</span>, []<span class="type">byte</span>, <span class="type">error</span>) &#123;</span><br><span class="line">		<span class="keyword">if</span> atEOF &#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="number">0</span>, <span class="literal">nil</span>, errors.New(<span class="string">&quot;EOF&quot;</span>)</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span> data[<span class="number">0</span>] != <span class="string">&#x27;$&#x27;</span> || data[<span class="number">3</span>] != <span class="string">&#x27;#&#x27;</span> &#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="number">0</span>, <span class="literal">nil</span>, errors.New(<span class="string">&quot;数据异常&quot;</span>)</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span> <span class="built_in">len</span>(data) &gt; <span class="number">4</span> &#123;</span><br><span class="line">			length := <span class="type">int16</span>(<span class="number">0</span>)</span><br><span class="line">			binary.Read(bytes.NewReader(data[<span class="number">1</span>:<span class="number">3</span>]), binary.BigEndian, &amp;length)</span><br><span class="line">			<span class="keyword">if</span> <span class="type">int</span>(length)+<span class="number">4</span> &lt;= <span class="built_in">len</span>(data) &#123;</span><br><span class="line">				<span class="keyword">return</span> <span class="type">int</span>(length) + <span class="number">4</span>, data[<span class="number">4</span> : <span class="type">int</span>(length)+<span class="number">4</span>], <span class="literal">nil</span></span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">0</span>, <span class="literal">nil</span>, <span class="literal">nil</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 设置分离函数</span></span><br><span class="line">	scanner.Split(split)</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 获取数据</span></span><br><span class="line">	<span class="keyword">for</span> scanner.Scan() &#123;</span><br><span class="line">		server.OnMessage(session, scanner.Bytes())</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 错误处理</span></span><br><span class="line">	<span class="keyword">if</span> err := scanner.Err(); err != <span class="literal">nil</span> &#123;</span><br><span class="line">		fmt.Println(<span class="string">&quot;客户端[&quot;</span>, session.ID, <span class="string">&quot;]数据接收错误, &quot;</span>, err)</span><br><span class="line">		session.conn.Close()</span><br><span class="line">		fmt.Println(<span class="string">&quot;客户端[&quot;</span>, session.ID, <span class="string">&quot;]连接已关闭!&quot;</span>)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Golang/">Golang</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Socket/">Socket</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    <a href="https://beian.miit.gov.cn" target="_blank">蜀ICP备15015945号-2</a> | 
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> | 
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 <a href="https://github.com/zboyco" target="_blank">zboyco</a>
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

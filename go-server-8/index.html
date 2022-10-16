@@ -1,0 +1,164 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Go实现简单的Socket服务端笔记(八) | 白羊的空间</title>
+
+  
+  <meta name="author" content="zboyco">
+  
+
+  
+  <meta name="description" content="session中Read方法实现粘包拆包处理定义简单协议,数据包头由4字节构成:第1位固定为’$’第2-3位为Body长度(uint16)第4位固定为’#’接收数据时若第1位和第4位不正确则认为接收到异常数据,同时关闭socket连接
+本文代码查看github:https://github.com/zboyco/go-server/tree/step-8
+
+为了实现粘包拆包处理,我们自己实现一个buffer类来管理数据在server目录中增加buffer.go,这里主要参考了https://studygolang.com/articles/12088
+完整代码如下">
+  
+
+  
+  
+  <meta name="keywords" content="Socket">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="Go实现简单的Socket服务端笔记(八)"/>
+
+  <meta property="og:site_name" content="白羊的空间"/>
+
+  
+  <meta property="og:image" content="/images/favicon.ico"/>
+  
+
+  <link href="/images/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白羊的空间" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白羊的空间</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives">归档</a></li>
+      
+        <li><a href="/categories">分类</a></li>
+      
+        <li><a href="/tags">标签</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>Go实现简单的Socket服务端笔记(八)</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/go-server-8/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-12-21T09:00:00.000Z">
+          2018-12-21
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h4 id="session中Read方法实现粘包拆包处理"><a href="#session中Read方法实现粘包拆包处理" class="headerlink" title="session中Read方法实现粘包拆包处理"></a>session中Read方法实现粘包拆包处理</h4><p>定义简单协议,数据包头由4字节构成:<br>第1位固定为’$’<br>第2-3位为Body长度(uint16)<br>第4位固定为’#’<br>接收数据时若第1位和第4位不正确则认为接收到异常数据,同时关闭socket连接</p>
+<p>本文代码查看github:<br><a target="_blank" rel="noopener" href="https://github.com/zboyco/go-server/tree/step-8">https://github.com/zboyco/go-server/tree/step-8</a></p>
+<hr>
+<p>为了实现粘包拆包处理,我们自己实现一个buffer类来管理数据<br>在server目录中增加buffer.go,这里主要参考了<a target="_blank" rel="noopener" href="https://studygolang.com/articles/12088">https://studygolang.com/articles/12088</a></p>
+<p>完整代码如下</p>
+<span id="more"></span>
+
+<p>buffer.go</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> server</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;errors&quot;</span></span><br><span class="line">	<span class="string">&quot;io&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> buffer <span class="keyword">struct</span> &#123;</span><br><span class="line">	reader io.Reader <span class="comment">//</span></span><br><span class="line">	buf    []<span class="type">byte</span>    <span class="comment">//缓存</span></span><br><span class="line">	start  <span class="type">int</span>       <span class="comment">//有效位开始索引</span></span><br><span class="line">	end    <span class="type">int</span>       <span class="comment">//有效位结束索引</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">newBuffer</span><span class="params">(reader io.Reader, <span class="built_in">len</span> <span class="type">int</span>)</span></span> *buffer &#123;</span><br><span class="line">	buf := <span class="built_in">make</span>([]<span class="type">byte</span>, <span class="built_in">len</span>)</span><br><span class="line">	<span class="keyword">return</span> &amp;buffer&#123;reader, buf, <span class="number">0</span>, <span class="number">0</span>&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(instance *buffer)</span></span> <span class="built_in">len</span>() <span class="type">int</span> &#123;</span><br><span class="line">	<span class="keyword">return</span> instance.end - instance.start</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//cleanBuf 清理缓存中已提取的数据</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(instance *buffer)</span></span> cleanBuf() &#123;</span><br><span class="line">	<span class="keyword">if</span> instance.start == <span class="number">0</span> &#123;</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">copy</span>(instance.buf, instance.buf[instance.start:instance.end])</span><br><span class="line">	instance.end -= instance.start</span><br><span class="line">	instance.start = <span class="number">0</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//read 接收数据</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(instance *buffer)</span></span> read() (<span class="type">int</span>, <span class="type">error</span>) &#123;</span><br><span class="line">	instance.cleanBuf()</span><br><span class="line">	n, err := instance.reader.Read(instance.buf[instance.end:])</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> n, err</span><br><span class="line">	&#125;</span><br><span class="line">	instance.end += n</span><br><span class="line">	<span class="keyword">return</span> n, <span class="literal">nil</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//peek 查看指定长度字节数据</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(instance *buffer)</span></span> peek(<span class="built_in">len</span> <span class="type">int</span>) ([]<span class="type">byte</span>, <span class="type">error</span>) &#123;</span><br><span class="line">	<span class="keyword">if</span> instance.<span class="built_in">len</span>() &lt; <span class="built_in">len</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">nil</span>, errors.New(<span class="string">&quot;可读取长度不够&quot;</span>)</span><br><span class="line">	&#125;</span><br><span class="line">	result := instance.buf[instance.start : instance.start+<span class="built_in">len</span>]</span><br><span class="line">	<span class="keyword">return</span> result, <span class="literal">nil</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//pick 提取指定长度字节数据</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(instance *buffer)</span></span> pick(offset <span class="type">int</span>, <span class="built_in">len</span> <span class="type">int</span>) ([]<span class="type">byte</span>, <span class="type">error</span>) &#123;</span><br><span class="line">	result, err := instance.peek(offset + <span class="built_in">len</span>)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">nil</span>, err</span><br><span class="line">	&#125;</span><br><span class="line">	instance.start += (offset + <span class="built_in">len</span>)</span><br><span class="line">	<span class="keyword">return</span> result[offset:], <span class="literal">nil</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>session.go 也需要修改</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> server</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;encoding/binary&quot;</span></span><br><span class="line">	<span class="string">&quot;errors&quot;</span></span><br><span class="line">	<span class="string">&quot;net&quot;</span></span><br><span class="line">	<span class="string">&quot;time&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> (</span><br><span class="line">	<span class="comment">//HeaderLen 数据包头长度</span></span><br><span class="line">	HeaderLen <span class="type">int</span> = <span class="number">4</span></span><br><span class="line">	<span class="comment">//HeaderStartByte 数据包头部起始码</span></span><br><span class="line">	HeaderStartByte <span class="type">byte</span> = <span class="string">&#x27;$&#x27;</span></span><br><span class="line">	<span class="comment">//HeaderEndByte 数据包头部结束码</span></span><br><span class="line">	HeaderEndByte <span class="type">byte</span> = <span class="string">&#x27;#&#x27;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment">//AppSession 客户端结构体</span></span><br><span class="line"><span class="keyword">type</span> AppSession <span class="keyword">struct</span> &#123;</span><br><span class="line">	ID             <span class="type">int64</span>     <span class="comment">//连接唯一标识</span></span><br><span class="line">	conn           net.Conn  <span class="comment">//socket连接</span></span><br><span class="line">	activeDateTime time.Time <span class="comment">//最后活跃时间</span></span><br><span class="line">	buffer         *buffer   <span class="comment">//数据流</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//Send 发送数据</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(session *AppSession)</span></span> Send(buf []<span class="type">byte</span>) &#123;</span><br><span class="line">	session.conn.Write(buf)</span><br><span class="line">	<span class="comment">//更新最后活跃时间</span></span><br><span class="line">	session.activeDateTime = time.Now()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//Read 读取数据</span></span><br><span class="line"><span class="comment">//每次读取必然返回一个完整数据包或者错误信息</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(session *AppSession)</span></span> Read() ([]<span class="type">byte</span>, <span class="type">error</span>) &#123;</span><br><span class="line">	<span class="comment">//判断是否需要读取数据</span></span><br><span class="line">	needRead := session.buffer.<span class="built_in">len</span>() &lt; HeaderLen</span><br><span class="line">	<span class="keyword">for</span> &#123;</span><br><span class="line">		<span class="keyword">if</span> needRead &#123;</span><br><span class="line">			_, err := session.buffer.read()</span><br><span class="line">			<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">				<span class="keyword">return</span> <span class="literal">nil</span>, err</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="comment">//查看前4个数据包头数据</span></span><br><span class="line">		headBuf, err := session.buffer.peek(HeaderLen)</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">			needRead = <span class="literal">true</span></span><br><span class="line">			<span class="keyword">continue</span></span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="comment">//判断1和4位是否为指定的起始码和结束码</span></span><br><span class="line">		<span class="keyword">if</span> headBuf[<span class="number">0</span>] != HeaderStartByte || headBuf[<span class="number">3</span>] != HeaderEndByte &#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="literal">nil</span>, errors.New(<span class="string">&quot;接收到异常数据&quot;</span>)</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="comment">//计算数据包内容长度</span></span><br><span class="line">		bodyLen := <span class="type">int</span>(binary.BigEndian.Uint16(headBuf[<span class="number">1</span>:<span class="number">3</span>]))</span><br><span class="line"></span><br><span class="line">		<span class="comment">//提取数据内容</span></span><br><span class="line">		bodyBuf, err := session.buffer.pick(HeaderLen, bodyLen)</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">			needRead = <span class="literal">true</span></span><br><span class="line">			<span class="keyword">continue</span></span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="comment">//更新最后活跃时间</span></span><br><span class="line">		session.activeDateTime = time.Now()</span><br><span class="line">		<span class="keyword">return</span> bodyBuf, <span class="literal">nil</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Golang/">Golang</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Socket/">Socket</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    <a href="https://beian.miit.gov.cn" target="_blank">蜀ICP备15015945号-2</a> | 
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> | 
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 <a href="https://github.com/zboyco" target="_blank">zboyco</a>
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

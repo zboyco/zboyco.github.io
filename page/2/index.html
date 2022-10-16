@@ -1,0 +1,693 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>第 2 页 | 白羊的空间</title>
+
+  
+  <meta name="author" content="zboyco">
+  
+
+  
+
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  
+
+  <meta property="og:site_name" content="白羊的空间"/>
+
+  
+  <meta property="og:image" content="/images/favicon.ico"/>
+  
+
+  <link href="/images/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白羊的空间" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白羊的空间</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives">归档</a></li>
+      
+        <li><a href="/categories">分类</a></li>
+      
+        <li><a href="/tags">标签</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/docker-redmine/"><span>Docker 部署redmine</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/docker-redmine/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-04-24T10:38:19.000Z">
+          2019-04-24
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">docker run --name redmine -d \</span><br><span class="line">--restart always \</span><br><span class="line">--link mysql5.7:mysql \</span><br><span class="line">-e REDMINE_DB_MYSQL=mysql \</span><br><span class="line">-e REDMINE_DB_PASSWORD=password \</span><br><span class="line">-v /home/redmine/files:/usr/src/redmine/files \</span><br><span class="line">-v /etc/localtime:/etc/localtime:ro \</span><br><span class="line">-p 3000:3000 \</span><br><span class="line">redmine</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Docker/">Docker</a>
+    </span>
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/docker-gitlab/"><span>Docker 部署gitlab</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/docker-gitlab/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-04-24T10:37:00.000Z">
+          2019-04-24
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">docker run --name gitlab -d \</span><br><span class="line">--hostname git.xxx.com \</span><br><span class="line">-v /etc/localtime:/etc/localtime:ro \</span><br><span class="line">-v /home/gitlab/config:/etc/gitlab \</span><br><span class="line">-v /home/gitlab/logs:/var/log/gitlab \</span><br><span class="line">-v /home/gitlab/data:/var/opt/gitlab \</span><br><span class="line">--restart always \</span><br><span class="line">-p 443:443 \</span><br><span class="line">-p 8080:80 \</span><br><span class="line">-p 22:22 \</span><br><span class="line">gitlab/gitlab-ce</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Docker/">Docker</a>
+    </span>
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/BinarySortTree/"><span>二叉查找树的一些操作方法</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/BinarySortTree/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-04-19T08:43:00.000Z">
+          2019-04-19
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>本文源码地址: <a target="_blank" rel="noopener" href="https://github.com/zboyco/go-test/blob/master/findtree/main.go">https://github.com/zboyco/go-test/blob/master/findtree/main.go</a></p>
+<hr>
+<h2 id="二叉查找树"><a href="#二叉查找树" class="headerlink" title="二叉查找树"></a>二叉查找树</h2><p>树有多种不同的结构，但都是由节点构成，一颗树至少有一个根节点，节点下有子节点，没有子节点的节点称为叶子；<br>二叉树指每一个树节点都最多有两个子节点的树，两个子节点分别称为左节点和右节点；<br>二叉查找树则是指每一个节点的左节点的值都小于当前节点的值，右节点的值都大于或等于当前节点的值。</p>
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Golang/">Golang</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/二叉树/">二叉树</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/Go-gRPC/"><span>Go gRPC体验</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/Go-gRPC/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-04-19T06:37:00.000Z">
+          2019-04-19
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>本文源码地址: <a target="_blank" rel="noopener" href="https://github.com/zboyco/go-test/blob/master/gRPC">https://github.com/zboyco/go-test/blob/master/gRPC</a></p>
+<hr>
+<h3 id="0-环境安装"><a href="#0-环境安装" class="headerlink" title="0 环境安装"></a>0 环境安装</h3><h4 id="protobuf"><a href="#protobuf" class="headerlink" title="protobuf"></a>protobuf</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/protocolbuffers/protobuf/releases</span><br></pre></td></tr></table></figure>
+<h4 id="protoc-gen-go"><a href="#protoc-gen-go" class="headerlink" title="protoc-gen-go"></a>protoc-gen-go</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go get -u github.com/golang/protobuf/protoc-gen-go</span><br></pre></td></tr></table></figure>
+<h4 id="gRPC"><a href="#gRPC" class="headerlink" title="gRPC"></a>gRPC</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go get -u google.golang.org/grpc</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Golang/">Golang</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/gRPC/">gRPC</a><a href="/tags/RPC/">RPC</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/go-micro/"><span>Go 使用go-micro编写微服务</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/go-micro/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-04-18T10:53:00.000Z">
+          2019-04-18
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="go-micro"><a href="#go-micro" class="headerlink" title="go-micro"></a>go-micro</h1><p>go-micro是一个可以构建微服务的rpc基础框架。</p>
+<h1 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h1><h4 id="1-protobuf"><a href="#1-protobuf" class="headerlink" title="1.protobuf"></a>1.protobuf</h4><p>go-micro代码生成依赖Protobuf，所以需要安装protobuf。参考<a href="../archives/go-protobuf.html" title="Go语言使用protobuf">Go语言使用protobuf</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/protocolbuffers/protobuf/releases</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-protoc-gen-go"><a href="#2-protoc-gen-go" class="headerlink" title="2.protoc-gen-go"></a>2.protoc-gen-go</h4><p>go-micro采用protobuf作为数据传输编码，所以需要安装<code>protoc-gen-go</code>生成工具。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go get -u github.com/golang/protobuf/protoc-gen-go</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-protoc-gen-micro"><a href="#3-protoc-gen-micro" class="headerlink" title="3.protoc-gen-micro"></a>3.protoc-gen-micro</h4><p><code>protoc-gen-micro</code>用来生成go-micro代码。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go get -u github.com/micro/protoc-gen-micro</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-consul"><a href="#4-consul" class="headerlink" title="4.consul"></a>4.consul</h4><p><code>go-micro</code>默认使用<code>consul</code>作为服务发现框架。下载地址:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://www.consul.io/downloads.html</span><br></pre></td></tr></table></figure>
+<ul>
+<li>下载后需要将consul所在目录加入PATH环境变量<br>执行<code>consul agent -dev</code>即可运行consul。<br><img src="https://sheep.dobit.top/usr/uploads/2019/04/456708895.png"></li>
+</ul>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Golang/">Golang</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Microservices/">Microservices</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/go-safestack/"><span>Go 实现线程安全栈</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/go-safestack/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-04-15T10:25:00.000Z">
+          2019-04-15
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><p>使用切片实现栈，要求线程安全。</p>
+<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>栈主要特征就是数据先进后出，操作主要有push&#x2F;pop&#x2F;top&#x2F;isempty，使用切片保存数据，为了线程安全，增加读写锁。</p>
+<h1 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h1><p>直接上代码</p>
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Golang/">Golang</a>
+    </span>
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/go-intersect/"><span>Go 求两个数组切片交集</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/go-intersect/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-04-15T09:30:00.000Z">
+          2019-04-15
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><p>两个数组切片求交集</p>
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Golang/">Golang</a>
+    </span>
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/go-interview-projects/"><span>记录下golang可能的一些项目问题</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/go-interview-projects/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-04-15T08:29:17.000Z">
+          2019-04-15
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h3 id="虚拟助手app"><a href="#虚拟助手app" class="headerlink" title="虚拟助手app"></a>虚拟助手app</h3><ol>
+<li><p>介绍下项目。<br>该项目是一个移动端养成类的app，相似的有日本的《makes》，功能比较简单，就是通过用户和虚拟人物日常的对话和交互累计经验和资源，使用资源购买道具装扮虚拟人物，然后解锁更多的交互内容、方式和场景，同步实现一些备忘录和闹钟功能的app。</p>
+</li>
+<li><p>介绍下项目架构。</p>
+</li>
+<li><p>为什么采用web api实现？<br>因为该项目主要是用户和虚拟人物的交互，没有用户对用户的交互需求，对即时性相应要求并不高，所以采用web api的方式实现，配合JWT协议，利用gin中间件可以方便的实现权限验证，开发效率高，并且gin也比较稳定。</p>
+</li>
+<li><p>为什么使用redis作为缓存？</p>
+<ol>
+<li>直接操作数据库相对较慢，redis存储在内存中，提高访问速度</li>
+<li>高并发，redis的承受能力高于数据库，使用redis可以减小数据库的压力</li>
+<li>redis支持分布式缓存和持久化</li>
+<li>redis是单线程的，操作具有原子性</li>
+<li>支持的数据类型多</li>
+</ol>
+</li>
+<li><p>redis和mysql的数据一致性问题怎么解决？</p>
+<ol>
+<li>读：读redis，如果redis没有再读取mysql并写入redis</li>
+<li>写：更新mysql–&gt;异步删redis</li>
+<li>redis设置短过期时间</li>
+<li>串行化对同一数据的处理</li>
+</ol>
+</li>
+<li><p>为什么采用protobuf协议？</p>
+<ol>
+<li>protobuf序列化后数据大小是<code>json</code>格式的十分之一，是<code>xml</code>格式的二十分之一，适合网络传输，减少数据量，减少网络IO</li>
+<li>解析效率快</li>
+<li>较复杂，数据本身不具有可读性</li>
+</ol>
+</li>
+<li><p>什么情况下使用nsq队列？怎么使用？</p>
+</li>
+<li><p>高可用有没有接触？如何保证高可用？</p>
+</li>
+<li><p>JWT有什么优势？有什么缺点？</p>
+<ol>
+<li>服务端不用保存会话信息</li>
+<li>实现单点登录</li>
+<li>增加了请求头开销</li>
+<li>续签和注销不方便</li>
+</ol>
+</li>
+</ol>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/go-interview/"><span>记录下golang可能的一些问题</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/go-interview/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-04-15T04:46:00.000Z">
+          2019-04-15
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>记录下题目，涉及多个方面，答案有自己总结，也有来源与网络，并不是标准答案，仅供参考。</p>
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Golang/">Golang</a>
+    </span>
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/socket-invalid-character/"><span>Go invalid character &#39; &#39; in string literal</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/socket-invalid-character/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-04-09T07:59:49.000Z">
+          2019-04-09
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>在socket读取数据后，进行<code>json.Unmarshal</code>时出现<code>invalid character &#39;\x00&#39; in string literal</code>错误.</p>
+<h3 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h3><p>在Unmarshal的时候，切片数据传入读取到的长度</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">readLenght, err := conn.Read(buffer)</span><br><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">	log.Panic(err)</span><br><span class="line">&#125;</span><br><span class="line">result := cmdModel&#123;&#125;</span><br><span class="line">err := json.Unmarshal(buffer[:readLenght], &amp;result)</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Golang/">Golang</a>
+    </span>
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+
+<nav class="pagination">
+  
+  <a href="/" class="pagination-prev">上一页</a>
+  
+  
+  <a href="/page/3/" class="pagination-next">下一页</a>
+  
+</nav>
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    <a href="https://beian.miit.gov.cn" target="_blank">蜀ICP备15015945号-2</a> | 
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> | 
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 <a href="https://github.com/zboyco" target="_blank">zboyco</a>
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

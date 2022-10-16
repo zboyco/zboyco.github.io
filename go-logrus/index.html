@@ -1,0 +1,155 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Go 日志库logrus写入文件简单使用 | 白羊的空间</title>
+
+  
+  <meta name="author" content="zboyco">
+  
+
+  
+  <meta name="description" content="logruslogrus是目前github上star最多的一个go语言日志库，完全兼容go标准库日志模块，可以方便的替换整个项目，这里记录下logrus的简单使用方法。
+简单用法">
+  
+
+  
+  
+  <meta name="keywords" content="">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="Go 日志库logrus写入文件简单使用"/>
+
+  <meta property="og:site_name" content="白羊的空间"/>
+
+  
+  <meta property="og:image" content="/images/favicon.ico"/>
+  
+
+  <link href="/images/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白羊的空间" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白羊的空间</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives">归档</a></li>
+      
+        <li><a href="/categories">分类</a></li>
+      
+        <li><a href="/tags">标签</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>Go 日志库logrus写入文件简单使用</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/go-logrus/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-04-08T02:40:00.000Z">
+          2019-04-08
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h3 id="logrus"><a href="#logrus" class="headerlink" title="logrus"></a>logrus</h3><p><a target="_blank" rel="noopener" href="https://github.com/sirupsen/logrus" title="logrus">logrus</a>是目前github上star最多的一个go语言日志库，完全兼容go标准库日志模块，可以方便的替换整个项目，这里记录下logrus的简单使用方法。</p>
+<h5 id="简单用法"><a href="#简单用法" class="headerlink" title="简单用法"></a>简单用法</h5><span id="more"></span>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">  log <span class="string">&quot;github.com/sirupsen/logrus&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">  <span class="comment">// 设置日志格式为json格式，默认为TextFormatter</span></span><br><span class="line">  log.SetFormatter(&amp;log.JSONFormatter&#123;&#125;)</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 日志消息输出可以是任意的io.writer类型</span></span><br><span class="line">  log.SetOutput(os.Stdout)</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 设置日志级别为warn以上</span></span><br><span class="line">  <span class="comment">// log.SetLevel(log.WarnLevel)</span></span><br><span class="line"></span><br><span class="line">  log.WithFields(log.Fields&#123;</span><br><span class="line">    <span class="string">&quot;userID&quot;</span>: <span class="number">1</span>,</span><br><span class="line">	<span class="string">&quot;api&quot;</span>:<span class="string">&quot;login&quot;</span></span><br><span class="line">	<span class="string">&quot;req&quot;</span>:<span class="string">&quot;xxxxxx&quot;</span>,</span><br><span class="line">  &#125;).Info(<span class="string">&quot;a login request&quot;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>logrus</code>提倡结构话日志记录，使用<code>WithFields</code>可以方便的结构化日志数据。</p>
+<h3 id="lfshook"><a href="#lfshook" class="headerlink" title="lfshook"></a>lfshook</h3><p><a target="_blank" rel="noopener" href="https://github.com/rifflock/lfshook" title="lfshook">lfshook</a>是一个方便开发人员使用logrus写入文件系统的一个hook，能够快速的配置logrus。</p>
+<h3 id="一般用法"><a href="#一般用法" class="headerlink" title="一般用法"></a>一般用法</h3><p>比较简单，直接上代码，一目了然:</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> Log *logrus.Logger</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewLogger</span><span class="params">()</span></span> *logrus.Logger &#123;</span><br><span class="line">	<span class="keyword">if</span> Log != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> Log</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	pathMap := lfshook.PathMap&#123;</span><br><span class="line">		logrus.InfoLevel:  <span class="string">&quot;./info.log&quot;</span>,</span><br><span class="line">		logrus.PanicLevel: <span class="string">&quot;./panic.log&quot;</span>,</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	Log = logrus.New()</span><br><span class="line"></span><br><span class="line">	Log.Hooks.Add(lfshook.NewHook(pathMap, &amp;logrus.JSONFormatter&#123;&#125;))</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> Log</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>这种方法将日志写入指定文件，但是通常为了避免日志文件过大，方便查看，我们需要将日志文件进行分割，下面使用<code>file-rotatelogs</code>来实现。</li>
+</ul>
+<h3 id="file-rotatelogs"><a href="#file-rotatelogs" class="headerlink" title="file-rotatelogs"></a>file-rotatelogs</h3><p><a target="_blank" rel="noopener" href="https://github.com/lestrrat-go/file-rotatelogs" title="file-rotatelogs">file-rotatelogs</a>提供一个文件轮换<code>io.Writer</code>，配合<code>logrus</code>实现日志分割。</p>
+<h4 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h4><p>还是直接上代码了</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> Log *logrus.Logger</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewLoggerWithRotate</span><span class="params">()</span></span> *logrus.Logger &#123;</span><br><span class="line">	<span class="keyword">if</span> Log != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> Log</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	path := <span class="string">&quot;./test.log&quot;</span></span><br><span class="line">	writer, _ := rotatelogs.New(</span><br><span class="line">		path+<span class="string">&quot;.%Y%m%d%H%M&quot;</span>,</span><br><span class="line">		rotatelogs.WithLinkName(path),               <span class="comment">// 生成软链，指向最新日志文件</span></span><br><span class="line">		rotatelogs.WithMaxAge(<span class="number">60</span>*time.Second),       <span class="comment">// 文件最大保存时间</span></span><br><span class="line">		rotatelogs.WithRotationTime(<span class="number">20</span>*time.Second), <span class="comment">// 日志切割时间间隔</span></span><br><span class="line">	)</span><br><span class="line"></span><br><span class="line">	pathMap := lfshook.WriterMap&#123;</span><br><span class="line">		logrus.InfoLevel:  writer,</span><br><span class="line">		logrus.PanicLevel: writer,</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	Log = logrus.New()</span><br><span class="line">	Log.Hooks.Add(lfshook.NewHook(</span><br><span class="line">		pathMap,</span><br><span class="line">		&amp;logrus.JSONFormatter&#123;&#125;,</span><br><span class="line">	))</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> Log</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Golang/">Golang</a>
+    </span>
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    <a href="https://beian.miit.gov.cn" target="_blank">蜀ICP备15015945号-2</a> | 
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> | 
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 <a href="https://github.com/zboyco" target="_blank">zboyco</a>
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

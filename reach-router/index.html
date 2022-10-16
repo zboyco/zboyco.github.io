@@ -1,0 +1,160 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Reach Router | 白羊的空间</title>
+
+  
+  <meta name="author" content="zboyco">
+  
+
+  
+  <meta name="description" content="今天在看一个项目的时候,无意间看到推荐 reach&amp;#x2F;router 这个React路由组件,然后就看了下组件的使用,感觉使用比react-router更加简单直接,库也比较小,用法和react-router类似但是更简洁,这里记录下换成reach时碰到的问题,官网地址如下:
+
+Reach R">
+  
+
+  
+  
+  <meta name="keywords" content="">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="Reach Router"/>
+
+  <meta property="og:site_name" content="白羊的空间"/>
+
+  
+  <meta property="og:image" content="/images/favicon.ico"/>
+  
+
+  <link href="/images/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白羊的空间" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白羊的空间</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives">归档</a></li>
+      
+        <li><a href="/categories">分类</a></li>
+      
+        <li><a href="/tags">标签</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>Reach Router</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/reach-router/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-09-13T02:58:00.000Z">
+          2018-09-13
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>今天在看一个项目的时候,无意间看到推荐 reach&#x2F;router 这个React路由组件,然后就看了下组件的使用,感觉使用比react-router更加简单直接,库也比较小,用法和react-router类似但是更简洁,这里记录下换成reach时碰到的问题,官网地址如下:</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://reach.tech/router" title="Reach Router">Reach Router</a></p>
+</blockquote>
+<ol>
+<li>router 会自动跳转到 主路由加载的内容上<br>其实就是focus变化,reach会将focus指定到主router渲染的内容,所以就导致页面会”跳”到新内容上,解决办法是给所有router添加 primary&#x3D;{false} 属性:<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;Router primary=&#123;false&#125;&gt;</span><br><span class="line">	&lt;Company path=&quot;/&quot; /&gt;</span><br><span class="line">	&lt;Brand path=&quot;/Brand&quot; /&gt;</span><br><span class="line">&lt;/Router&gt;</span><br></pre></td></tr></table></figure></li>
+<li>嵌套路由(router加载的组件里再使用router)<br>在子组件里使用路由时也使用router包围即可:<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">render(</span><br><span class="line">  &lt;Router&gt;</span><br><span class="line">	&lt;Home path=&quot;/&quot; /&gt;</span><br><span class="line">	&lt;Dash path=&quot;dashboard/*&quot; /&gt;</span><br><span class="line">  &lt;/Router&gt;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">const Dash = () =&gt; (</span><br><span class="line">  &lt;div&gt;</span><br><span class="line">	&lt;p&gt;A nested router&lt;/p&gt;</span><br><span class="line">	&lt;Router&gt;</span><br><span class="line">	  &lt;DashboardGraphs path=&quot;/&quot; /&gt;</span><br><span class="line">	  &lt;InvoiceList path=&quot;invoices&quot; /&gt;</span><br><span class="line">	&lt;/Router&gt;</span><br><span class="line">  &lt;/div&gt;</span><br><span class="line">)</span><br></pre></td></tr></table></figure></li>
+<li>NavLink<br>reach 没有 react-router 里的 NavLink,不能直接通过activeClassName的方式增加属性,但reach的Link组件提供了getProps参数,可以通过该方法实现NavLink:<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">import React, &#123; Component &#125; from &#x27;react&#x27;;</span><br><span class="line">import &#123; Link &#125; from &#x27;@reach/router&#x27;;</span><br><span class="line"></span><br><span class="line">export default class NavLink extends Component &#123;</span><br><span class="line">	render() &#123;</span><br><span class="line">		return (</span><br><span class="line">			&lt;React.Fragment&gt;</span><br><span class="line">				&lt;Link</span><br><span class="line">					&#123;...this.props&#125;</span><br><span class="line">					getProps=&#123;(&#123; isCurrent, isPartiallyCurrent, href, location &#125;) =&gt; &#123;</span><br><span class="line">						// the object returned here is passed to the</span><br><span class="line">						// anchor element&#x27;s props</span><br><span class="line">						if (href !== &quot;/&quot;) &#123;</span><br><span class="line">							return isPartiallyCurrent ? &#123; className: &#x27;active&#x27; &#125; : null;</span><br><span class="line">						&#125; else &#123;</span><br><span class="line">							return isCurrent ? &#123; className: &#x27;active&#x27; &#125; : null;</span><br><span class="line">						&#125;</span><br><span class="line">					&#125;&#125;</span><br><span class="line">				/&gt;</span><br><span class="line">			&lt;/React.Fragment&gt;</span><br><span class="line">		)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+其中四个参数意义:</li>
+</ol>
+<ul>
+<li>isCurrent - true if the location.pathname is exactly the same as the anchor’s href.</li>
+<li>isPartiallyCurrent - true if the location.pathname starts with the anchor’s href.</li>
+<li>href - the fully resolved href of the link.</li>
+<li>location - the app’s location.</li>
+</ul>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/React/">React</a>
+    </span>
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    <a href="https://beian.miit.gov.cn" target="_blank">蜀ICP备15015945号-2</a> | 
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> | 
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 <a href="https://github.com/zboyco" target="_blank">zboyco</a>
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

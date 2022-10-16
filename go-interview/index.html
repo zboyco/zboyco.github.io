@@ -1,0 +1,709 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>记录下golang可能的一些问题 | 白羊的空间</title>
+
+  
+  <meta name="author" content="zboyco">
+  
+
+  
+  <meta name="description" content="记录下题目，涉及多个方面，答案有自己总结，也有来源与网络，并不是标准答案，仅供参考。">
+  
+
+  
+  
+  <meta name="keywords" content="">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="记录下golang可能的一些问题"/>
+
+  <meta property="og:site_name" content="白羊的空间"/>
+
+  
+  <meta property="og:image" content="/images/favicon.ico"/>
+  
+
+  <link href="/images/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白羊的空间" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白羊的空间</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives">归档</a></li>
+      
+        <li><a href="/categories">分类</a></li>
+      
+        <li><a href="/tags">标签</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>记录下golang可能的一些问题</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/go-interview/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-04-15T04:46:00.000Z">
+          2019-04-15
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>记录下题目，涉及多个方面，答案有自己总结，也有来源与网络，并不是标准答案，仅供参考。</p>
+<span id="more"></span>
+<h3 id="数据结构和算法"><a href="#数据结构和算法" class="headerlink" title="数据结构和算法"></a>数据结构和算法</h3><ol>
+<li><p>了解的数据结构，区别和优势？</p>
+<ul>
+<li>数组、字符串</li>
+<li>链表</li>
+<li>栈</li>
+<li>队列</li>
+<li>双端队列</li>
+<li>树</li>
+<li>优先队列</li>
+<li>图</li>
+<li>前缀树</li>
+<li>线段树</li>
+<li>树状数组</li>
+</ul>
+</li>
+<li><p>平衡二叉树怎样才能称为平衡？</p>
+<ul>
+<li>可以是空树；</li>
+<li>如果不是空树，任何一个节点的左子树和右子树都是平衡二叉树，且高度差不超过1；<blockquote>
+<p>参考<a target="_blank" rel="noopener" href="https://www.cnblogs.com/fivestudy/p/10340647.html">什么是平衡二叉树（AVL）</a></p>
+</blockquote>
+</li>
+</ul>
+</li>
+<li><p>如何实现幂等?<br>幂等关键是操作是不是幂等的<br>数据库不可能三角，读性能，写性能，一致性。<br>定时重算余额，牺牲一致性换取读写性能。<br>写入的时候同时重算一次写入计算冗余，牺牲写性能。<br>读取的时候的时候重算，牺牲读性能。</p>
+<ul>
+<li>唯一ID</li>
+<li>去重表</li>
+<li>数据库插入或更新 InsertOrUpdate</li>
+<li>版本控制</li>
+<li>状态机</li>
+</ul>
+</li>
+<li><p>连个字符串s1和s2，写方法求出两个字符串都拥有的字符.<br>答：参考<a href="https://function.work/go-intersect" title="Go 求两个数组切片交集">Go 求两个数组切片交集</a>，使用<code>[]rune(&quot;abc&quot;)</code>转换字符串.</p>
+</li>
+<li><p>利用array实现栈，要求线程安全.<br>答：参考<a href="https://function.work/go-safestack" title="Go 实现线程安全栈">Go 实现线程安全栈</a></p>
+</li>
+<li><p>假定一个二叉树T,给定两个节点n1和n2，查找出两个节点共同的父节点，节点定义如下:</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> TreeNode <span class="keyword">struct</span> &#123;</span><br><span class="line">	LeftNode *TreeNode</span><br><span class="line">	RightNode *TreeNode</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>从一个字符串中找出第一个只出现一次的字符并返回下标。  </p>
+</li>
+<li><p>青蛙跳台阶，青蛙一次跳1级或者2级台阶，问N级台阶一共有多少种跳法？  </p>
+<blockquote>
+<p>参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/zhangshk_/article/details/81148340?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-1.nonecase&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-1.nonecase">算法—青蛙跳台阶问题汇总</a>   </p>
+</blockquote>
+</li>
+<li><p>流量削峰怎么实现？</p>
+<ul>
+<li>消息队列  </li>
+<li>层层削峰  </li>
+<li>答题  <blockquote>
+<p>参考<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/47114618">秒杀之流量削峰</a></p>
+</blockquote>
+</li>
+</ul>
+</li>
+<li><p>一个500G文件，存着用空格分割的随机数字，如何排序？  </p>
+<blockquote>
+<p>参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/u011381576/article/details/79385133">如果有一个500G的超大文件，里面都是数值，如何对这些数值排序？</a></p>
+</blockquote>
+</li>
+</ol>
+<h3 id="安全"><a href="#安全" class="headerlink" title="安全"></a>安全</h3><ol>
+<li>什么是加密?什么是签名?区别是什么?<ul>
+<li>加密：使用密钥以某种算法改变原有内容数据，防止被他人获取数据内容,只能使用密钥解密得到原始数据,分为对称加密（如AES）和非对称加密（如RSA）;</li>
+<li>签名：使用密码散列函数从数据中提出摘要，然后使用私钥对摘要进行加密，就是数据签名了，主要是为了保证数据一致性；<blockquote>
+<p>参考：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/f-ck-need-u/p/6089523.html">加密、签名和SSL握手机制细节</a></p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="计算机原理"><a href="#计算机原理" class="headerlink" title="计算机原理"></a>计算机原理</h3><ol>
+<li>进程、线程和协程的区别<ul>
+<li>进程：系统进行分配和调度的一个独立单元。拥有自己的独立内存空间，依靠进程间通讯来通讯，重量大，上下文切换开销大，相对稳定安全。</li>
+<li>线程：线程是进程的一个实体，是处理器调度的基本单元，且进程至少拥有一个主线程。线程基本不拥有系统资源，只拥有运行中必不可少的资源（计数器、寄存器和栈），但是可以与同一进程下的其他线程共享进程的全部资源，主要通过共享内存方式。上下文切换开销比进程小，速度比较快，但是不够稳定容易丢失。</li>
+<li>协程：一种用户态的轻量级线程，分配和调度完全由程序控制。拥有自己的寄存器上下文和栈，切换时，将寄存器和栈保存到其他地方，切换回来时，恢复保存的寄存器和栈，切换速度非常快，开销非常小。  <blockquote>
+<p>参考：<a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1520503">一个故事讲完进程、线程和协程</a></p>
+</blockquote>
+</li>
+</ul>
+</li>
+<li>多路复用原理，一台服务器怎么支持几十万连接的？  <blockquote>
+<p>参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/russell_tao/article/details/17119729">高性能网络编程5–IO复用与并发编程</a></p>
+</blockquote>
+</li>
+</ol>
+<h3 id="Golang"><a href="#Golang" class="headerlink" title="Golang"></a>Golang</h3><ol>
+<li>context包<ul>
+<li>Done  </li>
+<li>WithCancel  </li>
+<li>WithDeadline  </li>
+<li>WithTimeout  </li>
+<li>WithValue</li>
+</ul>
+</li>
+<li>sync包用法？  <ul>
+<li>Waitgroup<br> 管理等待协程  </li>
+<li>Mutex&#x2F;RWMutex<br> 互斥锁、读写锁  </li>
+<li>Map<br> 线程安全的map  </li>
+<li>Pool<br> 对象池  </li>
+<li>Cond<br> 用户goroutine协作，控制goroutine挂起和唤醒，Wait&#x2F;Signal&#x2F;Broadcast  </li>
+<li>Once<br> 确保函数只运行一次</li>
+</ul>
+</li>
+<li>Goroutine调度器四个概念？Goroutine如何调度？  <ul>
+<li>G: Goroutine<br>每个 Goroutine 对应一个G结构体，G 存储 Goroutine 的运行堆栈、状态以及任务函数，可重用。G并非执行体，每个 G 需要绑定到 P 才能被调度执行；</li>
+<li>P: Processor<br>逻辑处理器，维护一个自己的 G 队列，并找到可用的 M 来执行 G；</li>
+<li>M: Machine<br>操作系统线程并抽象为 Machine，M 在执行系统调用时可能会阻塞，默认 M 的数量大于 P 的数量，这样某个 M 在执行某个 G 阻塞后，P 可以找另一个空闲的 M 继续跑其它的 G；</li>
+<li>S: Schedule<br>进程中唯一的调度器，负责创建监控线程和 G、P、M 以及分配和维护资源队列。  <blockquote>
+<p>参考<a target="_blank" rel="noopener" href="https://6xiao.github.io/2016/1108.schedule.html">Golang调度模式之通俗演义版</a></p>
+</blockquote>
+</li>
+</ul>
+</li>
+<li>GC,三色标记法原理？  <blockquote>
+<p>参考<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/4c5a303af470">[典藏版]Golang三色标记、混合写屏障GC模式图文全分析</a>  </p>
+</blockquote>
+</li>
+<li>GC 触发时机？  <ul>
+<li>内存扩大一倍时  </li>
+<li>默认2分钟  </li>
+<li>手动调用runtime.GC()</li>
+</ul>
+</li>
+<li>Goroutine为什么开销小？<br>goroutine是应用层实现的用户态的轻量级线程，运行在线程池上，由golang的runtime实现调度，因为调度时不需要像线程一样涉及到系统调用，不需要进行内核态的切换，所以开销比线程小很多。</li>
+<li>抢占式goroutine调用是什么意思？<br>goroutine 遇到阻塞或者主动调用 runtime.Gosched 的情况下可能会产生重新调度，让出计算资源给其他goroutine使用，如果一个 goroutine 不包含上面提到的情况，那么其他的 goroutine 就无法被调度到相应的 CPU 上面运行，这是不应该发生的。这时候就需要抢占机制来打断长时间占用 CPU 资源的 goroutine ，发起重新调度。Golang 运行时（runtime）中的系统监控线程 sysmon 可以找出“长时间占用(10ms)”的 goroutine，从而标记相应 goroutine ，待 goroutine 运行到检查点(抢占检查点是编译器预先插入)时才被抢占。  <blockquote>
+<p>参考<a target="_blank" rel="noopener" href="https://jingwei.link/2019/05/26/golang-routine-scheduler.html">Golang 并发问题（五）goroutine 的调度及抢占</a>  </p>
+</blockquote>
+</li>
+<li>append切片的时候，为什么要返回？（重点，值传递）<br>golang所有方法和函数参数都是值传递，调用append方法的时候，方法接收到的slice参数实际上是复制了一份slice结构拷贝，所以append内部在对这个拷贝进行操作的时候，并不会影响到调用append时传入的slice结构，所以需要返回修改后的slice结构。  </li>
+<li>slice 扩容规则？  <ol>
+<li>容量 大于 新长度，不扩容  </li>
+<li>扩容一倍 小于 新长度，扩容到新长度  </li>
+<li>新长度 小于 1024，扩容1倍  </li>
+<li>新长度 大于 1024，扩容1.25倍  </li>
+<li>内存对齐</li>
+</ol>
+</li>
+<li>什么时候传值，什么时候传址？  <ul>
+<li>希望函数对对象的修改不影响原对象，传值  </li>
+<li>传的对象较大，从对象拷贝开销考虑，传址</li>
+</ul>
+</li>
+<li>map底层数据结构？<br>   hmap&#x2F;bucket&#x2F;bmap&#x2F;tophash&#x2F;overflow<blockquote>
+<p>参考<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/aa0d4808cbb8">Golang map 的底层实现</a>  </p>
+</blockquote>
+</li>
+<li>struct 怎么比较，哪些能比较，哪些不能比较？  <ul>
+<li>如果结构体的所有成员变量都是可比较的，那么结构体就可比较  </li>
+<li>如果结构体中存在不可比较的成员变量，那么结构体就不能比较  </li>
+<li>结构体之间进行转换需要他们具备完全相同的成员(字段名、字段类型、字段个数)  </li>
+<li>切片和map不能比较</li>
+</ul>
+</li>
+<li>golang的内存模型，多小才是小对象，为什么小对象多了会造成gc压力？  </li>
+<li>什么是channel，为什么它可以做到线程安全？<br>Golang的Channel,发送一个数据到Channel 和 从Channel接收一个数据 都是 原子性 的。而且Go的设计思想就是”不要通过共享内存来通信，而是通过通信来共享内存“，前者就是传统的加锁，后者就是Channel。  </li>
+<li>channel 的缓存长度怎么确定？  </li>
+<li>channel 如果消费者消费能力跟不上生产者生产能力，怎么处理？</li>
+</ol>
+<h3 id="网络"><a href="#网络" class="headerlink" title="网络"></a>网络</h3><ol>
+<li><p>tcp协议</p>
+</li>
+<li><p>为什么需要三次握手？四次挥手？</p>
+<ul>
+<li>三次握手中的每一次都是必须的。如果是两次握手，在第二次结束后，服务器并不能保证客户端已经收到了第二次的请求，如此一来的话，服务器会一直保存着这个通信过程，因为TCP通信都是要占用端口的，造成了一定的资源浪费。所以，就一定要让客户端来发送ACK的确认请求。  </li>
+<li>四次挥手不能像三次握手一样，三次握手可以将ACK+SYN 一起发送，ACK用于确认信息，SYN却是用来建立联机的；四次挥手中ACK是不能和FIN一起发送，ACK只是告诉客户端确认我收到了，等我将数据发送完毕之后会向其发送FIN的标志，所以四次挥手是不能够改变的。</li>
+</ul>
+</li>
+<li><p>TIME_WAIT和CLOSE_WAIT状态解释？</p>
+<blockquote>
+<p>参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_38950316/article/details/81087809">TCP的三次握手与四次挥手理解及面试题（很全面）</a></p>
+</blockquote>
+</li>
+<li><p>TIME_WAIT过多怎么处理，如何避免？<br>短时间内大量并发的短链接会造成大量TIME_WAIT状态，导致其他连接请求不能进入。<br>编辑内核文件&#x2F;etc&#x2F;sysctl.conf<br>net.ipv4.tcp_syncookies &#x3D; 1 表示开启SYN Cookies。当出现SYN等待队列溢出时，启用cookies来处理，可防范少量SYN攻击，默认为0，表示关闭；<br>net.ipv4.tcp_tw_reuse &#x3D; 1 表示开启重用。允许将TIME-WAIT sockets重新用于新的TCP连接，默认为0，表示关闭；<br>net.ipv4.tcp_tw_recycle &#x3D; 1 表示开启TCP连接中TIME-WAIT sockets的快速回收，默认为0，表示关闭。<br>net.ipv4.tcp_fin_timeout 修改系默认的 TIMEOUT 时间<br>net.ipv4.tcp_keepalive_time &#x3D; 1200 表示当keepalive起用的时候，TCP发送keepalive消息的频度。缺省是2小时，改为20分钟。<br>net.ipv4.ip_local_port_range &#x3D; 1024 65000 表示用于向外连接的端口范围。缺省情况下很小：32768到61000，改为1024到65000。<br>net.ipv4.tcp_max_syn_backlog &#x3D; 8192 表示SYN队列的长度，默认为1024，加大队列长度为8192，可以容纳更多等待连接的网络连接数。<br>net.ipv4.tcp_max_tw_buckets &#x3D; 5000 表示系统同时保持TIME_WAIT套接字的最大数量，如果超过这个数字，TIME_WAIT套接字将立刻被清除并打印警告信息。</p>
+<blockquote>
+<p>参考<a target="_blank" rel="noopener" href="https://www.cnblogs.com/dadonggg/p/8778318.html">解决TIME_WAIT过多造成的问题</a>  </p>
+</blockquote>
+</li>
+<li><p>单台服务器并发TCP连接数到底可以有多少?  </p>
+<blockquote>
+<p>参考<a target="_blank" rel="noopener" href="http://www.52im.net/thread-561-1-1.html">单台服务器并发TCP连接数到底可以有多少</a>  </p>
+</blockquote>
+</li>
+<li><p>udp协议</p>
+</li>
+<li><p>http协议</p>
+</li>
+<li><p>https协议，好处和缺点分别是什么？<br>   优点：</p>
+</li>
+<li><p>使用HTTPS协议可认证用户和服务器，确保数据发送到正确的客户机和服务器  </p>
+</li>
+<li><p>TTPS协议是由SSL+HTTP协议构建的可进行加密传输、身份认证的网络协议，要比http协议安全，可防止数据在传输过程中不被窃取、改变，确保数据的完整性</p>
+</li>
+</ol>
+<p>   缺点：</p>
+<ol>
+<li>HTTPS协议握手阶段比较费时  </li>
+<li>HTTPS连接缓存不如HTTP高效，会增加数据开销和功耗  </li>
+<li>CA机构颁发的证书需要费用  </li>
+<li>http协议中GET&#x2F;POST&#x2F;PUT&#x2F;PATCH&#x2F;DELETE有什么意义？是否了解Resful设计原则和约束条件?<br>   答：参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_21383435/article/details/80032375" title="REST，以及RESTful的讲解">REST，以及RESTful的讲解</a></li>
+<li>http分片提交是怎么实现的？</li>
+<li>客户端如何验证证书是否合法？<br>各大浏览器和操作系统已经维护了所有的权威证书机构的名称和公钥。客户端只需要知道是哪个权威机构发的证书，使用对应的机构公钥，就可以解密出证书签名；接下来，客户端使用同样的规则，生成自己的证书签名，如果两个签名是一致的，说明证书是合法有效.  <blockquote>
+<p>参考<a target="_blank" rel="noopener" href="https://github.com/Advanced-Frontend/Daily-Interview-Question/issues/74">HTTPS 握手过程中，客户端如何验证证书的合法性</a></p>
+</blockquote>
+</li>
+<li>HTTP1.0 HTTP1.1 HTTP2.0 各有什么特性？</li>
+</ol>
+<h4 id="http1-0"><a href="#http1-0" class="headerlink" title="http1.0"></a>http1.0</h4><ul>
+<li>无状态、无连接</li>
+<li>无法复用连接，每次请求进行一个TCP连接</li>
+<li>队头阻塞</li>
+</ul>
+<h4 id="http1-1"><a href="#http1-1" class="headerlink" title="http1.1"></a>http1.1</h4><ul>
+<li>支持长连接 connection keep-alive</li>
+<li>请求管道化 pipelining</li>
+<li>加入缓存处理 cache-control</li>
+<li>增加Host 一个服务器能创建多个web站点</li>
+</ul>
+<h4 id="http2-0"><a href="#http2-0" class="headerlink" title="http2.0"></a>http2.0</h4><ul>
+<li>二进制分帧 frame</li>
+<li>多路复用 stream</li>
+<li>头部压缩</li>
+<li>服务器推送  <blockquote>
+<p>参考<a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000013028798" title="HTTP1.0 HTTP1.1 HTTP2.0 主要特性对比">HTTP1.0 HTTP1.1 HTTP2.0 主要特性对比</a></p>
+</blockquote>
+</li>
+</ul>
+<ol start="11">
+<li>浏览器从输入域名到渲染出页面的整个过程?<ol>
+<li>DNS解析URL</li>
+<li>与服务器交互获取数据</li>
+<li>浏览器渲染HTML<blockquote>
+<p>参考<a target="_blank" rel="noopener" href="https://www.cnblogs.com/qing-5/p/11126524.html">浏览器从输入URL到渲染完页面的整个过程</a></p>
+</blockquote>
+</li>
+</ol>
+</li>
+<li>nginx 反向代理？负载均衡？  <blockquote>
+<p>参考<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/40689824">Nginx反向代理和负载均衡</a></p>
+</blockquote>
+</li>
+</ol>
+<h3 id="Mysql"><a href="#Mysql" class="headerlink" title="Mysql"></a>Mysql</h3><ol>
+<li><p>数据库的ACID？</p>
+<ul>
+<li>原子性(Atomicity)：整个事务中的所有操作，要么全部完成，要么全部不完成。</li>
+<li>一致性(Correspondence)：在事务开始以前和事务结束以后，数据库的完整性约束没有被破坏。</li>
+<li>隔离性(Isolation)：串行化请求，使得在同一时间仅有一个请求用于同一数据。</li>
+<li>持久性(Durability)：在事务完成后，该事务对数据库所作的更改持久的保存在数据库中。</li>
+</ul>
+</li>
+<li><p>数据库连接种类</p>
+<ul>
+<li>内连接 inner join</li>
+<li>左连接 left join&#x2F;left outer join</li>
+<li>右连接 right join&#x2F;right outer join</li>
+<li>全连接 full join</li>
+<li>交叉连接 cross join</li>
+</ul>
+</li>
+<li><p>数据库索引的创建对新增、修改、查询、删除有什么影响？</p>
+<ul>
+<li>加快数据检索速度</li>
+<li>减少磁盘IO</li>
+<li>占用空间</li>
+<li>降低增加、修改、删除操作速度，因为需要同步修改索引</li>
+</ul>
+</li>
+<li><p>explain？<br>显示mysql如何使用索引来处理select语句以及连接表，可以帮助选择更好的索引和写出更优化的查询语句。</p>
+</li>
+<li><p>innodb 的底层实现？</p>
+</li>
+<li><p>在多并发的API中如何保证数据的唯一性，如多人同时注册相同用户名？</p>
+<ul>
+<li>添加唯一索引</li>
+<li>锁表 并发差</li>
+<li>修改数据库隔离级别</li>
+<li>采用insert select 语句</li>
+</ul>
+</li>
+<li><p>建立索引后为什么查询快？原因是什么？</p>
+<blockquote>
+<p>参考<a target="_blank" rel="noopener" href="https://draveness.me/whys-the-design-mysql-b-plus-tree/">为什么 MySQL 使用 B+ 树</a>  </p>
+</blockquote>
+</li>
+<li><p>索引建立</p>
+<ul>
+<li>在经常需要搜索的列上，可以加快搜索的速度；</li>
+<li>在作为主键的列上，强制该列的唯一性和组织表中数据的排列结构；</li>
+<li>在经常用在连接的列上，这些列主要是一些外键，可以加快连接的速度；</li>
+<li>在经常需要根据范围进行搜索的列上创建索引，因为索引已经排序，其指定的范围是连续的；</li>
+<li>在经常需要排序的列上创建索引，因为索引已经排序，这样查询可以利用索引的排序，加快排序查询时间；</li>
+<li>在经常使用在WHERE子句中的列上面创建索引，加快条件的判断速度。</li>
+</ul>
+<ul>
+<li>参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/Abysscarry/article/details/80792876">多个单列索引和联合索引的区别详解</a></li>
+</ul>
+</li>
+<li><p>联合索引最左匹配原则<br>   参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/u013164931/article/details/82386555">mysql索引最左匹配原则的理解</a>  </p>
+</li>
+<li><p>隔离级别有哪些？脏读幻读会在什么情况下出现？<br>脏读：事务1 读取了 事务2 未提交的数据，然后事务2回滚<br>不可重复读：事务1 第一次读取了数据，事务2 提交数据，导致 事务1 第二次读取数据内容与第一次不同（内容不同）<br>幻读：事务1 第一次读取了rows1，事务2 提交，事务1 第二次读取了row1和row2（记录数不同）  </p>
+<table>
+<thead>
+<tr>
+<th>隔离级别</th>
+<th align="center">脏读</th>
+<th align="center">不可重复读</th>
+<th align="center">幻读</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Read uncommitted (读未提交)</td>
+<td align="center">√</td>
+<td align="center">√</td>
+<td align="center">√</td>
+</tr>
+<tr>
+<td>Read committed (读已提交)</td>
+<td align="center">×</td>
+<td align="center">√</td>
+<td align="center">√</td>
+</tr>
+<tr>
+<td>Repeatable read (可重复读)</td>
+<td align="center">×</td>
+<td align="center">×</td>
+<td align="center">√</td>
+</tr>
+<tr>
+<td>Serializable (序列化)</td>
+<td align="center">×</td>
+<td align="center">×</td>
+<td align="center">×</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>乐观锁<br>乐观的假设锁在更新数据的时候可以拿到，然后在更新时使用 版本号 或者 时间戳 验证数据是否最新，不是最新的就先获取最新版本再更新。  </p>
+</li>
+<li><p>悲观锁实现<br>要使用悲观锁，需要关闭mysql数据库的自动提交属性，因为mysql默认使用autocommit模式，也就是说，当你执行一个更新操作后，mysql会立即将结果进行提交。<br>使用命令设置mysql 为非autocommit模式：set autocommit &#x3D;0；<br>一般使用select … for update对所选择的数据进行加锁处理，例如，select status form t_goods where id in (‘1’,’2’)  for update;这条sql语句会锁定t_goods表中id为1和id为2的记录。<br>使用场景举例：商品t_goods表有一个字段status，status为1代表商品未被下单，status为2代表商品已经被下单，那么我们队某个商品下单是必须确保该商品status为1.假设商品的id为1<br>①begin&#x2F;begin work&#x2F;start transaction;  &#x2F;&#x2F;开始事务(三者选一就可以)<br>②select status from t_goods where id&#x3D;1 for update;  &#x2F;&#x2F;查询出商品信息<br>③insert into t_orders(id,goods_id) value (null,1);  &#x2F;&#x2F;根据商品信息生成订单<br>④update t_goods set status&#x3D;2;  &#x2F;&#x2F;修改商品status为2<br>⑤commit&#x2F;commit work;  &#x2F;&#x2F;提交事务  </p>
+</li>
+<li><p>为什么有数据库连接池？有什么作用？</p>
+<ul>
+<li>节约资源，不用频繁创建和销毁</li>
+<li>限定连接数量，增加稳定性，避免连接数过多导致崩溃</li>
+<li>提高响应速度，直接从池中申请不用创建</li>
+</ul>
+</li>
+<li><p>怎么在不停止服务的情况下往一个大数据量表中增加字段？  </p>
+<ol>
+<li>建立包含新字段的新表，每次操作都将原表中受影响的记录移到新表，逐步完成转移  </li>
+<li>建立关联表，用外键连接</li>
+</ol>
+</li>
+<li><p>连接池中的连接数怎么确定？<br>核心数*2 + 有效磁盘数<br>参考 <a target="_blank" rel="noopener" href="https://blog.csdn.net/w05980598/article/details/78797310/">数据库连接池到底应该设置多大?</a></p>
+</li>
+<li><p>批量写入和逐条写入有什么区别？<br>批量写入节约数据库连接开销，不用频繁创建和销毁数据库连接  </p>
+</li>
+<li><p>sql和nosql的区别？<br>sql: 关系型数据库，创建在关系模型基础上的数据库，借助于集合代数等数学概念和方法来处理数据库中的数据。现实世界中的各种实体以及实体之间的各种联系均用关系模型来表示。  </p>
+<ul>
+<li>事务一致性、复杂查询、容易理解、使用方便、易于维护</li>
+</ul>
+<p>nosql: 非关系型数据库，是对不同于传统的关系数据库的数据库管理系统的统称。  </p>
+<ul>
+<li>弱一致性、以键值对存储、结构不固定、水平可扩展性</li>
+</ul>
+</li>
+</ol>
+<h3 id="Redis"><a href="#Redis" class="headerlink" title="Redis"></a>Redis</h3><p>参考<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/81195864">为什么要用Redis？Redis为什么这么快？</a></p>
+<ol>
+<li><p>redis好处</p>
+<ol>
+<li>速度快</li>
+<li>数据类型丰富</li>
+<li>支持事务，操作都是原子性</li>
+<li>丰富的特性：用于缓存，消息队列，设置过期时间自动删除</li>
+</ol>
+</li>
+<li><p>如何保证redis中的数据是热点数据&#x2F;redis存储满了如何处理<br>通过redis的数据淘汰策略</p>
+<ol>
+<li>no-enviction（驱逐）：禁止驱逐数据，新增返回no</li>
+<li>volatile-lru：从已设置过期时间的数据集（server.db[i].expires）中挑选最近最少使用的数据淘汰</li>
+<li>volatile-ttl：从已设置过期时间的数据集（server.db[i].expires）中挑选将要过期的数据淘汰</li>
+<li>volatile-random：从已设置过期时间的数据集（server.db[i].expires）中任意选择数据淘汰</li>
+<li>allkeys-lru：从数据集（server.db[i].dict）中挑选最近最少使用的数据淘汰</li>
+<li>allkeys-random：从数据集（server.db[i].dict）中任意选择数据淘汰</li>
+</ol>
+<ul>
+<li>如果voltile-lru&#x2F;volatile-ttl&#x2F;volatile-random 没有可以淘汰的数据，同no-enviction处理</li>
+</ul>
+</li>
+<li><p>Redis与Memcache区别</p>
+<ol>
+<li>存储方式<ul>
+<li>Memcache 全内存</li>
+<li>Redis 支持持久化</li>
+</ul>
+</li>
+<li>数据类型<ul>
+<li>Memcache 字符串</li>
+<li>多种数据结构</li>
+</ul>
+</li>
+<li>底层模型<ul>
+<li>Redis直接自己构建了VM 机制，因为一般的系统调用系统函数的话，会浪费一定的时间去移动和请求。</li>
+</ul>
+</li>
+<li>value大小<ul>
+<li>Memcache 1MB</li>
+<li>Redis 1GB</li>
+</ul>
+</li>
+</ol>
+</li>
+<li><p>Redis为什么能这么快，原因是什么？  </p>
+<ul>
+<li>纯内存操作  </li>
+<li>单线程，避免了不必要的上下文切换和竞争条件</li>
+<li>使用多路I&#x2F;O复用模型，io阻塞机制    </li>
+<li>高效的数据结构  </li>
+<li>合理的数据编码  </li>
+<li>其他方面的优化</li>
+</ul>
+</li>
+<li><p>Redis 持久化机制？  </p>
+<ol>
+<li>RDB 持久化</li>
+</ol>
+<ul>
+<li>将某个时间点的所有数据都存放到硬盘上。可以将快照复制到其它服务器从而创建具有相同数据的服务器副本。如果系统发生故障，将会丢失最后一次创建快照之后的数据。如果数据量很大，保存快照的时间会很长。</li>
+</ul>
+<ol start="2">
+<li>AOF 持久化</li>
+</ol>
+<ul>
+<li>将写命令添加到 AOF 文件（Append Only File）的末尾。使用 AOF 持久化需要设置同步选项，从而确保写命令同步到磁盘文件上的时机。这是因为对文件进行写入并不会马上将内容同步到磁盘上，而是先存储到缓冲区，然后由操作系统决定什么时候同步到磁盘。有以下同步选项：  </li>
+<li>选项同步频率always每个写命令都同步everysec每秒同步一次no让操作系统来决定何时同步  </li>
+<li>always 选项会严重减低服务器的性能；  </li>
+<li>everysec 选项比较合适，可以保证系统崩溃时只会丢失一秒左右的数据，并且 Redis 每秒执行一次同步对服务器性能几乎没有任何影响；  </li>
+<li>no 选项并不能给服务器性能带来多大的提升，而且也会增加系统崩溃时数据丢失的数量  </li>
+<li>随着服务器写请求的增多，AOF 文件会越来越大。Redis 提供了一种将 AOF 重写的特性，能够去除 AOF 文件中的冗余写命令。</li>
+</ul>
+</li>
+<li><p>Redis的同步机制<br>主从同步。第一次同步时，主节点做一次bgsave，并同时将后续修改操作记录到内存buffer，待完成后将rdb文件全量同步到复制节点，复制节点接受完成后将rdb镜像加载到内存。加载完成后，再通知主节点将期间修改的操作记录同步到复制节点进行重放就完成了同步过程。</p>
+</li>
+<li><p>缓存穿透、缓存击穿、缓存雪崩  </p>
+<ul>
+<li>缓存穿透：就是客户持续向服务器发起对不存在服务器中数据的请求。客户先在Redis中查询，查询不到后去数据库中查询。  </li>
+<li>缓存击穿：就是一个很热门的数据，突然失效，大量请求到服务器数据库中  </li>
+<li>缓存雪崩：就是大量数据同一时间失效。</li>
+</ul>
+<p>解决办法。  </p>
+<ul>
+<li>缓存穿透：</li>
+</ul>
+<ol>
+<li>接口层增加校验，对传参进行个校验，比如说我们的id是从1开始的，那么id&lt;&#x3D;0的直接拦截；  </li>
+<li>缓存中取不到的数据，在数据库中也没有取到，这时可以将key-value对写为key-null，这样可以防止攻击用户反复用同一个id暴力攻击</li>
+</ol>
+<ul>
+<li><p>缓存击穿：最好的办法就是设置热点数据永不过期  </p>
+</li>
+<li><p>缓存雪崩：</p>
+</li>
+</ul>
+<ol>
+<li>缓存数据的过期时间设置随机，防止同一时间大量数据过期现象发生。  </li>
+<li>如果缓存数据库是分布式部署，将热点数据均匀分布在不同搞得缓存数据库中。</li>
+</ol>
+</li>
+<li><p>支持的数据类型？  </p>
+<ol>
+<li>String（字符串）（键值对）  </li>
+<li>List（列表）（双向链表）  </li>
+<li>Hash（字典）（HashMap）  </li>
+<li>Set（集合）（value永远为null的HashMap）  </li>
+<li>Sorted Set（有序集合）（HashMap和跳跃表(SkipList)）</li>
+</ol>
+</li>
+<li><p>应用场景  </p>
+</li>
+<li><p>缓存</p>
+</li>
+<li><p>计数器 INCRBY</p>
+</li>
+<li><p>队列 PUB&#x2F;SUB</p>
+</li>
+<li><p>分布式锁 </p>
+</li>
+<li><p>最新列表 List LPUSH</p>
+</li>
+<li><p>排行榜 SortedSet ZADD</p>
+</li>
+<li><p>好友关系，利用集合的一些命令，比如求交集、并集、差集等。可以方便搞定  </p>
+</li>
+<li><p>Redis如何一次执行多条指令，节约网络、提升吞吐量？<br>   使用pipeline，将请求合并成一次IO</p>
+</li>
+</ol>
+<ul>
+<li>优点：降低延迟，提升系统吞吐量</li>
+<li>缺点：需要等待所有指令执行完毕后才能返回结果&#x2F;无法提供原子性保证</li>
+</ul>
+<ol start="11">
+<li>Redis事务</li>
+</ol>
+<ul>
+<li>MULTI 开始事务</li>
+<li>EXEC 执行事务队列</li>
+<li>DISCARD 取消事务</li>
+<li>WATCH 监控键</li>
+<li>UNWATCH 取消监控键</li>
+</ul>
+<ol>
+<li>事务提供了一种将多个命令打包，然后一次性、有序地执行的机制;  </li>
+<li>多个命令会被人队到事务队列中， 然后按先进先出(FIFO)的顺序执行;  </li>
+<li>事务在执行过程中不会被中断，当事务队列中的所有命令都被执行完毕之后，事务才会结束;</li>
+<li>带有WATCH命令的事务会将客户端和被监视的键在数据库的watched_keys字典关联，当键被修改时，程序会将所有监视被修改键的客户端的REDIS_DIRTY_CAS标识打开，服务只有在REDIS_DIRTY_CAS标识没有打开时，才会执行客户端提交的事务，否则服务器拒绝执行事务;  </li>
+<li>redis事务不支持回滚机制;</li>
+<li>Redis的事务总是具有ACID中的原子性、一致性和隔离性，当服务器运行在AOF持久化模式下，并且appendfsync选项的值为always时，事务也具有耐久性.<blockquote>
+<p>参考：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/4136a99da1da">Redis的事务功能详解</a> <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/479398a8e82c">Redis事务</a></p>
+</blockquote>
+</li>
+</ol>
+<h3 id="kafka"><a href="#kafka" class="headerlink" title="kafka"></a>kafka</h3><ol>
+<li>kafka基本概念<ul>
+<li>Broker<br>消息队列中常用的概念，在Kafka中指部署了Kafka实例的服务器节点。  </li>
+<li>Topic<br>用来区分不同类型信息的主题。比如应用程序A订阅了主题t1，应用程序B订阅了主题t2而没有订阅t1，那么发送到主题t1中的数据将只能被应用程序A读到，而不会被应用程序B读到。  </li>
+<li>Partition<br>每个topic可以有一个或多个partition（分区）。分区是在物理层面上的，不同的分区对应着不同的数据文件。Kafka使用分区支持物理上的并发写入和读取，从而大大提高了吞吐量。  </li>
+<li>Record<br>实际写入Kafka中并可以被读取的消息记录。每个record包含了key、value和timestamp。  </li>
+<li>Producer<br>生产者，用来向Kafka中发送数据（record）。  </li>
+<li>Consumer<br>消费者，用来读取Kafka中的数据（record）。  </li>
+<li>Consumer Group<br>一个消费者组可以包含一个或多个消费者。使用多分区+多消费者方式可以极大提高数据下游的处理速度。</li>
+</ul>
+</li>
+<li>如何保证消息有序?  <ul>
+<li>单分区时:<br>kafka本身是有序的;  </li>
+<li>多分区时:   <ol>
+<li>使用message key来指定消息发送到哪个分区,相同key会发送到同一个分区;  </li>
+<li>指定partition,将需要有序的数据指定发送到同一分区;</li>
+</ol>
+</li>
+</ul>
+</li>
+<li>消费者异常怎么处理？<br>消费者采用手动提交，消费者消费成功后再commit offset，如果在处理时报异常，可以尝试固定次数，如果仍然失败，可以先将record保存到数据库中，先提交commit offset，然后再手动处理record。</li>
+</ol>
+<h3 id="docker"><a href="#docker" class="headerlink" title="docker"></a>docker</h3><ol>
+<li>ADD COPY 区别？  <ul>
+<li>ADD 可以添加 指定的文件或目录src 到 指定的文件或路径dest</li>
+<li>如果 dest 以<code>/</code>结尾，默认为目录，</li>
+<li>COPY 是 ADD 的一种简化版本，目的在于满足大多数人“复制文件到容器”的需求，没有下面两个功能。  </li>
+<li>ADD src如果是压缩文件，会被解压到dest  </li>
+<li>ADD src如果是url，会下载文件到dest<blockquote>
+<p>参考<a target="_blank" rel="noopener" href="https://juejin.im/post/5aa5d08e6fb9a028de4455d1">Dockerfile:ADD VS COPY</a></p>
+</blockquote>
+</li>
+</ul>
+</li>
+<li>CMD ENTRYPOINT 区别？  <blockquote>
+<p>参考<a target="_blank" rel="noopener" href="https://juejin.im/post/5d4007a3f265da03e5230fc6">Dockerfile RUN 、 CMD 、 ENTRYPOINT区别</a></p>
+</blockquote>
+</li>
+<li>docker镜像用什么方式创建？</li>
+</ol>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Golang/">Golang</a>
+    </span>
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    <a href="https://beian.miit.gov.cn" target="_blank">蜀ICP备15015945号-2</a> | 
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> | 
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 <a href="https://github.com/zboyco" target="_blank">zboyco</a>
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

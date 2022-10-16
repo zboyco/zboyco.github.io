@@ -1,0 +1,171 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Go 利用链表实现循环队列 | 白羊的空间</title>
+
+  
+  <meta name="author" content="zboyco">
+  
+
+  
+  <meta name="description" content="记录下使用Go语言，利用silce实现循环队列。本文代码github: https://github.com/zboyco/go-test/tree/master/queue/link
+需要slice实现队列可以参考：Go 利用slice实现循环队列
+
+1. 列举一下准备实现的功能列举一下准备实现的功能这里只使用单向链表实现队列功能，实现下列方法:
+
+Enqueue 入队
+Dequeue 出队
+
+使用链表实现队列相比较slice的优势是，队列容量可以不受限制。（当然也可以在结构体中增加容量和长度字段，限制队列长度）
+2. 实现代码">
+  
+
+  
+  
+  <meta name="keywords" content="">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="Go 利用链表实现循环队列"/>
+
+  <meta property="og:site_name" content="白羊的空间"/>
+
+  
+  <meta property="og:image" content="/images/favicon.ico"/>
+  
+
+  <link href="/images/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白羊的空间" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白羊的空间</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives">归档</a></li>
+      
+        <li><a href="/categories">分类</a></li>
+      
+        <li><a href="/tags">标签</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>Go 利用链表实现循环队列</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/go-queue-link/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-03-20T09:55:00.000Z">
+          2019-03-20
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="记录下使用Go语言，利用silce实现循环队列。"><a href="#记录下使用Go语言，利用silce实现循环队列。" class="headerlink" title="记录下使用Go语言，利用silce实现循环队列。"></a>记录下使用Go语言，利用silce实现循环队列。</h2><p>本文代码github: <a target="_blank" rel="noopener" href="https://github.com/zboyco/go-test/tree/master/queue/link">https://github.com/zboyco/go-test/tree/master/queue/link</a></p>
+<p>需要slice实现队列可以参考：<br><a target="_blank" rel="noopener" href="https://sheep.dobit.top/archives/go-queue-slice.html" title="Go 利用slice实现循环队列">Go 利用slice实现循环队列</a></p>
+<hr>
+<h3 id="1-列举一下准备实现的功能列举一下准备实现的功能"><a href="#1-列举一下准备实现的功能列举一下准备实现的功能" class="headerlink" title="1. 列举一下准备实现的功能列举一下准备实现的功能"></a>1. 列举一下准备实现的功能列举一下准备实现的功能</h3><p>这里只使用单向链表实现队列功能，实现下列方法:</p>
+<ul>
+<li>Enqueue 入队</li>
+<li>Dequeue 出队</li>
+</ul>
+<p>使用链表实现队列相比较slice的优势是，队列容量可以不受限制。（当然也可以在结构体中增加容量和长度字段，限制队列长度）</p>
+<h3 id="2-实现代码"><a href="#2-实现代码" class="headerlink" title="2. 实现代码"></a>2. 实现代码</h3><span id="more"></span>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> queue</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;errors&quot;</span></span><br><span class="line">	<span class="string">&quot;sync&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 节点</span></span><br><span class="line"><span class="keyword">type</span> node <span class="keyword">struct</span> &#123;</span><br><span class="line">	value <span class="keyword">interface</span>&#123;&#125; <span class="comment">// 值</span></span><br><span class="line">	next  *node       <span class="comment">// 下一个节点</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Queue 队列</span></span><br><span class="line"><span class="keyword">type</span> Queue <span class="keyword">struct</span> &#123;</span><br><span class="line">	front      *node <span class="comment">// 头</span></span><br><span class="line">	rear       *node <span class="comment">// 尾</span></span><br><span class="line">	sync.Mutex       <span class="comment">// 锁</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Enqueue 入队</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(q *Queue)</span></span> Enqueue(item <span class="keyword">interface</span>&#123;&#125;) <span class="type">error</span> &#123;</span><br><span class="line">	q.Lock()</span><br><span class="line">	<span class="keyword">defer</span> q.Unlock()</span><br><span class="line">	<span class="keyword">if</span> item == <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> errors.New(<span class="string">&quot;数据不可为空&quot;</span>)</span><br><span class="line">	&#125;</span><br><span class="line">	newNode := &amp;node&#123;value: item&#125;</span><br><span class="line">	<span class="keyword">if</span> q.front == <span class="literal">nil</span> &#123;</span><br><span class="line">		q.front = newNode</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> q.rear != <span class="literal">nil</span> &#123;</span><br><span class="line">		q.rear.next = newNode</span><br><span class="line">	&#125;</span><br><span class="line">	q.rear = newNode</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Dequeue 出队</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(q *Queue)</span></span> Dequeue() (item <span class="keyword">interface</span>&#123;&#125;, err <span class="type">error</span>) &#123;</span><br><span class="line">	q.Lock()</span><br><span class="line">	<span class="keyword">defer</span> q.Unlock()</span><br><span class="line">	<span class="keyword">if</span> q.front == <span class="literal">nil</span> &#123;</span><br><span class="line">		err = errors.New(<span class="string">&quot;队列为空&quot;</span>)</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">	item = q.front.value</span><br><span class="line">	<span class="keyword">if</span> q.front.next == <span class="literal">nil</span> &#123;</span><br><span class="line">		q.front = <span class="literal">nil</span></span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		q.front = q.front.next</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-测试队列"><a href="#3-测试队列" class="headerlink" title="3. 测试队列"></a>3. 测试队列</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;log&quot;</span></span><br><span class="line">	<span class="string">&quot;time&quot;</span></span><br><span class="line"></span><br><span class="line">	<span class="string">&quot;github.com/zboyco/go-test/queue/link/queue&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	q := &amp;queue.Queue&#123;&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">go</span> read(q, <span class="number">1</span>)</span><br><span class="line">	<span class="keyword">go</span> read(q, <span class="number">2</span>)</span><br><span class="line">	<span class="keyword">go</span> read(q, <span class="number">3</span>)</span><br><span class="line"></span><br><span class="line">	i := <span class="number">0</span></span><br><span class="line">	<span class="keyword">for</span> &#123;</span><br><span class="line">		time.Sleep(<span class="number">50</span> * time.Millisecond)</span><br><span class="line">		err := q.Enqueue(i)</span><br><span class="line">		<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">			<span class="comment">// log.Println(err)</span></span><br><span class="line">			<span class="keyword">continue</span></span><br><span class="line">		&#125;</span><br><span class="line">		i++</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">read</span><span class="params">(q *queue.Queue, id <span class="type">int</span>)</span></span> &#123;</span><br><span class="line">	<span class="keyword">for</span> &#123;</span><br><span class="line">		item, err := q.Dequeue()</span><br><span class="line">		<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">			<span class="comment">// log.Println(err)</span></span><br><span class="line">			<span class="comment">// time.Sleep(100 * time.Millisecond)</span></span><br><span class="line">			<span class="keyword">continue</span></span><br><span class="line">		&#125;</span><br><span class="line">		log.Println(<span class="string">&quot;id&quot;</span>, id, <span class="string">&quot;------&quot;</span>, item.(<span class="type">int</span>))</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出结果:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">2019/03/20 17:44:43 id 2 ------ 0</span><br><span class="line">2019/03/20 17:44:43 id 2 ------ 1</span><br><span class="line">2019/03/20 17:44:43 id 2 ------ 2</span><br><span class="line">2019/03/20 17:44:43 id 2 ------ 3</span><br><span class="line">2019/03/20 17:44:43 id 3 ------ 4</span><br><span class="line">2019/03/20 17:44:44 id 2 ------ 5</span><br><span class="line">2019/03/20 17:44:44 id 1 ------ 6</span><br><span class="line">2019/03/20 17:44:44 id 1 ------ 7</span><br><span class="line">2019/03/20 17:44:44 id 1 ------ 8</span><br><span class="line">2019/03/20 17:44:44 id 3 ------ 9</span><br><span class="line">2019/03/20 17:44:44 id 2 ------ 10</span><br><span class="line">2019/03/20 17:44:44 id 2 ------ 11</span><br><span class="line">2019/03/20 17:44:44 id 1 ------ 12</span><br><span class="line">2019/03/20 17:44:44 id 1 ------ 13</span><br><span class="line">2019/03/20 17:44:44 id 3 ------ 14</span><br><span class="line">2019/03/20 17:44:44 id 1 ------ 15</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-结语"><a href="#5-结语" class="headerlink" title="5. 结语"></a>5. 结语</h3><p>需要注意：<br>**- 入队时队列为空</p>
+<ul>
+<li>出队后队列为空**</li>
+</ul>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Golang/">Golang</a>
+    </span>
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    <a href="https://beian.miit.gov.cn" target="_blank">蜀ICP备15015945号-2</a> | 
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> | 
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 <a href="https://github.com/zboyco" target="_blank">zboyco</a>
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

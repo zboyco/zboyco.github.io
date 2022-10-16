@@ -1,0 +1,666 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>第 7 页 | 白羊的空间</title>
+
+  
+  <meta name="author" content="zboyco">
+  
+
+  
+
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  
+
+  <meta property="og:site_name" content="白羊的空间"/>
+
+  
+  <meta property="og:image" content="/images/favicon.ico"/>
+  
+
+  <link href="/images/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白羊的空间" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白羊的空间</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives">归档</a></li>
+      
+        <li><a href="/categories">分类</a></li>
+      
+        <li><a href="/tags">标签</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/go-install/"><span>Golang mac安装及GOPATH设置</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/go-install/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-08-12T10:53:27.000Z">
+          2018-08-12
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><p>直接官网下载go语言安装包，打开安装即可</p>
+<h1 id="GOPATH-变量"><a href="#GOPATH-变量" class="headerlink" title="GOPATH 变量"></a>GOPATH 变量</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ echo &#x27;export GOPATH=&quot;$HOME/go&quot;&#x27; &gt;&gt; ~/.profile # 或者 ~/.zshrc, ~/.cshrc, 您所使用的sh对应的配置文件</span><br></pre></td></tr></table></figure>
+<h2 id="PATH-变量"><a href="#PATH-变量" class="headerlink" title="PATH 变量"></a>PATH 变量</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ echo &#x27;export PATH=&quot;$GOPATH/bin:$PATH&quot;&#x27; &gt;&gt; ~/.profile # 或者 ~/.zshrc, ~/.cshrc, 您所使用的sh对应的配置文件</span><br><span class="line">$ exec $SHELL</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Golang/">Golang</a>
+    </span>
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/csharp-redis/"><span>C# Redis 帮助类</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/csharp-redis/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-08-07T16:28:00.000Z">
+          2018-08-08
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>自己项目中使用的Redis帮助类，采用StackExchange.Redis库，单例模式，使用简单，直接上代码:</p>
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/CSharp/">CSharp</a>, <a href="/categories/CSharp/Redis/">Redis</a>
+    </span>
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/net-socket-client/"><span>.net Socket 客户端</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/net-socket-client/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-08-07T06:39:00.000Z">
+          2018-08-07
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="记录下这两天修改后的Socket客户端类，用在unity上的。"><a href="#记录下这两天修改后的Socket客户端类，用在unity上的。" class="headerlink" title="记录下这两天修改后的Socket客户端类，用在unity上的。"></a>记录下这两天修改后的Socket客户端类，用在unity上的。</h2><blockquote>
+<p>服务器返回的消息采用 4+n 简单协议，即数据包的前4个字节代表真实数据长度.</p>
+</blockquote>
+<ol>
+<li>因为需求会切换服务器地址，所以支持切换服务器重新创建连接；</li>
+<li>创建一个新连接后，会立刻创建一个线程用于监听服务器返回数据；</li>
+<li>创建一个定时处理线程，当连接闲置15秒后，关闭当前线程；</li>
+</ol>
+<p>代码很简单，只有核心代码，稍微修改下可以直接使用:</p>
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/CSharp/">CSharp</a>
+    </span>
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/docker-gameservice/"><span>Docker 发布游戏服务命令备份</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/docker-gameservice/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-08-07T03:11:00.000Z">
+          2018-08-07
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">docker run --name service-test \</span><br><span class="line">--restart always \</span><br><span class="line">-p 13910:13908/tcp \</span><br><span class="line">-v /etc/localtime:/etc/localtime:ro \</span><br><span class="line">-v /home/DaoJian/Test/Logs:/app/Logs \</span><br><span class="line">-v /home/DaoJian/Test/NLog.config:/app/NLog.config:ro \</span><br><span class="line">-v /home/DaoJian/Test/ServerApp.dll.config:/app/ServerApp.dll.config:ro \</span><br><span class="line">-v /home/DaoJian/ShieldingWord.txt:/app/ShieldingWord.txt:ro \</span><br><span class="line">-d \</span><br><span class="line">registry.cn-shenzhen.aliyuncs.com/zboyco/daojian-service</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Docker/">Docker</a>
+    </span>
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/redis-timeout/"><span>StackExchange.Redis timeout异常 解决方案</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/redis-timeout/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-08-06T17:00:00.000Z">
+          2018-08-07
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>公司项目使用了redis作为缓存数据库，在网上看了很多文章，都指出StackExchange.Redis最好使用单例模式，然而在实际 项目使用过程中，捕捉到timeout事件，如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Timeout performing EXISTS UserKey-36700, inst: 1, queue: 1, qu: 0, qs: 1, qc: 0, wr: 0, wq: 0, in: 4, ar: 0, clientName: , serverEndpoint: 10.66.205.72:6379, keyHashSlot: 15122 (Please take a look at this article for some common client-side issues that can cause timeouts: http://stackexchange.github.io/StackExchange.Redis/Timeouts)</span><br></pre></td></tr></table></figure>
+<p>根据异常提到的连接：<br><a target="_blank" rel="noopener" href="http://stackexchange.github.io/StackExchange.Redis/Timeouts%EF%BC%89">http://stackexchange.github.io/StackExchange.Redis/Timeouts）</a><br>以及在网上查找StackExchange.Redis timeout相关的文章，发现其中两点个解决方法(也是官方提出的方式):</p>
+<ol>
+<li>使用ConnectionMultiplexer Pool<blockquote>
+<p>客户端中使用 ConnectionMultiplexer 对象池，并在发送新请求时选择“最小化加载”ConnectionMultiplexer。 这样可能会防止单个超时导致其他请求也超时。客户端中使用 ConnectionMultiplexer 对象池，并在发送新请求时选择“最小化加载”ConnectionMultiplexer。 这样可能会防止单个超时导致其他请求也超时。</p>
+</blockquote>
+</li>
+<li>修改线程池的最小设置<blockquote>
+<p>建议将 IOCP 和 WORKER 线程的最小配置值设置为大于默认值的值。 我们不能给出一个大小适合所有指导这个值应该是什么，因为一个应用程序的正确价值将太高&#x2F;低为另一个应用程序。<br>此设置也会影响复杂应用程序的其他部分的性能，因此您需要根据您的特定需求调整此设置。<br>一个好的起点是200或300，然后根据需要进行测试和调整。<br>调整方式：<code>System.Threading.ThreadPool.SetMinThreads(200, 200);</code></p>
+</blockquote>
+</li>
+</ol>
+<hr>
+<h4 id="附上官方文档中文译文"><a href="#附上官方文档中文译文" class="headerlink" title="附上官方文档中文译文"></a>附上官方文档中文译文</h4><p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/4dc1ad0abc1c">https://www.jianshu.com/p/4dc1ad0abc1c</a></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/CSharp/">CSharp</a>, <a href="/categories/CSharp/Redis/">Redis</a>
+    </span>
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/docker-operation/"><span>Docker 常用命令和参数</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/docker-operation/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-08-06T14:43:00.000Z">
+          2018-08-06
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>记录下在使用过程中用到的命令和参数用法。</p>
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Docker/">Docker</a>
+    </span>
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/docker-nginx/"><span>Docker 安装Nginx</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/docker-nginx/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-08-06T09:43:00.000Z">
+          2018-08-06
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>1.首先获取nginx</p>
+<p><code>docker pull nginx</code></p>
+<p>2.安装nginx，将nginx对应的配置路径和文件映射到主机目录，代码如下:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">docker run --name nginx \</span><br><span class="line">  -p 80:80 \</span><br><span class="line">  -p 443:443 \</span><br><span class="line">  -v /etc/localtime:/etc/localtime:ro \</span><br><span class="line">  -v /home/docker/nginx/wwwroot:/home/wwwroot \</span><br><span class="line">  -v /home/docker/nginx/config/nginx.conf:/etc/nginx/nginx.conf \</span><br><span class="line">  -v /home/docker/nginx/config/conf.d:/etc/nginx/conf.d \</span><br><span class="line">  -v /home/docker/nginx/config/logs:/var/log/nginx \</span><br><span class="line">  -v /home/docker/nginx/config/ssl:/etc/nginx/ssl \</span><br><span class="line">  -d \</span><br><span class="line">  --restart=always \</span><br><span class="line">  nginx</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Docker/">Docker</a>
+    </span>
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/docker-datetime/"><span>Docker 容器时间与主机不一致</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/docker-datetime/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-08-06T08:27:00.000Z">
+          2018-08-06
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>最近发现直接启动的容器，系统时间与主机时间不一致，网上找了一下解决方法，其实就是启动的时候映射了时间设置。<br>主机为linux方法如下，启动容器的时候加入以下设置:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-v /etc/localtime:/etc/localtime:ro</span><br></pre></td></tr></table></figure>
+
+<p>问题解决.</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Docker/">Docker</a>
+    </span>
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/install-docker/"><span>Docker 安装记录(CentOS)</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/install-docker/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-08-06T08:18:00.000Z">
+          2018-08-06
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="卸载旧版本"><a href="#卸载旧版本" class="headerlink" title="卸载旧版本"></a>卸载旧版本</h1><p>Older versions of Docker were called docker or docker-engine. If these are installed, uninstall them, along with associated dependencies.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$ sudo yum remove docker \</span><br><span class="line">                  docker-client \</span><br><span class="line">                  docker-client-latest \</span><br><span class="line">                  docker-common \</span><br><span class="line">                  docker-latest \</span><br><span class="line">                  docker-latest-logrotate \</span><br><span class="line">                  docker-logrotate \</span><br><span class="line">                  docker-selinux \</span><br><span class="line">                  docker-engine-selinux \</span><br><span class="line">                  docker-engine</span><br></pre></td></tr></table></figure>
+<p>It’s OK if yum reports that none of these packages are installed.</p>
+<p>The contents of <code>/var/lib/docker/</code>, including images, containers, volumes, and networks, are preserved. The Docker CE package is now called <code>docker-ce</code>.</p>
+<h1 id="安装-Docker-CE"><a href="#安装-Docker-CE" class="headerlink" title="安装 Docker CE"></a>安装 Docker CE</h1><h2 id="使用-repository-安装"><a href="#使用-repository-安装" class="headerlink" title="使用 repository 安装"></a>使用 repository 安装</h2><h3 id="设置-repository"><a href="#设置-repository" class="headerlink" title="设置 repository"></a>设置 repository</h3><h4 id="1-添加引用包"><a href="#1-添加引用包" class="headerlink" title="1.添加引用包"></a>1.添加引用包</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ sudo yum install -y yum-utils \</span><br><span class="line">  device-mapper-persistent-data \</span><br><span class="line">  lvm2</span><br></pre></td></tr></table></figure>
+<h4 id="2-添加-repository-地址"><a href="#2-添加-repository-地址" class="headerlink" title="2.添加 repository 地址"></a>2.添加 repository 地址</h4><h5 id="官方源"><a href="#官方源" class="headerlink" title="官方源"></a>官方源</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ sudo yum-config-manager \</span><br><span class="line">    --add-repo \</span><br><span class="line">    https://download.docker.com/linux/centos/docker-ce.repo</span><br></pre></td></tr></table></figure>
+<h5 id="国内源"><a href="#国内源" class="headerlink" title="国内源"></a>国内源</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ sudo yum-config-manager \</span><br><span class="line">    --add-repo \</span><br><span class="line">    https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo</span><br></pre></td></tr></table></figure>
+
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install docker-ce</span><br></pre></td></tr></table></figure>
+<h3 id="启动-Docker-CE"><a href="#启动-Docker-CE" class="headerlink" title="启动 Docker CE"></a>启动 Docker CE</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl start docker</span><br></pre></td></tr></table></figure>
+<h3 id="开机自动启动"><a href="#开机自动启动" class="headerlink" title="开机自动启动"></a>开机自动启动</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl enable docker</span><br></pre></td></tr></table></figure>
+
+<p>安装完毕<br>参考地址:<a target="_blank" rel="noopener" href="https://docs.docker.com/install/linux/docker-ce/centos/#install-docker-ce-1">https://docs.docker.com/install/linux/docker-ce/centos/#install-docker-ce-1</a></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Docker/">Docker</a>
+    </span>
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/go-project-structure/"><span>[转载]Go项目的目录结构</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/go-project-structure/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-08-02T16:41:22.000Z">
+          2018-08-03
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>项目目录结构如何组织，一般语言都是没有规定。但 Go 语言这方面做了规定，这样可以保持一致性</p>
+<h3 id="1、一般的，一个-Go-项目在-GOPATH-下，会有如下三个目录："><a href="#1、一般的，一个-Go-项目在-GOPATH-下，会有如下三个目录：" class="headerlink" title="1、一般的，一个 Go 项目在 GOPATH 下，会有如下三个目录："></a>1、一般的，一个 Go 项目在 GOPATH 下，会有如下三个目录：</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">|--bin</span><br><span class="line">|--pkg</span><br><span class="line">|--src</span><br></pre></td></tr></table></figure>
+
+<p>其中，bin存放编译后的可执行文件；pkg 存放编译后的包文件；src 存放项目源文件。一般，bin 和 pkg 目录可以不创建，go 命令会自动创建（如 go install），只需要创建src目录即可。<br>对于 pkg 目录，曾经有人问：我把 Go 中的包放入 pkg 下面，怎么不行啊？他直接把 Go 包的源文件放入了 pkg 中。这显然是不对的。pkg 中的文件是 Go 编译生成的，而不是手动放进去的。（一般文件后缀.a）<br>对于 src 目录，存放源文件，Go 中源文件以包（package）的形式组织。通常，新建一个包就在 src 目录中新建一个文件夹。</p>
+<h3 id="2、举例说明"><a href="#2、举例说明" class="headerlink" title="2、举例说明"></a>2、举例说明</h3>
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Golang/">Golang</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/go/">go</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+
+<nav class="pagination">
+  
+  <a href="/page/6/" class="pagination-prev">上一页</a>
+  
+  
+  <a href="/page/8/" class="pagination-next">下一页</a>
+  
+</nav>
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    <a href="https://beian.miit.gov.cn" target="_blank">蜀ICP备15015945号-2</a> | 
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> | 
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 <a href="https://github.com/zboyco" target="_blank">zboyco</a>
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Go gin使用JWT进行身份校验 | 白羊的空间</title>
+
+  
+  <meta name="author" content="zboyco">
+  
+
+  
+  <meta name="description" content="本文代码github: https://github.com/zboyco/go-test/tree/master/gin-jwt
+
+1.前言JWT是json web token缩写,一种网络令牌,可以非常简单的实现身份校验功能,具体的介绍网上很多,就不再重复了.
+2.使用库go语言的jwt库还是挺多的,我们选用star最多的,其他可以参考 https://jwt.io/jwt-go:github.com/dgrijalva/jwt-go">
+  
+
+  
+  
+  <meta name="keywords" content="go,gin,jwt">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="Go gin使用JWT进行身份校验"/>
+
+  <meta property="og:site_name" content="白羊的空间"/>
+
+  
+  <meta property="og:image" content="/images/favicon.ico"/>
+  
+
+  <link href="/images/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白羊的空间" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白羊的空间</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives">归档</a></li>
+      
+        <li><a href="/categories">分类</a></li>
+      
+        <li><a href="/tags">标签</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>Go gin使用JWT进行身份校验</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/go-gin-jwt/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-01-18T10:47:00.000Z">
+          2019-01-18
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>本文代码github: <a target="_blank" rel="noopener" href="https://github.com/zboyco/go-test/tree/master/gin-jwt">https://github.com/zboyco/go-test/tree/master/gin-jwt</a></p>
+<hr>
+<h3 id="1-前言"><a href="#1-前言" class="headerlink" title="1.前言"></a>1.前言</h3><p>JWT是json web token缩写,一种网络令牌,可以非常简单的实现身份校验功能,具体的介绍网上很多,就不再重复了.</p>
+<h3 id="2-使用库"><a href="#2-使用库" class="headerlink" title="2.使用库"></a>2.使用库</h3><p>go语言的jwt库还是挺多的,我们选用star最多的,其他可以参考 <a target="_blank" rel="noopener" href="https://jwt.io/">https://jwt.io/</a><br>jwt-go:<code>github.com/dgrijalva/jwt-go</code></p>
+<span id="more"></span>
+<h3 id="3-gin中间件实现"><a href="#3-gin中间件实现" class="headerlink" title="3.gin中间件实现"></a>3.gin中间件实现</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> jwt</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;errors&quot;</span></span><br><span class="line">	<span class="string">&quot;log&quot;</span></span><br><span class="line">	<span class="string">&quot;net/http&quot;</span></span><br><span class="line">	<span class="string">&quot;time&quot;</span></span><br><span class="line"></span><br><span class="line">	jwt <span class="string">&quot;github.com/dgrijalva/jwt-go&quot;</span></span><br><span class="line">	<span class="string">&quot;github.com/gin-gonic/gin&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> (</span><br><span class="line">	<span class="comment">// 盐</span></span><br><span class="line">	jwtSecret = []<span class="type">byte</span>(<span class="string">&quot;baiyang&quot;</span>)</span><br><span class="line">	<span class="comment">// 过期时间</span></span><br><span class="line">	expireSecond = <span class="number">1</span> * <span class="number">60</span> * <span class="number">60</span></span><br><span class="line">	<span class="comment">// 发行人</span></span><br><span class="line">	issur = <span class="string">&quot;baiyang&quot;</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">// ErrorExpired 过期</span></span><br><span class="line">	ErrorExpired = errors.New(<span class="string">&quot;Token is expired&quot;</span>)</span><br><span class="line">	<span class="comment">// ErrorNotValidYet 未生效</span></span><br><span class="line">	ErrorNotValidYet = errors.New(<span class="string">&quot;Token not active yet&quot;</span>)</span><br><span class="line">	<span class="comment">// ErrorMalformed 畸形Token</span></span><br><span class="line">	ErrorMalformed = errors.New(<span class="string">&quot;That&#x27;s not even a token&quot;</span>)</span><br><span class="line">	<span class="comment">// ErrorInvalid 其他错误</span></span><br><span class="line">	ErrorInvalid = errors.New(<span class="string">&quot;Couldn&#x27;t handle this token&quot;</span>)</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment">// CustomClaims 定义一个Claims结构体,可以添加自定义属性</span></span><br><span class="line"><span class="keyword">type</span> CustomClaims <span class="keyword">struct</span> &#123;</span><br><span class="line">	UserID <span class="type">int</span> <span class="string">`json:&quot;userID&quot;`</span></span><br><span class="line">	jwt.StandardClaims</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// GenerateToken 生成Token</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">GenerateToken</span><span class="params">(userID <span class="type">int</span>)</span></span> (<span class="type">string</span>, <span class="type">error</span>) &#123;</span><br><span class="line">	<span class="comment">// 新建一个Claims</span></span><br><span class="line">	claims := CustomClaims&#123;</span><br><span class="line">		userID,</span><br><span class="line">		jwt.StandardClaims&#123;</span><br><span class="line">			ExpiresAt: time.Now().Add(time.Duration(expireSecond) * time.Second).Unix(), <span class="comment">// 设置超时时间</span></span><br><span class="line">			Issuer:    issur,                                                            <span class="comment">// 设置发行人</span></span><br><span class="line">		&#125;,</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">// 生成Token</span></span><br><span class="line">	tokenClaims := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)</span><br><span class="line">	<span class="comment">// 签署</span></span><br><span class="line">	<span class="keyword">return</span> tokenClaims.SignedString(jwtSecret)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ParseToken 解析Token</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">ParseToken</span><span class="params">(tokenString <span class="type">string</span>)</span></span> (*CustomClaims, <span class="type">error</span>) &#123;</span><br><span class="line">	tokenClaims, err := jwt.ParseWithClaims(tokenString, &amp;CustomClaims&#123;&#125;, <span class="function"><span class="keyword">func</span><span class="params">(token *jwt.Token)</span></span> (<span class="keyword">interface</span>&#123;&#125;, <span class="type">error</span>) &#123;</span><br><span class="line">		<span class="keyword">return</span> jwtSecret, <span class="literal">nil</span></span><br><span class="line">	&#125;)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">if</span> ve, ok := err.(*jwt.ValidationError); ok &#123;</span><br><span class="line">			<span class="keyword">if</span> ve.Errors&amp;jwt.ValidationErrorMalformed != <span class="number">0</span> &#123;</span><br><span class="line">				<span class="keyword">return</span> <span class="literal">nil</span>, ErrorMalformed</span><br><span class="line">			&#125; <span class="keyword">else</span> <span class="keyword">if</span> ve.Errors&amp;jwt.ValidationErrorExpired != <span class="number">0</span> &#123;</span><br><span class="line">				<span class="keyword">return</span> <span class="literal">nil</span>, ErrorExpired</span><br><span class="line">			&#125; <span class="keyword">else</span> <span class="keyword">if</span> ve.Errors&amp;jwt.ValidationErrorNotValidYet != <span class="number">0</span> &#123;</span><br><span class="line">				<span class="keyword">return</span> <span class="literal">nil</span>, ErrorNotValidYet</span><br><span class="line">			&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">				<span class="keyword">return</span> <span class="literal">nil</span>, ErrorInvalid</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> claims, ok := tokenClaims.Claims.(*CustomClaims); ok &amp;&amp; tokenClaims.Valid &#123;</span><br><span class="line">		<span class="keyword">return</span> claims, <span class="literal">nil</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">nil</span>, ErrorInvalid</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Auth 中间件，检查token</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Auth</span><span class="params">()</span></span> gin.HandlerFunc &#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="function"><span class="keyword">func</span><span class="params">(c *gin.Context)</span></span> &#123;</span><br><span class="line">		token := c.Request.Header.Get(<span class="string">&quot;token&quot;</span>)</span><br><span class="line">		<span class="keyword">if</span> token == <span class="string">&quot;&quot;</span> &#123;</span><br><span class="line">			c.JSON(http.StatusUnauthorized, gin.H&#123;</span><br><span class="line">				<span class="string">&quot;code&quot;</span>: <span class="number">-1</span>,</span><br><span class="line">				<span class="string">&quot;msg&quot;</span>:  <span class="string">&quot;请求未携带token，无权限访问&quot;</span>,</span><br><span class="line">			&#125;)</span><br><span class="line">			c.Abort()</span><br><span class="line">			<span class="keyword">return</span></span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		log.Print(<span class="string">&quot;get token: &quot;</span>, token)</span><br><span class="line"></span><br><span class="line">		<span class="comment">// parseToken 解析token包含的信息</span></span><br><span class="line">		claims, err := ParseToken(token)</span><br><span class="line">		<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">			<span class="keyword">if</span> err == ErrorExpired &#123;</span><br><span class="line">				c.JSON(http.StatusUnauthorized, gin.H&#123;</span><br><span class="line">					<span class="string">&quot;code&quot;</span>: <span class="number">-1</span>,</span><br><span class="line">					<span class="string">&quot;msg&quot;</span>:  <span class="string">&quot;授权已过期&quot;</span>,</span><br><span class="line">				&#125;)</span><br><span class="line">				c.Abort()</span><br><span class="line">				<span class="keyword">return</span></span><br><span class="line">			&#125;</span><br><span class="line">			c.JSON(http.StatusUnauthorized, gin.H&#123;</span><br><span class="line">				<span class="string">&quot;code&quot;</span>: <span class="number">-1</span>,</span><br><span class="line">				<span class="string">&quot;msg&quot;</span>:  err.Error(),</span><br><span class="line">			&#125;)</span><br><span class="line">			c.Abort()</span><br><span class="line">			<span class="keyword">return</span></span><br><span class="line">		&#125;</span><br><span class="line">		<span class="comment">// 继续交由下一个路由处理,并将解析出的信息传递下去</span></span><br><span class="line">		c.Set(<span class="string">&quot;UserID&quot;</span>, claims.UserID)</span><br><span class="line">		<span class="comment">// c.Next()</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<ul>
+<li>Auth 方法实现gin的中间件,其他方法实现jwt功能,可以将其他方法提取到utils中去</li>
+</ul>
+<h3 id="4-使用jwt验证"><a href="#4-使用jwt验证" class="headerlink" title="4.使用jwt验证"></a>4.使用jwt验证</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;go-test/gin-jwt/middleware/jwt&quot;</span></span><br><span class="line">	<span class="string">&quot;net/http&quot;</span></span><br><span class="line"></span><br><span class="line">	<span class="string">&quot;github.com/gin-gonic/gin&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	r := gin.Default()</span><br><span class="line">	r.GET(<span class="string">&quot;/&quot;</span>, <span class="function"><span class="keyword">func</span><span class="params">(ctx *gin.Context)</span></span> &#123;</span><br><span class="line">		ctx.JSON(http.StatusOK, gin.H&#123;</span><br><span class="line">			<span class="string">&quot;message&quot;</span>: <span class="string">&quot;this is index&quot;</span>,</span><br><span class="line">		&#125;)</span><br><span class="line">	&#125;)</span><br><span class="line">	r.POST(<span class="string">&quot;/Login&quot;</span>, <span class="function"><span class="keyword">func</span><span class="params">(ctx *gin.Context)</span></span> &#123;</span><br><span class="line">		token, err := jwt.GenerateToken(<span class="number">123</span>)</span><br><span class="line">		<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">			ctx.JSON(http.StatusOK, gin.H&#123;</span><br><span class="line">				<span class="string">&quot;message&quot;</span>: err.Error(),</span><br><span class="line">			&#125;)</span><br><span class="line">		&#125;</span><br><span class="line">		ctx.JSON(http.StatusOK, gin.H&#123;</span><br><span class="line">			<span class="string">&quot;token&quot;</span>: token,</span><br><span class="line">		&#125;)</span><br><span class="line">	&#125;)</span><br><span class="line">	data := r.Group(<span class="string">&quot;/data&quot;</span>)</span><br><span class="line">	data.Use(jwt.Auth())</span><br><span class="line">	&#123;</span><br><span class="line">		data.GET(<span class="string">&quot;/ok&quot;</span>, <span class="function"><span class="keyword">func</span><span class="params">(ctx *gin.Context)</span></span> &#123;</span><br><span class="line">			userID := ctx.MustGet(<span class="string">&quot;UserID&quot;</span>).(<span class="type">int</span>)</span><br><span class="line">			ctx.JSON(http.StatusOK, gin.H&#123;</span><br><span class="line">				<span class="string">&quot;UserID&quot;</span>: userID,</span><br><span class="line">			&#125;)</span><br><span class="line">		&#125;)</span><br><span class="line">	&#125;</span><br><span class="line">	r.Run()</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>userID := ctx.MustGet(&quot;UserID&quot;).(int)</code>获取中间件传递的数据</li>
+</ul>
+<p>参考文章:<br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/1f9915818992" title="gin 基于JWT实现token令牌功能">gin 基于JWT实现token令牌功能</a><br><a target="_blank" rel="noopener" href="https://github.com/EDDYCJY/blog/blob/master/golang/gin/2018-02-16-Gin%E5%AE%9E%E8%B7%B5-%E8%BF%9E%E8%BD%BD%E4%BA%94-%E4%BD%BF%E7%94%A8JWT%E8%BF%9B%E8%A1%8C%E8%BA%AB%E4%BB%BD%E6%A0%A1%E9%AA%8C.md" title="2018-02-16-Gin实践-连载五-使用JWT进行身份校验">2018-02-16-Gin实践-连载五-使用JWT进行身份校验</a></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Golang/">Golang</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/go/">go</a><a href="/tags/gin/">gin</a><a href="/tags/jwt/">jwt</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    <a href="https://beian.miit.gov.cn" target="_blank">蜀ICP备15015945号-2</a> | 
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> | 
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 <a href="https://github.com/zboyco" target="_blank">zboyco</a>
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

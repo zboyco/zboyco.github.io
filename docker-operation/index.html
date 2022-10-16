@@ -1,0 +1,178 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Docker 常用命令和参数 | 白羊的空间</title>
+
+  
+  <meta name="author" content="zboyco">
+  
+
+  
+  <meta name="description" content="记录下在使用过程中用到的命令和参数用法。">
+  
+
+  
+  
+  <meta name="keywords" content="">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="Docker 常用命令和参数"/>
+
+  <meta property="og:site_name" content="白羊的空间"/>
+
+  
+  <meta property="og:image" content="/images/favicon.ico"/>
+  
+
+  <link href="/images/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白羊的空间" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白羊的空间</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives">归档</a></li>
+      
+        <li><a href="/categories">分类</a></li>
+      
+        <li><a href="/tags">标签</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>Docker 常用命令和参数</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/docker-operation/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-08-06T14:43:00.000Z">
+          2018-08-06
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>记录下在使用过程中用到的命令和参数用法。</p>
+<span id="more"></span>
+<h1 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h1><ol>
+<li>搜索镜像<br><code>docker search *</code></li>
+<li>拉取镜像<br><code>docker pull *</code></li>
+<li>拉取指定标签镜像<br><code>docker pull *:tag</code></li>
+<li>查询本地镜像列表<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker images</span><br><span class="line">docker images -a （所有镜像）</span><br></pre></td></tr></table></figure></li>
+<li>运行镜像（配合参数使用）<br><code>docker run *:tag</code></li>
+<li>运行镜像并进入命令行<br><code>docker run -it *:tag</code></li>
+<li>暂存并退出容器<br><code>ctrl+p ctrl+q</code><br>（容器暂存后在后端运行并为退出）</li>
+<li>查询容器列表<br><code>docker ps</code> 查询运行中的容器<br><code>docker ps -a</code> 查询所有容器</li>
+<li>再次进入暂存的容器<br><code>docker attach [CONTAINER ID]</code></li>
+<li>退出容器<br>直接在容器中运行<code>exit</code>即可退出容器</li>
+<li>重启容器<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker start [CONTAINER ID] (启动stop的容器)</span><br><span class="line">docker restart [CONTAINER ID] (可重启在运行中的容器)</span><br></pre></td></tr></table></figure></li>
+<li>停止容器<br><code>docker stop [CONTAINER ID]</code></li>
+<li>进入一个在运行中的容器的命令行<br><code>docker exec -it [CONTAINER ID] bash</code></li>
+<li>删除容器<br><code>docker rm [CONTAINER ID]</code></li>
+<li>删除镜像<br><code>docker rmi [IMAGE ID]</code></li>
+<li>保存修改后的容器为镜像<br><code>docker commit [CONTAINER ID] [NEW REPOSITORY]</code></li>
+</ol>
+<hr>
+<h1 id="常用参数"><a href="#常用参数" class="headerlink" title="常用参数"></a>常用参数</h1><p>（这里只记录我自己常用的，后面贴上完整的参数列表）<br>参数通常跟随<code>docker run</code>命令使用</p>
+<ol>
+<li>登录终端交互<br><code>-it</code></li>
+<li>端口映射<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-p 8080:80/tcp (tcp可省略)</span><br><span class="line">-p 8090:81/udp</span><br></pre></td></tr></table></figure></li>
+<li>命名容器<br><code>--name newname</code></li>
+<li>文件路径映射<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-v /home/Logs:/app/Logs:rw    (rw指定为读写权限，可省略)</span><br><span class="line">-v /home/Config:/app/Config:ro  (ro指定为只读权限)</span><br></pre></td></tr></table></figure></li>
+<li>Docker启动时自动启动容器<br><code>--restart always</code></li>
+<li>后台运行容器<br><code>-d</code></li>
+</ol>
+<hr>
+<h1 id="常用完整命令"><a href="#常用完整命令" class="headerlink" title="常用完整命令"></a>常用完整命令</h1><ol>
+<li>后台运行redis:latest并命名为redis<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">docker run \</span><br><span class="line">--name redis \</span><br><span class="line">-p 7963:6379/tcp \</span><br><span class="line">-d \</span><br><span class="line">--restart always \</span><br><span class="line">redis</span><br></pre></td></tr></table></figure></li>
+<li>进入redis容器<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker exec -it redis bash</span><br></pre></td></tr></table></figure></li>
+</ol>
+<hr>
+<h1 id="完整参数列表"><a href="#完整参数列表" class="headerlink" title="完整参数列表"></a>完整参数列表</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">Usage: docker run [OPTIONS] IMAGE [COMMAND] [ARG...]  </span><br><span class="line"> </span><br><span class="line">  -d, --detach=false         指定容器运行于前台还是后台，默认为false   </span><br><span class="line">  -i, --interactive=false   打开STDIN，用于控制台交互  </span><br><span class="line">  -t, --tty=false            分配tty设备，该可以支持终端登录，默认为false  </span><br><span class="line">  -u, --user=&quot;&quot;              指定容器的用户  </span><br><span class="line">  -a, --attach=[]            登录容器（必须是以docker run -d启动的容器）</span><br><span class="line">  -w, --workdir=&quot;&quot;           指定容器的工作目录 </span><br><span class="line">  -c, --cpu-shares=0        设置容器CPU权重，在CPU共享场景使用  </span><br><span class="line">  -e, --env=[]               指定环境变量，容器中可以使用该环境变量  </span><br><span class="line">  -m, --memory=&quot;&quot;            指定容器的内存上限  </span><br><span class="line">  -P, --publish-all=false    指定容器暴露的端口  </span><br><span class="line">  -p, --publish=[]           指定容器暴露的端口 </span><br><span class="line">  -h, --hostname=&quot;&quot;          指定容器的主机名  </span><br><span class="line">  -v, --volume=[]            给容器挂载存储卷，挂载到容器的某个目录  </span><br><span class="line">  --volumes-from=[]          给容器挂载其他容器上的卷，挂载到容器的某个目录</span><br><span class="line">  --cap-add=[]               添加权限，权限清单详见：http://linux.die.net/man/7/capabilities  </span><br><span class="line">  --cap-drop=[]              删除权限，权限清单详见：http://linux.die.net/man/7/capabilities  </span><br><span class="line">  --cidfile=&quot;&quot;               运行容器后，在指定文件中写入容器PID值，一种典型的监控系统用法  </span><br><span class="line">  --cpuset=&quot;&quot;                设置容器可以使用哪些CPU，此参数可以用来容器独占CPU  </span><br><span class="line">  --device=[]                添加主机设备给容器，相当于设备直通  </span><br><span class="line">  --dns=[]                   指定容器的dns服务器  </span><br><span class="line">  --dns-search=[]            指定容器的dns搜索域名，写入到容器的/etc/resolv.conf文件  </span><br><span class="line">  --entrypoint=&quot;&quot;            覆盖image的入口点  </span><br><span class="line">  --env-file=[]              指定环境变量文件，文件格式为每行一个环境变量  </span><br><span class="line">  --expose=[]                指定容器暴露的端口，即修改镜像的暴露端口  </span><br><span class="line">  --link=[]                  指定容器间的关联，使用其他容器的IP、env等信息  </span><br><span class="line">  --lxc-conf=[]              指定容器的配置文件，只有在指定--exec-driver=lxc时使用  </span><br><span class="line">  --name=&quot;&quot;                  指定容器名字，后续可以通过名字进行容器管理，links特性需要使用名字  </span><br><span class="line">  --net=&quot;bridge&quot;             容器网络设置:</span><br><span class="line">				                bridge 使用docker daemon指定的网桥     </span><br><span class="line">				                host 	//容器使用主机的网络  </span><br><span class="line">				                container:NAME_or_ID  &gt;//使用其他容器的网路，共享IP和PORT等网络资源  </span><br><span class="line">				                none 容器使用自己的网络（类似--net=bridge），但是不进行配置 </span><br><span class="line">  --privileged=false         指定容器是否为特权容器，特权容器拥有所有的capabilities  </span><br><span class="line">  --restart=&quot;no&quot;             指定容器停止后的重启策略:</span><br><span class="line">				                no：容器退出时不重启  </span><br><span class="line">				                on-failure：容器故障退出（返回值非零）时重启 </span><br><span class="line">				                always：容器退出时总是重启  </span><br><span class="line">  --rm=false                 指定容器停止后自动删除容器(不支持以docker run -d启动的容器)  </span><br><span class="line">  --sig-proxy=true           设置由代理接受并处理信号，但是SIGCHLD、SIGSTOP和SIGKILL不能被代理  </span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Docker/">Docker</a>
+    </span>
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    <a href="https://beian.miit.gov.cn" target="_blank">蜀ICP备15015945号-2</a> | 
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> | 
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 <a href="https://github.com/zboyco" target="_blank">zboyco</a>
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,725 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>第 6 页 | 白羊的空间</title>
+
+  
+  <meta name="author" content="zboyco">
+  
+
+  
+
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  
+
+  <meta property="og:site_name" content="白羊的空间"/>
+
+  
+  <meta property="og:image" content="/images/favicon.ico"/>
+  
+
+  <link href="/images/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白羊的空间" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白羊的空间</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives">归档</a></li>
+      
+        <li><a href="/categories">分类</a></li>
+      
+        <li><a href="/tags">标签</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/go-server-4/"><span>Go实现简单的Socket服务端笔记(四)</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/go-server-4/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-12-21T08:21:00.000Z">
+          2018-12-21
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h4 id="将创建socket的方法放入单独的包中"><a href="#将创建socket的方法放入单独的包中" class="headerlink" title="将创建socket的方法放入单独的包中"></a>将创建socket的方法放入单独的包中</h4><p>本文代码查看github:<br><a target="_blank" rel="noopener" href="https://github.com/zboyco/go-server/tree/step-4">https://github.com/zboyco/go-server/tree/step-4</a></p>
+<p>修改以下项目结构,将之前的代码放到server包中,main.go中直接调用就行了</p>
+<p>项目结构如下:</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">|-<span class="keyword">go</span>-server</span><br><span class="line">|-server</span><br><span class="line">	|-socket.<span class="keyword">go</span></span><br></pre></td></tr></table></figure>
+
+<p>socket.go 中增加一个结构体,增加一个工厂函数用来返回一个新的Server.</p>
+<p>代码如下:</p>
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Golang/">Golang</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Socket/">Socket</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/go-server-3/"><span>Go实现简单的Socket服务端笔记(三)</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/go-server-3/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-12-21T08:16:00.000Z">
+          2018-12-21
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h4 id="利用goroutine实现同时多个客户端连接"><a href="#利用goroutine实现同时多个客户端连接" class="headerlink" title="利用goroutine实现同时多个客户端连接"></a>利用goroutine实现同时多个客户端连接</h4><p>将数据读取放入单独的方法中,利用goroutine运行</p>
+<p>本文代码查看github:<br><a target="_blank" rel="noopener" href="https://github.com/zboyco/go-server/tree/step-3">https://github.com/zboyco/go-server/tree/step-3</a></p>
+<p>要实现多个客户端连接,需要将每个客户端放入单独的线程处理,通常我们使用多线程实现这个功能,但Go语言提供的 goroutine, 可以非常方便的实现并行(goroutine并不是多线程)</p>
+<ol>
+<li>将接收数据的相关代码放入单独的方法中:
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Golang/">Golang</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Socket/">Socket</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/go-server-2/"><span>Go实现简单的Socket服务端笔记(二)</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/go-server-2/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-12-21T08:08:00.000Z">
+          2018-12-21
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h4 id="第二步-循环读取数据"><a href="#第二步-循环读取数据" class="headerlink" title="第二步 循环读取数据"></a>第二步 循环读取数据</h4><p>利用for循环,等待客户端发送数据</p>
+<p>本文代码查看github:<br><a target="_blank" rel="noopener" href="https://github.com/zboyco/go-server/tree/step-2">https://github.com/zboyco/go-server/tree/step-2</a></p>
+<p>修改上一步的代码,让服务端循环接收客户端发送的消息,主要使用for循环,直接上代码</p>
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Golang/">Golang</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Socket/">Socket</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/go-server-1/"><span>Go实现简单的Socket服务端笔记(一)</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/go-server-1/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-12-21T08:02:00.000Z">
+          2018-12-21
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>###第一步 实现socket服务<br>简单实现一个socket服务,能接收客户端连接并接收数据</p>
+<p>本文代码查看github:<br><a target="_blank" rel="noopener" href="https://github.com/zboyco/go-server/tree/step-1">https://github.com/zboyco/go-server/tree/step-1</a></p>
+<p>Go语言的socket服务由标准库 <code>net</code> 提供,主要就使用三个方法.</p>
+<ol>
+<li><p>ResolveTCPAddr<br>用于获取一个TCPAddr</p>
+</li>
+<li><p>ListenTCP<br>开始监听</p>
+</li>
+<li><p>Accept<br>接受会话</p>
+</li>
+</ol>
+<h4 id="下面直接放代码"><a href="#下面直接放代码" class="headerlink" title="下面直接放代码"></a>下面直接放代码</h4>
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Golang/">Golang</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Socket/">Socket</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/go-server-0/"><span>Go实现简单的Socket服务端笔记(零)</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/go-server-0/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-12-21T07:47:57.000Z">
+          2018-12-21
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>#说明<br>最近开始学习Go语言,尝试写一个简单的Socket服务端,计划实现以下一些功能:</p>
+<ol>
+<li>监听单个端口,支持多个客户端连接</li>
+<li>定义简单的协议,实现粘包拆包处理</li>
+<li>能设置会话闲置超时时间,周期性关闭超时的会话</li>
+<li>记录会话连接,关闭,错误日志</li>
+<li>还没想好</li>
+</ol>
+<p>下面一步步的实现吧,我是新手</p>
+<p>项目地址:<a target="_blank" rel="noopener" href="https://github.com/zboyco/go-server">https://github.com/zboyco/go-server</a></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Golang/">Golang</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Socket/">Socket</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/go-point/"><span>Go学习杂记</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/go-point/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-12-14T10:00:00.000Z">
+          2018-12-14
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <ol>
+<li>方法<br>方法实际上也是函数,只是在声明时,关键字func喝方法名之间增加了一个参数(接收者)<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> user <span class="keyword">struct</span> &#123;</span><br><span class="line">	name  <span class="type">string</span></span><br><span class="line">	email <span class="type">string</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(u user)</span></span> notify() &#123;</span><br><span class="line">	fmt.Printf(<span class="string">&quot;Sending User Email To %s&lt;%s&gt;\n&quot;</span>,u.name,u.email)</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(u *user)</span></span> changeEmail(email <span class="type">string</span>) &#123;</span><br><span class="line">	u.email = email</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>defer 关键字<br>在函数或方法中,用defer标识的语句将会在函数或方法返回后执行<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(p *Pool)</span></span> Release(r io.Closer) &#123;</span><br><span class="line">	p.m.Lock()</span><br><span class="line">	<span class="keyword">defer</span> p.m.Unlock()</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> p.closed &#123;</span><br><span class="line">		r.Close()</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>chan 通道<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Test <span class="keyword">struct</span> &#123;</span><br><span class="line">    <span class="comment">// 普通通道.</span></span><br><span class="line">    complete <span class="keyword">chan</span> <span class="type">error</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 单项通道,只能读取.</span></span><br><span class="line">    timeout &lt;-<span class="keyword">chan</span> time.Time</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>select 语句<br>select 中没有default分支,程序将会阻塞等待<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> &#123;</span><br><span class="line"><span class="keyword">case</span> err := &lt;-r.complete:</span><br><span class="line">	<span class="keyword">return</span> err</span><br><span class="line"></span><br><span class="line"><span class="keyword">case</span> &lt;-r.timeout:</span><br><span class="line">	<span class="keyword">return</span> ErrTimeout</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+select 中有default分支,程序将会将阻塞转变为非阻塞,如果通道有内容则接收,没有则执行default分支<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> &#123;</span><br><span class="line"><span class="keyword">case</span> &lt;-r.interrupt:</span><br><span class="line">	signal.Stop(r.interrupt)</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">default</span>:</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ol>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Golang/">Golang</a>
+    </span>
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/reach-router/"><span>Reach Router</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/reach-router/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-09-13T02:58:00.000Z">
+          2018-09-13
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>今天在看一个项目的时候,无意间看到推荐 reach&#x2F;router 这个React路由组件,然后就看了下组件的使用,感觉使用比react-router更加简单直接,库也比较小,用法和react-router类似但是更简洁,这里记录下换成reach时碰到的问题,官网地址如下:</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://reach.tech/router" title="Reach Router">Reach Router</a></p>
+</blockquote>
+<ol>
+<li>router 会自动跳转到 主路由加载的内容上<br>其实就是focus变化,reach会将focus指定到主router渲染的内容,所以就导致页面会”跳”到新内容上,解决办法是给所有router添加 primary&#x3D;{false} 属性:<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;Router primary=&#123;false&#125;&gt;</span><br><span class="line">	&lt;Company path=&quot;/&quot; /&gt;</span><br><span class="line">	&lt;Brand path=&quot;/Brand&quot; /&gt;</span><br><span class="line">&lt;/Router&gt;</span><br></pre></td></tr></table></figure></li>
+<li>嵌套路由(router加载的组件里再使用router)<br>在子组件里使用路由时也使用router包围即可:<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">render(</span><br><span class="line">  &lt;Router&gt;</span><br><span class="line">	&lt;Home path=&quot;/&quot; /&gt;</span><br><span class="line">	&lt;Dash path=&quot;dashboard/*&quot; /&gt;</span><br><span class="line">  &lt;/Router&gt;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">const Dash = () =&gt; (</span><br><span class="line">  &lt;div&gt;</span><br><span class="line">	&lt;p&gt;A nested router&lt;/p&gt;</span><br><span class="line">	&lt;Router&gt;</span><br><span class="line">	  &lt;DashboardGraphs path=&quot;/&quot; /&gt;</span><br><span class="line">	  &lt;InvoiceList path=&quot;invoices&quot; /&gt;</span><br><span class="line">	&lt;/Router&gt;</span><br><span class="line">  &lt;/div&gt;</span><br><span class="line">)</span><br></pre></td></tr></table></figure></li>
+<li>NavLink<br>reach 没有 react-router 里的 NavLink,不能直接通过activeClassName的方式增加属性,但reach的Link组件提供了getProps参数,可以通过该方法实现NavLink:<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">import React, &#123; Component &#125; from &#x27;react&#x27;;</span><br><span class="line">import &#123; Link &#125; from &#x27;@reach/router&#x27;;</span><br><span class="line"></span><br><span class="line">export default class NavLink extends Component &#123;</span><br><span class="line">	render() &#123;</span><br><span class="line">		return (</span><br><span class="line">			&lt;React.Fragment&gt;</span><br><span class="line">				&lt;Link</span><br><span class="line">					&#123;...this.props&#125;</span><br><span class="line">					getProps=&#123;(&#123; isCurrent, isPartiallyCurrent, href, location &#125;) =&gt; &#123;</span><br><span class="line">						// the object returned here is passed to the</span><br><span class="line">						// anchor element&#x27;s props</span><br><span class="line">						if (href !== &quot;/&quot;) &#123;</span><br><span class="line">							return isPartiallyCurrent ? &#123; className: &#x27;active&#x27; &#125; : null;</span><br><span class="line">						&#125; else &#123;</span><br><span class="line">							return isCurrent ? &#123; className: &#x27;active&#x27; &#125; : null;</span><br><span class="line">						&#125;</span><br><span class="line">					&#125;&#125;</span><br><span class="line">				/&gt;</span><br><span class="line">			&lt;/React.Fragment&gt;</span><br><span class="line">		)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+其中四个参数意义:</li>
+</ol>
+<ul>
+<li>isCurrent - true if the location.pathname is exactly the same as the anchor’s href.</li>
+<li>isPartiallyCurrent - true if the location.pathname starts with the anchor’s href.</li>
+<li>href - the fully resolved href of the link.</li>
+<li>location - the app’s location.</li>
+</ul>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/React/">React</a>
+    </span>
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/react-sass/"><span>React 配置 SASS</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/react-sass/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-09-04T14:29:34.000Z">
+          2018-09-04
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>学习react时，在项目中使用sass编辑样式，记录配置方法:</p>
+<p>#安装</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install sass-loader node-sass --save-dev</span><br></pre></td></tr></table></figure>
+
+<p>#配置<br>打开react的webpack配置,找到module下的rules，然后找到最后一个配置，修改成如下的样子</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">    exclude: [/\.js$/,/\.html$/,/\.json$/,/\.scss$/],</span><br><span class="line">    loader: require.resolve(&#x27;file-loader&#x27;),</span><br><span class="line">    options: &#123;</span><br><span class="line">            name: &#x27;static/media/[name].[hash:8].[ext]&#x27;,</span><br><span class="line">        &#125;,</span><br><span class="line">&#125;,</span><br><span class="line">&#123;</span><br><span class="line">    test:/\.scss$/,</span><br><span class="line">    loaders:[&#x27;style-loader&#x27;,&#x27;css-loader&#x27;,&#x27;sass-loader&#x27;]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注意，我们只是修改了 webpack.config.dev.js, 如果要在生产环境中生效，需要在webpack.config.prod.js做同样的配置。</p>
+</blockquote>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/React/">React</a>
+    </span>
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/react-jquery/"><span>React 引用 jQuery</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/react-jquery/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-09-04T14:25:00.000Z">
+          2018-09-04
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="原由"><a href="#原由" class="headerlink" title="原由"></a>原由</h1><p>计划用 React 做一个前台展示网站，设计用到了jQuery Smoove这个插件，所以在网上找了下怎么在 React 中引入jQuery,并让插件可以正常使用.</p>
+<h2 id="安装-jQuery"><a href="#安装-jQuery" class="headerlink" title="安装 jQuery"></a>安装 jQuery</h2><p><code>npm install jquery</code></p>
+<blockquote>
+<p>注意，全是小写字母,不能写成 jQuery，会安装成功，但无法编译通过。</p>
+</blockquote>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><ol>
+<li>直接使用<br>如果直接使用 jQuery 而不使用其他基于 jq 的插件的话，那么直接在 react 文件里 import 即可:<br><code>import $ from &#39;jquery&#39;;</code></li>
+<li>为插件服务<br>如果有其他基于 jq 的插件，则需要在 webpack 中添加全局设置(我使用的 create-react-app 初始化的项目).<br>找到webpack配置路径：<br><code>node_modules/react-scripts/config/webpack.config.dev.js(webpack.config.prod.js)</code><br>在 plugins 属性中添加以下代码即可：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">new webpack.ProvidePlugin(&#123;</span><br><span class="line">    $:&quot;jquery&quot;, </span><br><span class="line">    jQuery:&quot;jquery&quot;, </span><br><span class="line">    &quot;window.jQuery&quot;:&quot;jquery&quot;</span><br><span class="line">&#125;),</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>大功告成！</p>
+<blockquote>
+<p>create-react-app 初始化的项目在node_modules，直接修改的话重新安装包就被覆盖了，如果有需要的话，可以执行 yarn eject，把引用的包本地化后再修改，或者使用其他脚手架初始化项目也可。</p>
+</blockquote>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/React/">React</a>
+    </span>
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/aspnetcorewebapi-jwt/"><span>AspNet Core WebAPI 集成JWT权限验证初始项目</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/aspnetcorewebapi-jwt/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-08-13T03:52:00.000Z">
+          2018-08-13
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="AspNetCoreWebAPI-JWT-Authorize"><a href="#AspNetCoreWebAPI-JWT-Authorize" class="headerlink" title="AspNetCoreWebAPI-JWT-Authorize"></a>AspNetCoreWebAPI-JWT-Authorize</h1><p>Asp.Net Core WebAPI with JWT Authorization.<br>项目代码：<a target="_blank" rel="noopener" href="https://github.com/zboyco/AspNetCoreWebAPI-JWT-Authorize">https://github.com/zboyco/AspNetCoreWebAPI-JWT-Authorize</a><br>初始化 Asp.Net Core WebAPI 项目</p>
+<h3 id="集成JWT权限验证"><a href="#集成JWT权限验证" class="headerlink" title="集成JWT权限验证"></a>集成JWT权限验证</h3><h3 id="集成Swagger接口控制台"><a href="#集成Swagger接口控制台" class="headerlink" title="集成Swagger接口控制台"></a>集成Swagger接口控制台</h3>
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/CSharp/">CSharp</a>, <a href="/categories/CSharp/NET-Core/">.NET Core</a>
+    </span>
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+
+<nav class="pagination">
+  
+  <a href="/page/5/" class="pagination-prev">上一页</a>
+  
+  
+  <a href="/page/7/" class="pagination-next">下一页</a>
+  
+</nav>
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    <a href="https://beian.miit.gov.cn" target="_blank">蜀ICP备15015945号-2</a> | 
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> | 
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 <a href="https://github.com/zboyco" target="_blank">zboyco</a>
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

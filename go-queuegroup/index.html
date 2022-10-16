@@ -1,0 +1,193 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Go 实现一个分组排队取号叫号的逻辑 | 白羊的空间</title>
+
+  
+  <meta name="author" content="zboyco">
+  
+
+  
+  <meta name="description" content="本文github代码库：https://github.com/zboyco/queuegroup
+
+业务场景（这个包产生的原因）
+在我们的项目中，由同一个客服端发送到服务器的请求，必须按照请求的顺序进行处理（数据只存在服务端，下一个请求的基础数据就是上一个请求运算完成后的结果）；
+无法保证客服端请求一定严格收到返回后才发送下个请求，偶尔客户端会短时间内发送多个请求，如果直接并发处理会导致数据错误或丢失（多个请求使用旧数据进行运算）。
+
+思路
+由于请求需要的基础数据依赖于上一次请求的结果，自然想到需要将请求串型处理，说到串型处理，那就是队列了，由于我们只需要对同一客户端发送的请求进行串型处理，所以就需要分组队列，每个组单独一个队列即可。
+在我们的需求中，主要是每个请求的基础数据依赖于上一个请求，那么只需要在当前请求运算结束以前阻塞后面的请求获取基础数据即可，也就是在当前请求返回前，独占这个队列，不让后面的请求使用。
+
+基于上面两点，我联想到了车站排队购票或者医院排队挂号等线下排队的情形，基本和我们的需求相同，再结合银行的取号排队方式，实现一个分组队列方法：">
+  
+
+  
+  
+  <meta name="keywords" content="">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="Go 实现一个分组排队取号叫号的逻辑"/>
+
+  <meta property="og:site_name" content="白羊的空间"/>
+
+  
+  <meta property="og:image" content="/images/favicon.ico"/>
+  
+
+  <link href="/images/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白羊的空间" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白羊的空间</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives">归档</a></li>
+      
+        <li><a href="/categories">分类</a></li>
+      
+        <li><a href="/tags">标签</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>Go 实现一个分组排队取号叫号的逻辑</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/go-queuegroup/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-04-29T13:40:00.000Z">
+          2019-04-29
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>本文github代码库：<a target="_blank" rel="noopener" href="https://github.com/zboyco/queuegroup">https://github.com/zboyco/queuegroup</a></p>
+<hr>
+<h1 id="业务场景（这个包产生的原因）"><a href="#业务场景（这个包产生的原因）" class="headerlink" title="业务场景（这个包产生的原因）"></a>业务场景（这个包产生的原因）</h1><ol>
+<li>在我们的项目中，由同一个客服端发送到服务器的请求，必须按照请求的顺序进行处理（数据只存在服务端，下一个请求的基础数据就是上一个请求运算完成后的结果）；</li>
+<li>无法保证客服端请求一定严格收到返回后才发送下个请求，偶尔客户端会短时间内发送多个请求，如果直接并发处理会导致数据错误或丢失（多个请求使用旧数据进行运算）。</li>
+</ol>
+<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><ol>
+<li>由于请求需要的基础数据依赖于上一次请求的结果，自然想到需要将请求串型处理，说到串型处理，那就是队列了，由于我们只需要对同一客户端发送的请求进行串型处理，所以就需要分组队列，每个组单独一个队列即可。</li>
+<li>在我们的需求中，主要是每个请求的基础数据依赖于上一个请求，那么只需要在当前请求运算结束以前阻塞后面的请求获取基础数据即可，也就是在当前请求返回前，独占这个队列，不让后面的请求使用。</li>
+</ol>
+<p>基于上面两点，我联想到了车站排队购票或者医院排队挂号等线下排队的情形，基本和我们的需求相同，再结合银行的取号排队方式，实现一个分组队列方法：</p>
+<span id="more"></span>
+<ul>
+<li>1个请求 &gt;&gt;&gt;&gt;&gt;&gt; 一个需要办理业务的人</li>
+<li>请求需要的基础数据 &gt;&gt;&gt;&gt;&gt;&gt; 柜台自助机</li>
+<li>请求入队 &gt;&gt;&gt;&gt;&gt;&gt; 排队取号</li>
+<li>独占基础数据 &gt;&gt;&gt;&gt;&gt;&gt; 霸占自助机</li>
+<li>请求离队 &gt;&gt;&gt;&gt;&gt;&gt; 释放自助机</li>
+</ul>
+<p>逻辑步骤如下：</p>
+<ol>
+<li>进入窗口（一个组）取号（窗口不存在则新开窗口）</li>
+<li>等待该窗口叫号</li>
+<li>被叫到号的人（一个请求）开始办理业务</li>
+<li>办理完成后（或超时）离开该窗口（组）</li>
+<li>继续叫号</li>
+<li>若该窗口一段时间（闲置时间）没有人取号办理业务，关闭该窗口以节约资源（也可以不关闭）</li>
+</ol>
+<p>需要暴露的方法：</p>
+<ol>
+<li>GetQueue 获取队列<br>这个方法需要返回一个指定id的队列，如果这个队列是为空则需要新建这个队列，这个操作需要保证一致性，在多协程下可能造成数据丢失，所以采用mutex来保证数据安全。</li>
+<li>QueueUp 排队取号<br>从指定队列中取一个号(我称为票据ticket)，我们需要一个队列来保存所以客户取到的ticket，在go语言中，有缓冲的chan通道就可以实现队列的功能，先进先出。</li>
+<li>Wait 等待叫号<br>该方法需要阻塞当前协程，当队列叫到这个号的时候放通该协程，chan通道正好满足这个需求，于是我采用<code>chan bool</code>来当作这个ticket，也就是说在<code>QueueUp</code>方法中取到的号就是一个<code>chan bool</code>。</li>
+<li>Leave 离队<br>离队方法就是需要告诉队列，当前协程逻辑已经完成，离开队列，可以放通下一个协程了。</li>
+</ol>
+<h1 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h1><p>1.首先建立“票据”类型，使用<code>chan bool</code>通道实现：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Ticket 排队票据</span></span><br><span class="line"><span class="keyword">type</span> Ticket <span class="keyword">chan</span> <span class="type">bool</span></span><br></pre></td></tr></table></figure>
+<p>Ticket需要实现两个方法，就是上面说到的等待叫号和离队两个方法，基于通道的特性，方法实现很简单：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Wait 等待叫号</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(t *Ticket)</span></span> Wait() &#123;</span><br><span class="line">	&lt;-(*t)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Leave 离开队伍</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(t *Ticket)</span></span> Leave() &#123;</span><br><span class="line">	(*t) &lt;- <span class="literal">true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>等待叫号的方法很好理解，就是等待一个信号，因为从通道里读取数据会阻塞当前协程，所以在没收到信号之前，调用当前票据wait方法的协程将被阻塞，直到收到信号。<br>离开队伍的方法则是往当前ticket写入一个信号，队列收到离队信号后则会继续呼叫下一个ticket（这个过程有队列管理员完成，将在后面介绍）。</p>
+<p>2.建立队列模型<br>队列模型需要记录</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Queue 队列</span></span><br><span class="line"><span class="keyword">type</span> Queue <span class="keyword">struct</span> &#123;</span><br><span class="line">	groupID       <span class="type">int64</span>       <span class="comment">// 组ID(窗口ID)</span></span><br><span class="line">	ticketChan    <span class="keyword">chan</span> Ticket <span class="comment">// 排号队列</span></span><br><span class="line">	currentTicket Ticket      <span class="comment">// 当前办理号</span></span><br><span class="line">	status        <span class="type">bool</span>        <span class="comment">// 队列状态(true:启用；false:关闭)</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(q *Queue)</span></span> callTicket() &#123;</span><br><span class="line">	q.currentTicket &lt;- <span class="literal">true</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(q *Queue)</span></span> closeTicket() &#123;</span><br><span class="line">	<span class="built_in">close</span>(q.currentTicket)</span><br><span class="line">	q.currentTicket = <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Golang/">Golang</a>
+    </span>
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    <a href="https://beian.miit.gov.cn" target="_blank">蜀ICP备15015945号-2</a> | 
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> | 
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 <a href="https://github.com/zboyco" target="_blank">zboyco</a>
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

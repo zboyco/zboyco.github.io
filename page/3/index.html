@@ -1,0 +1,694 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>第 3 页 | 白羊的空间</title>
+
+  
+  <meta name="author" content="zboyco">
+  
+
+  
+
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  
+
+  <meta property="og:site_name" content="白羊的空间"/>
+
+  
+  <meta property="og:image" content="/images/favicon.ico"/>
+  
+
+  <link href="/images/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白羊的空间" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白羊的空间</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives">归档</a></li>
+      
+        <li><a href="/categories">分类</a></li>
+      
+        <li><a href="/tags">标签</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/go-lock/"><span>Go sync.RWMutex - 解决并发读写问题(转)</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/go-lock/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-04-09T06:20:00.000Z">
+          2019-04-09
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>转自: <a target="_blank" rel="noopener" href="https://github.com/gocn/translator/blob/master/2019/w13_sync_mutex_translation.md">https://github.com/gocn/translator/blob/master/2019/w13_sync_mutex_translation.md</a></p>
+<h1 id="sync-RWMutex-解决并发读写问题"><a href="#sync-RWMutex-解决并发读写问题" class="headerlink" title="sync.RWMutex - 解决并发读写问题"></a>sync.RWMutex - 解决并发读写问题</h1><ul>
+<li>原文地址：<a target="_blank" rel="noopener" href="https://medium.com/golangspec/sync-rwmutex-ca6c6c3208a0">https://medium.com/golangspec/sync-rwmutex-ca6c6c3208a0</a></li>
+<li>原文作者：<a target="_blank" rel="noopener" href="https://medium.com/@mlowicki">Michał Łowicki</a></li>
+<li>译文出处：<a target="_blank" rel="noopener" href="https://medium.com/">https://medium.com</a></li>
+<li>本文永久链接：<a target="_blank" rel="noopener" href="https://github.com/gocn/translator/blob/master/2019/w13_sync_mutex_translation.md">https://github.com/gocn/translator/blob/master/2019/w13_sync_mutex_translation.md</a></li>
+<li>译者：<a target="_blank" rel="noopener" href="https://github.com/fivezh">fivezh</a></li>
+<li>校对者：<a target="_blank" rel="noopener" href="https://github.com/watermelo">咔叽咔叽</a></li>
+</ul>
+<p><img src="https://cdn-images-1.medium.com/max/1000/1*qmHZVxZmPP9w5iMqN7GWMw.jpeg"></p>
+<p>当多个线程访问共享数据时，会出现并发读写问题（<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/readers%E2%80%93writers_problem">reader-writer problems</a>）。有两种访问数据的线程类型：</p>
+<ul>
+<li>读线程 reader：只进行数据读取</li>
+<li>写线程 writer：进行数据修改</li>
+</ul>
+<p>当 writer 获取到数据的访问权限后，其他任何线程（reader 或 writer）都无权限访问此数据。这种约束亦存在于现实中，比如，当 writer 在修改数据无法保证原子性时（如数据库），此时读取未完成的修改必须被阻塞，以防止加载脏数据（译者注：数据库中的脏读）。还有许多诸如此类的核心问题，例如：</p>
+<ul>
+<li>writer 不能无限等待</li>
+<li>reader 不能无限等待</li>
+<li>不允许线程出现无限等待</li>
+</ul>
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Golang/">Golang</a>
+    </span>
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/go-time-parse/"><span>Go time.Parse 方法问题记录</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/go-time-parse/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-04-09T05:57:00.000Z">
+          2019-04-09
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>在go项目中使用 <code>time.Parse()</code>把字符串转成日期后，内部的<code>loc</code>信息为<code>nil</code>，这时用来和<code>time.Now()</code>进行日期比较或者获取Unix值时，都与预期的结果不匹配。</p>
+<h3 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h3><p>使用<code>time.ParseInLocation()</code>代替<code>time.Parse()</code></p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">timePoint,_ := time.ParseInLocation(<span class="string">&quot;2006-01-02 15:04:05&quot;</span>,<span class="string">&quot;2019-04-09 00:00:00&quot;</span>,time.Local)</span><br><span class="line">fmt.Println(timePoint)</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Golang/">Golang</a>
+    </span>
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/go-logrus/"><span>Go 日志库logrus写入文件简单使用</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/go-logrus/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-04-08T02:40:00.000Z">
+          2019-04-08
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h3 id="logrus"><a href="#logrus" class="headerlink" title="logrus"></a>logrus</h3><p><a target="_blank" rel="noopener" href="https://github.com/sirupsen/logrus" title="logrus">logrus</a>是目前github上star最多的一个go语言日志库，完全兼容go标准库日志模块，可以方便的替换整个项目，这里记录下logrus的简单使用方法。</p>
+<h5 id="简单用法"><a href="#简单用法" class="headerlink" title="简单用法"></a>简单用法</h5>
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Golang/">Golang</a>
+    </span>
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/go-channel-queue/"><span>Go channel使用，实现队列功能</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/go-channel-queue/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-03-20T10:42:00.000Z">
+          2019-03-20
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>前面写了两篇使用Go实现的队列<br><a target="_blank" rel="noopener" href="https://sheep.dobit.top/archives/go-queue-slice.html" title="Go 利用slice实现循环队列">Go 利用slice实现循环队列</a><br><a target="_blank" rel="noopener" href="https://sheep.dobit.top/archives/go-queue-link.html" title="Go 利用链表实现循环队列">Go 利用链表实现循环队列</a></p>
+<p>这里记录下channel 的使用，感觉功能和queue很相像，也比较简单，记录下代码</p>
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Golang/">Golang</a>
+    </span>
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/go-queue-link/"><span>Go 利用链表实现循环队列</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/go-queue-link/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-03-20T09:55:00.000Z">
+          2019-03-20
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="记录下使用Go语言，利用silce实现循环队列。"><a href="#记录下使用Go语言，利用silce实现循环队列。" class="headerlink" title="记录下使用Go语言，利用silce实现循环队列。"></a>记录下使用Go语言，利用silce实现循环队列。</h2><p>本文代码github: <a target="_blank" rel="noopener" href="https://github.com/zboyco/go-test/tree/master/queue/link">https://github.com/zboyco/go-test/tree/master/queue/link</a></p>
+<p>需要slice实现队列可以参考：<br><a target="_blank" rel="noopener" href="https://sheep.dobit.top/archives/go-queue-slice.html" title="Go 利用slice实现循环队列">Go 利用slice实现循环队列</a></p>
+<hr>
+<h3 id="1-列举一下准备实现的功能列举一下准备实现的功能"><a href="#1-列举一下准备实现的功能列举一下准备实现的功能" class="headerlink" title="1. 列举一下准备实现的功能列举一下准备实现的功能"></a>1. 列举一下准备实现的功能列举一下准备实现的功能</h3><p>这里只使用单向链表实现队列功能，实现下列方法:</p>
+<ul>
+<li>Enqueue 入队</li>
+<li>Dequeue 出队</li>
+</ul>
+<p>使用链表实现队列相比较slice的优势是，队列容量可以不受限制。（当然也可以在结构体中增加容量和长度字段，限制队列长度）</p>
+<h3 id="2-实现代码"><a href="#2-实现代码" class="headerlink" title="2. 实现代码"></a>2. 实现代码</h3>
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Golang/">Golang</a>
+    </span>
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/go-queue-slice/"><span>Go 利用slice实现循环队列</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/go-queue-slice/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-03-20T08:10:00.000Z">
+          2019-03-20
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="记录下使用Go语言，利用silce实现循环队列。"><a href="#记录下使用Go语言，利用silce实现循环队列。" class="headerlink" title="记录下使用Go语言，利用silce实现循环队列。"></a>记录下使用Go语言，利用silce实现循环队列。</h2><p>本文代码github: <a target="_blank" rel="noopener" href="https://github.com/zboyco/go-test/tree/master/queue/slice">https://github.com/zboyco/go-test/tree/master/queue/slice</a></p>
+<p>需要链表实现队列可以参考：<br><a target="_blank" rel="noopener" href="https://sheep.dobit.top/archives/go-queue-link.html" title="Go 利用链表实现循环队列">Go 利用链表实现循环队列</a></p>
+<hr>
+<h3 id="1-列举一下准备实现的功能列举一下准备实现的功能"><a href="#1-列举一下准备实现的功能列举一下准备实现的功能" class="headerlink" title="1. 列举一下准备实现的功能列举一下准备实现的功能"></a>1. 列举一下准备实现的功能列举一下准备实现的功能</h3><ul>
+<li>InitQueue 初始化队列</li>
+<li>Lenght 获取当前队列长度</li>
+<li>IsFull 是否满</li>
+<li>IsEmpty 是否空</li>
+<li>EnQueue 入队</li>
+<li>DeQueue 出队</li>
+</ul>
+<p>队列使用slice作为存储数据的容器，使用slice而不使用array的原因是想在初始化的时候再指定队列长度，提高灵活性.</p>
+<h3 id="2-简单实现"><a href="#2-简单实现" class="headerlink" title="2. 简单实现:"></a>2. 简单实现:</h3>
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Golang/">Golang</a>
+    </span>
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/go-test/"><span>Go 单元测试</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/go-test/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-03-01T10:02:00.000Z">
+          2019-03-01
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>本文代码github地址: <a target="_blank" rel="noopener" href="https://github.com/zboyco/goutlis/blob/master/encry/md5_test.go">https://github.com/zboyco/goutlis/blob/master/encry/md5_test.go</a></p>
+<hr>
+<h1 id="Go-编写单元测试"><a href="#Go-编写单元测试" class="headerlink" title="Go 编写单元测试"></a>Go 编写单元测试</h1><p>go 的单元测试编写很简单,记录一下下面几个点.</p>
+<ol>
+<li><p>测试文件必须使用<code>_test.go</code>结尾,比如:<code>md5_test.go</code> .</p>
+</li>
+<li><p>导入<code>testing</code>包 .</p>
+</li>
+<li><p>测试方法名使用<code>Test</code>开始,比如<code>TestMD5</code> .</p>
+</li>
+<li><p>接收一个<code>testing.T</code>类型的指针参数 .<br>e.g.</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">TestMD5</span><span class="params">(t *testing.T)</span></span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>主要使用的Log方法</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">t.Log</span><br><span class="line">t.Fatal</span><br><span class="line">t.Error</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>测试方法</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go test -v</span><br></pre></td></tr></table></figure></li>
+</ol>
+<ul>
+<li><code>-v</code>用于输出日志,不使用<code>-v</code>的话将只显示结果</li>
+</ul>
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Golang/">Golang</a>
+    </span>
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/go-vscode-launch/"><span>Go Visual Studio Code运行配置</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/go-vscode-launch/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-02-18T03:27:05.000Z">
+          2019-02-18
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>在vscode中debug Go语言程序,需要配置launch.json文件<br>先贴出文件代码:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    // 使用 IntelliSense 了解相关属性。 </span><br><span class="line">    // 悬停以查看现有属性的描述。</span><br><span class="line">    // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387</span><br><span class="line">    &quot;version&quot;: &quot;0.2.0&quot;,</span><br><span class="line">    &quot;configurations&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;name&quot;: &quot;Launch&quot;,</span><br><span class="line">            &quot;type&quot;: &quot;go&quot;,</span><br><span class="line">            &quot;request&quot;: &quot;launch&quot;,</span><br><span class="line">            &quot;mode&quot;: &quot;auto&quot;,</span><br><span class="line">            &quot;program&quot;: &quot;$&#123;workspaceRoot&#125;&quot;,</span><br><span class="line">            &quot;env&quot;: &#123;</span><br><span class="line">                &quot;GOPATH&quot;:&quot;C:/Users/baiyang/go;C:/Users/baiyang/Source/repos/go;&quot;</span><br><span class="line">            &#125;,</span><br><span class="line">            &quot;args&quot;: []</span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其中主要注意的是<code>program</code>和<code>env</code>属性.</p>
+<ul>
+<li><code>program</code>修改为<code>$&#123;workspaceRoot&#125;</code>,指从当前项目根目录运行</li>
+<li><code>env</code>默认为空,需要添加<code>GOPATH</code>路径,系统中有多个GOPATH的话就添加多个即可</li>
+</ul>
+<p>配置好launch.json后就可以直接在vscode中运行和调试go程序了</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Golang/">Golang</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/vscode/">vscode</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/go-time-format/"><span>Go 日期格式化</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/go-time-format/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-02-15T08:01:00.000Z">
+          2019-02-15
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>go语言日期格式话格式比较奇怪</p>
+<p>记忆就是 1,2,3,4,5,6<br>1 代表 月份<br>2 代表 号数<br>3 代表 小时<br>4 代表 分钟<br>5 代表 秒数<br>6 代表 年份</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">currentTime := time.Now()</span><br><span class="line">value = currentTime.Format(<span class="string">&quot;2006/01/02 15:04:05&quot;</span>)</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Golang/">Golang</a>
+    </span>
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/go-enum-status/"><span>Go 状态枚举实例</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/go-enum-status/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-02-02T09:20:00.000Z">
+          2019-02-02
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>Go 没有单独的枚举类型,采用const实现</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> status</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> (</span><br><span class="line">	OK           = <span class="number">0</span>   <span class="comment">// 正常</span></span><br><span class="line">	UnknowError  = <span class="number">100</span> <span class="comment">// 未知错误</span></span><br><span class="line">	UserNotExist = <span class="number">101</span> <span class="comment">// 用户不存在</span></span><br><span class="line">	UserExist    = <span class="number">102</span> <span class="comment">// 用户已存在</span></span><br><span class="line">	CodeNoExist  = <span class="number">103</span> <span class="comment">// 验证码不存在</span></span><br><span class="line">	CodeError    = <span class="number">104</span> <span class="comment">// 验证码不正确</span></span><br><span class="line">	UserError    = <span class="number">105</span> <span class="comment">// 用户名或密码错误</span></span><br><span class="line">	InnerError   = <span class="number">199</span> <span class="comment">// 内部错误</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> statusText = <span class="keyword">map</span>[<span class="type">int</span>]<span class="type">string</span>&#123;</span><br><span class="line">	OK:           <span class="string">&quot;&quot;</span>,</span><br><span class="line">	UnknowError:  <span class="string">&quot;未知错误&quot;</span>,</span><br><span class="line">	UserNotExist: <span class="string">&quot;用户不存在&quot;</span>,</span><br><span class="line">	UserExist:    <span class="string">&quot;用户名已被注册&quot;</span>,</span><br><span class="line">	CodeNoExist:  <span class="string">&quot;验证码不存在或已过期,请重新获取验证码&quot;</span>,</span><br><span class="line">	CodeError:    <span class="string">&quot;验证码不正确&quot;</span>,</span><br><span class="line">	UserError:    <span class="string">&quot;用户名或密码错误&quot;</span>,</span><br><span class="line">	InnerError:   <span class="string">&quot;内部错误: &quot;</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Message 返回错误消息</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Message</span><span class="params">(code <span class="type">int</span>)</span></span> <span class="type">string</span> &#123;</span><br><span class="line">	str, ok := statusText[code]</span><br><span class="line">	<span class="keyword">if</span> ok &#123;</span><br><span class="line">		<span class="keyword">return</span> str</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> statusText[UnknowError]</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Golang/">Golang</a>
+    </span>
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+
+<nav class="pagination">
+  
+  <a href="/page/2/" class="pagination-prev">上一页</a>
+  
+  
+  <a href="/page/4/" class="pagination-next">下一页</a>
+  
+</nav>
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    <a href="https://beian.miit.gov.cn" target="_blank">蜀ICP备15015945号-2</a> | 
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> | 
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 <a href="https://github.com/zboyco" target="_blank">zboyco</a>
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

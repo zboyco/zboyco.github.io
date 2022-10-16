@@ -1,0 +1,189 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Go 单元测试 | 白羊的空间</title>
+
+  
+  <meta name="author" content="zboyco">
+  
+
+  
+  <meta name="description" content="本文代码github地址: https://github.com/zboyco/goutlis/blob/master/encry/md5_test.go
+
+Go 编写单元测试go 的单元测试编写很简单,记录一下下面几个点.
+
+测试文件必须使用_test.go结尾,比如:md5_test.go .
+
+导入testing包 .
+
+测试方法名使用Test开始,比如TestMD5 .
+
+接收一个testing.T类型的指针参数 .e.g.
+1func TestMD5(t *testing.T)
+
+主要使用的Log方法
+123t.Logt.Fatalt.Error
+
+测试方法
+1go test -v
+
+
+-v用于输出日志,不使用-v的话将只显示结果">
+  
+
+  
+  
+  <meta name="keywords" content="">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="Go 单元测试"/>
+
+  <meta property="og:site_name" content="白羊的空间"/>
+
+  
+  <meta property="og:image" content="/images/favicon.ico"/>
+  
+
+  <link href="/images/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白羊的空间" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白羊的空间</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives">归档</a></li>
+      
+        <li><a href="/categories">分类</a></li>
+      
+        <li><a href="/tags">标签</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>Go 单元测试</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/go-test/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-03-01T10:02:00.000Z">
+          2019-03-01
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>本文代码github地址: <a target="_blank" rel="noopener" href="https://github.com/zboyco/goutlis/blob/master/encry/md5_test.go">https://github.com/zboyco/goutlis/blob/master/encry/md5_test.go</a></p>
+<hr>
+<h1 id="Go-编写单元测试"><a href="#Go-编写单元测试" class="headerlink" title="Go 编写单元测试"></a>Go 编写单元测试</h1><p>go 的单元测试编写很简单,记录一下下面几个点.</p>
+<ol>
+<li><p>测试文件必须使用<code>_test.go</code>结尾,比如:<code>md5_test.go</code> .</p>
+</li>
+<li><p>导入<code>testing</code>包 .</p>
+</li>
+<li><p>测试方法名使用<code>Test</code>开始,比如<code>TestMD5</code> .</p>
+</li>
+<li><p>接收一个<code>testing.T</code>类型的指针参数 .<br>e.g.</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">TestMD5</span><span class="params">(t *testing.T)</span></span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>主要使用的Log方法</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">t.Log</span><br><span class="line">t.Fatal</span><br><span class="line">t.Error</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>测试方法</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go test -v</span><br></pre></td></tr></table></figure></li>
+</ol>
+<ul>
+<li><code>-v</code>用于输出日志,不使用<code>-v</code>的话将只显示结果</li>
+</ul>
+<span id="more"></span>
+<p>e.g.</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> encry</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;testing&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">TestMD5</span><span class="params">(t *testing.T)</span></span> &#123;</span><br><span class="line">	t.Log(<span class="string">&quot;Test MD5 Start&quot;</span>)</span><br><span class="line"></span><br><span class="line">	testText := <span class="string">&quot;Hello Golang!&quot;</span></span><br><span class="line">	resultString := <span class="string">&quot;780c29c240e7c9cf6669eccfa7a321ad&quot;</span></span><br><span class="line"></span><br><span class="line">	&#123;</span><br><span class="line">		md5String := MD5(testText)</span><br><span class="line">		<span class="keyword">if</span> md5String != resultString &#123;</span><br><span class="line">			t.Errorf(<span class="string">&quot;Test MD5 End %v&quot;</span>, ballotX)</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			t.Logf(<span class="string">&quot;Test MD5 End %v&quot;</span>, checkMark)</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>out:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">=== RUN   TestAesEncrypt</span><br><span class="line">--- PASS: TestAesEncrypt (0.00s)</span><br><span class="line">    aes_test.go:9: Test Aes Encrypt Start</span><br><span class="line">    aes_test.go:15: Text : &quot;Hello Golang!&quot; , key : &quot;1234567812345678&quot;</span><br><span class="line">    aes_test.go:25: Test Aes Encrypt End ✓</span><br><span class="line">PASS</span><br><span class="line">ok      github.com/zboyco/goutlis/encry 0.456s</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Golang/">Golang</a>
+    </span>
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    <a href="https://beian.miit.gov.cn" target="_blank">蜀ICP备15015945号-2</a> | 
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> | 
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 <a href="https://github.com/zboyco" target="_blank">zboyco</a>
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

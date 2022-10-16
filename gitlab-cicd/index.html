@@ -1,0 +1,177 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Docker使用gitlab-runner实现cicd快速部署(未完) | 白羊的空间</title>
+
+  
+  <meta name="author" content="zboyco">
+  
+
+  
+  <meta name="description" content="目的代码托管在gitlab，今天尝试使用gitlab-runner实现cicd，目标就是push代码，可以自动完成编译和部署步骤。
+环境准备
+Gitlab环境（我这里使用的是官方Gitlab）
+一台装了Docker的服务器(我这里使用的是腾讯云Centos 7.6)
+项目源代码
+Dockerfile
+.gitlab-ci.yml">
+  
+
+  
+  
+  <meta name="keywords" content="cicd,runner">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="Docker使用gitlab-runner实现cicd快速部署(未完)"/>
+
+  <meta property="og:site_name" content="白羊的空间"/>
+
+  
+  <meta property="og:image" content="/images/favicon.ico"/>
+  
+
+  <link href="/images/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白羊的空间" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白羊的空间</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives">归档</a></li>
+      
+        <li><a href="/categories">分类</a></li>
+      
+        <li><a href="/tags">标签</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>Docker使用gitlab-runner实现cicd快速部署(未完)</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/gitlab-cicd/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-09-12T10:42:25.000Z">
+          2019-09-12
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h1><p>代码托管在gitlab，今天尝试使用gitlab-runner实现cicd，目标就是push代码，可以自动完成编译和部署步骤。</p>
+<h2 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h2><ul>
+<li>Gitlab环境（我这里使用的是官方Gitlab）</li>
+<li>一台装了Docker的服务器(我这里使用的是腾讯云Centos 7.6)</li>
+<li>项目源代码</li>
+<li>Dockerfile</li>
+<li>.gitlab-ci.yml<span id="more"></span></li>
+</ul>
+<h2 id="安装Gitlab-runner"><a href="#安装Gitlab-runner" class="headerlink" title="安装Gitlab-runner"></a>安装Gitlab-runner</h2><p>gitlab-runner可以直接安装（参考<a target="_blank" rel="noopener" href="https://docs.gitlab.com/runner/install/" title="安装GitLab Runner">安装GitLab Runner</a>），也可以使用docker安装，我这里采用docker安装（<a target="_blank" rel="noopener" href="https://docs.gitlab.com/runner/install/docker.html" title="Docker安装Gitlab Runner">Docker安装Gitlab Runner</a>）:</p>
+<ol>
+<li>启动gitlab runner镜像</li>
+</ol>
+<figure class="highlight docker"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">docker <span class="keyword">run</span><span class="language-bash"> -d --name gitlab-runner --restart always \</span></span><br><span class="line"><span class="language-bash">  -v /srv/gitlab-runner/config:/etc/gitlab-runner \</span></span><br><span class="line"><span class="language-bash">  -v /var/run/docker.sock:/var/run/docker.sock \</span></span><br><span class="line"><span class="language-bash">  gitlab/gitlab-runner:latest</span></span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>配置注册gitlab runner</li>
+</ol>
+<h2 id="编写Dockerfile"><a href="#编写Dockerfile" class="headerlink" title="编写Dockerfile"></a>编写Dockerfile</h2><figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># BUILD 阶段</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="keyword">FROM</span> golang AS build</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置我们工作目录</span></span><br><span class="line"><span class="keyword">WORKDIR</span><span class="language-bash"> /go/src/gitlab.com/oott/cicddemo</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 添加所有需要编译的应用代码</span></span><br><span class="line"><span class="keyword">COPY</span><span class="language-bash"> . .</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> <span class="built_in">export</span> GO111MODULE=on \</span></span><br><span class="line"><span class="language-bash">    &amp;&amp; go <span class="built_in">env</span> -w GOPROXY=https://goproxy.cn,direct \</span></span><br><span class="line"><span class="language-bash">    &amp;&amp; go mod init \</span></span><br><span class="line"><span class="language-bash">    &amp;&amp; go get -v</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 编译一个静态的go应用（在二进制构建中包含C语言依赖库）</span></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> CGO_ENABLED=0 GOOS=linux go build -a -ldflags <span class="string">&quot;-s -w&quot;</span> -installsuffix cgo -o app</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># 生产阶段</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="keyword">FROM</span> scratch AS prod</span><br><span class="line"></span><br><span class="line"><span class="comment"># 从buil阶段拷贝文件</span></span><br><span class="line"><span class="keyword">COPY</span><span class="language-bash"> --from=build /go/src/gitlab.com/oott/cicddemo/app .</span></span><br><span class="line"><span class="keyword">EXPOSE</span> <span class="number">8080</span>/tcp</span><br><span class="line"><span class="keyword">ENTRYPOINT</span><span class="language-bash"> [ <span class="string">&quot;./app&quot;</span> ]</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="编写-gitlab-ci-yml"><a href="#编写-gitlab-ci-yml" class="headerlink" title="编写.gitlab-ci.yml"></a>编写.gitlab-ci.yml</h2><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">stages:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">build</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">deploy</span></span><br><span class="line"></span><br><span class="line"><span class="attr">job1:</span></span><br><span class="line">  <span class="attr">stage:</span> <span class="string">deploy</span></span><br><span class="line">  <span class="attr">image:</span> <span class="string">docker</span></span><br><span class="line">  <span class="comment"># 执行Job内容</span></span><br><span class="line">  <span class="attr">script:</span></span><br><span class="line">    <span class="comment"># 通过Dockerfile生成cicddemo镜像</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">docker</span> <span class="string">build</span> <span class="string">-t</span> <span class="string">cicddemo</span> <span class="string">.</span></span><br><span class="line">  <span class="attr">tags:</span></span><br><span class="line">    <span class="comment"># 执行Job的服务器</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">demo</span></span><br><span class="line">  <span class="attr">only:</span></span><br><span class="line">    <span class="comment"># 只有在master分支才会执行</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">master</span></span><br><span class="line"></span><br><span class="line"><span class="attr">job2:</span></span><br><span class="line">  <span class="attr">stage:</span> <span class="string">deploy</span></span><br><span class="line">  <span class="attr">image:</span> <span class="string">docker</span></span><br><span class="line">  <span class="comment"># 执行Job内容</span></span><br><span class="line">  <span class="attr">script:</span></span><br><span class="line">    <span class="comment"># 删除已经在运行的容器</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">if</span> [ <span class="string">$(docker</span> <span class="string">ps</span> <span class="string">-aq</span> <span class="string">--filter</span> <span class="string">name=</span> <span class="string">cicddemo)</span> ]<span class="string">;</span> <span class="string">then</span> <span class="string">docker</span> <span class="string">rm</span> <span class="string">-f</span> <span class="string">cicddemo;fi</span></span><br><span class="line">    <span class="comment"># 通过镜像启动容器，并把本机8000端口映射到容器8000端口</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">docker</span> <span class="string">run</span> <span class="string">-d</span> <span class="string">-p</span> <span class="number">8080</span><span class="string">:8080</span> <span class="string">--name</span> <span class="string">cicddemo</span> <span class="string">cicddemo</span></span><br><span class="line">  <span class="attr">tags:</span></span><br><span class="line">    <span class="comment"># 执行Job的服务器</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">demo</span></span><br><span class="line">  <span class="attr">only:</span></span><br><span class="line">    <span class="comment"># 只有在master分支才会执行</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">master</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://function.work/usr/uploads/2019/09/3874198847.png"></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Golang/">Golang</a>, <a href="/categories/Golang/Docker/">Docker</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/cicd/">cicd</a><a href="/tags/runner/">runner</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    <a href="https://beian.miit.gov.cn" target="_blank">蜀ICP备15015945号-2</a> | 
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> | 
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 <a href="https://github.com/zboyco" target="_blank">zboyco</a>
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

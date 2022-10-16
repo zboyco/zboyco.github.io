@@ -1,0 +1,217 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>go使用xorm操作mysql | 白羊的空间</title>
+
+  
+  <meta name="author" content="zboyco">
+  
+
+  
+  <meta name="description" content="今天学习一下go语言对mysql的操作,因为以前在c#中习惯了用orm操作,所以今天了解了一下,尝试下用go语言的xorm操作mysql数据库.
+xorm地址: https://github.com/go-xorm/xorm
+
+###1. xorm安装
+1go get github.com/go-xorm/xorm
+另外我们需要连接mysql,所以需要MySQL的驱动
+1go get github.com/go-sql-driver/mysql
+
+###2. xorm创建连接xorm将连接实例称为引擎,一个连接就是一个引擎,我们测试只需要一个连接即可,如果需要连接多个mysql,新建多个引擎就可以了
+12// 新建orm引擎	engine, err := xorm.NewEngine(&amp;quot;mysql&amp;quot;, &amp;quot;root:pwd@tcp(192.168.2.100:3307)/XormTest?charset=utf8&amp;quot;)
+
+###3. 设置字段映射方式">
+  
+
+  
+  
+  <meta name="keywords" content="xorm,mysql">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="go使用xorm操作mysql"/>
+
+  <meta property="og:site_name" content="白羊的空间"/>
+
+  
+  <meta property="og:image" content="/images/favicon.ico"/>
+  
+
+  <link href="/images/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白羊的空间" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白羊的空间</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives">归档</a></li>
+      
+        <li><a href="/categories">分类</a></li>
+      
+        <li><a href="/tags">标签</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>go使用xorm操作mysql</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/go-xorm-mysql/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-12-26T03:51:00.000Z">
+          2018-12-26
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>今天学习一下go语言对mysql的操作,因为以前在c#中习惯了用orm操作,所以今天了解了一下,尝试下用go语言的xorm操作mysql数据库.</p>
+<p>xorm地址: <a target="_blank" rel="noopener" href="https://github.com/go-xorm/xorm">https://github.com/go-xorm/xorm</a></p>
+<hr>
+<p>###1. xorm安装</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go get github.com/go-xorm/xorm</span><br></pre></td></tr></table></figure>
+<p>另外我们需要连接mysql,所以需要MySQL的驱动</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go get github.com/go-sql-driver/mysql</span><br></pre></td></tr></table></figure>
+
+<p>###2. xorm创建连接<br>xorm将连接实例称为引擎,一个连接就是一个引擎,我们测试只需要一个连接即可,如果需要连接多个mysql,新建多个引擎就可以了</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 新建orm引擎</span></span><br><span class="line">	engine, err := xorm.NewEngine(<span class="string">&quot;mysql&quot;</span>, <span class="string">&quot;root:pwd@tcp(192.168.2.100:3307)/XormTest?charset=utf8&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>###3. 设置字段映射方式</p>
+<span id="more"></span>
+<p>由于我们程序中的结构体和数据库中的命名方式可能不相同,比如驼峰命名和匈牙利命名,为了将不同命名方式的表名和字段对应起来,xorm提供了三种映射方式</p>
+<ul>
+<li>SnakeMapper 支持struct为驼峰式命名，表结构为下划线命名之间的转换，这个是默认的Maper；</li>
+<li>SameMapper 支持结构体名称和对应的表名称以及结构体field名称与对应的表字段名称相同的命名；</li>
+<li>GonicMapper 和SnakeMapper很类似，但是对于特定词支持更好，比如ID会翻译成id而不是i_d。</li>
+</ul>
+<p>我们数据库和结构体采用相同的命名方式,所以设置为SameMapper</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 设置字段映射方法</span></span><br><span class="line">engine.SetMapper(core.SameMapper&#123;&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>###4. 插入数据<br>先新建一个结构体,并在数据库中新建对应的表</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> User <span class="keyword">struct</span> &#123;</span><br><span class="line">	ID        <span class="type">int</span> <span class="string">`xorm:&quot;pk autoincr&quot;`</span></span><br><span class="line">	UserName  <span class="type">string</span></span><br><span class="line">	UserPwd   <span class="type">string</span></span><br><span class="line">	CreatedAt time.Time <span class="string">`xorm:&quot;created&quot;`</span></span><br><span class="line">	Flag      <span class="type">int</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>ID 后面的标签,是xorm的属性标记,pk主键,autoincr自增长,其他可查看官方doc</li>
+</ul>
+<p>对应数据库表:<br><img src="https://sheep.dobit.top/usr/uploads/2018/12/3085286979.png"></p>
+<p>数据插入使用Insert方法,传入一个结构体指针,返回影响行数和error</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 插入数据</span></span><br><span class="line">newUser := User&#123;</span><br><span class="line">	UserName: <span class="string">&quot;root&quot;</span>,</span><br><span class="line">	UserPwd:  <span class="string">&quot;test&quot;</span>,</span><br><span class="line">	Flag:     <span class="number">1</span>,</span><br><span class="line">&#125;</span><br><span class="line">affected, err = engine.Insert(&amp;newUser)</span><br><span class="line">checkErr(err)</span><br><span class="line">log.Println(<span class="string">&quot;新插入&quot;</span>, affected, <span class="string">&quot;条数据,ID:&quot;</span>, newUser.ID)</span><br></pre></td></tr></table></figure>
+
+<p>###5. 查询数据<br>查询方法比较多,根据使用环境选择就可以了</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> user User</span><br><span class="line">	<span class="comment">// ID获取单条</span></span><br><span class="line">	engine.ID(<span class="number">1</span>).Get(&amp;user)</span><br><span class="line">	log.Println(<span class="string">&quot;查出数据,ID:&quot;</span>, user.ID)</span><br><span class="line"></span><br><span class="line">	<span class="comment">// where获取单条</span></span><br><span class="line">	has, err = engine.Where(<span class="string">&quot;UserName = ?&quot;</span>, <span class="string">&quot;root&quot;</span>).Get(&amp;user)</span><br><span class="line">	checkErr(err)</span><br><span class="line">	log.Println(<span class="string">&quot;查出数据&quot;</span>, has, <span class="string">&quot;ID:&quot;</span>, user.ID)</span><br><span class="line"></span><br><span class="line">	<span class="comment">// user结构体中已有的非空数据来获得单条数据</span></span><br><span class="line">	user = User&#123;UserName: <span class="string">&quot;root&quot;</span>&#125;</span><br><span class="line">	engine.Get(&amp;user)</span><br><span class="line">	log.Println(<span class="string">&quot;查出数据,ID:&quot;</span>, user.ID)</span><br><span class="line"></span><br><span class="line">	<span class="comment">// find 获取多条 where</span></span><br><span class="line">	<span class="keyword">var</span> users []User</span><br><span class="line">	engine.Where(<span class="string">&quot;UserName = ?&quot;</span>, <span class="string">&quot;root&quot;</span>).Find(&amp;users)</span><br><span class="line">	<span class="keyword">for</span> _, item := <span class="keyword">range</span> users &#123;</span><br><span class="line">		log.Println(<span class="string">&quot;查出数据:&quot;</span>, item)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// find 获取多条 结构体中已有的非空数据来获得</span></span><br><span class="line">	engine.Find(&amp;users, &amp;User&#123;</span><br><span class="line">		UserName: <span class="string">&quot;root&quot;</span>,</span><br><span class="line">	&#125;)</span><br><span class="line">	<span class="keyword">for</span> _, item := <span class="keyword">range</span> users &#123;</span><br><span class="line">		log.Println(<span class="string">&quot;查出数据:&quot;</span>, item)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// find map</span></span><br><span class="line">	usersMap := <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="type">int</span>]User, <span class="number">0</span>)</span><br><span class="line">	err = engine.Find(&amp;usersMap)</span><br><span class="line">	checkErr(err)</span><br><span class="line">	<span class="keyword">for</span> _, item := <span class="keyword">range</span> usersMap &#123;</span><br><span class="line">		log.Println(<span class="string">&quot;查出数据:&quot;</span>, item)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// find 查询单个字段</span></span><br><span class="line">	<span class="keyword">var</span> ids []<span class="type">int</span></span><br><span class="line">	err := engine.Table(<span class="built_in">new</span>(User)).Cols(<span class="string">&quot;ID&quot;</span>).Find(&amp;ids)</span><br><span class="line">	checkErr(err)</span><br><span class="line">	log.Println(<span class="string">&quot;查出IDs:&quot;</span>, ids)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>知识点:Get()方法中传入的结构体指针不只有指定表的作用,其实例中不为0值的字段将作为查询条件,比如上面的<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// user结构体中已有的非空数据来获得单条数据</span></span><br><span class="line">user = User&#123;UserName: <span class="string">&quot;root&quot;</span>&#125;</span><br><span class="line">engine.Get(&amp;user)</span><br><span class="line">log.Println(<span class="string">&quot;查出数据,ID:&quot;</span>, user.ID)</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>###6. 是否存在<br>xorm提供了exist方法判断查询的数据是否存在,在不需要查出数据而仅需要判断的时候,性能比Get要好,官方推荐</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Exist 判断是否存在</span></span><br><span class="line">has, err = engine.Exist(&amp;User&#123;</span><br><span class="line">	UserName: <span class="string">&quot;root&quot;</span>,</span><br><span class="line">&#125;)</span><br><span class="line">checkErr(err)</span><br><span class="line">log.Println(<span class="string">&quot;数据是否存在:&quot;</span>, has)</span><br><span class="line">has, err = engine.Where(<span class="string">&quot;UserName = ?&quot;</span>, <span class="string">&quot;root&quot;</span>).Exist(&amp;User&#123;&#125;)</span><br><span class="line">checkErr(err)</span><br><span class="line">log.Println(<span class="string">&quot;数据是否存在:&quot;</span>, has)</span><br><span class="line">has, err = engine.Table(<span class="built_in">new</span>(User)).Where(<span class="string">&quot;UserName = ?&quot;</span>, <span class="string">&quot;root&quot;</span>).Exist()</span><br><span class="line">checkErr(err)</span><br><span class="line">log.Println(<span class="string">&quot;数据是否存在:&quot;</span>, has)</span><br></pre></td></tr></table></figure>
+
+<p>###7. 更新数据<br>更新是常用的方法,xorm提供了非0值更新,和指定列更新的方法</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">user := <span class="built_in">new</span>(User)</span><br><span class="line"></span><br><span class="line">	user.UserName = <span class="string">&quot;update&quot;</span></span><br><span class="line">	user.UserPwd = <span class="string">&quot;update&quot;</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">// 非0值更新</span></span><br><span class="line">	affected, err = engine.ID(<span class="number">1</span>).Update(user)</span><br><span class="line">	checkErr(err)</span><br><span class="line">	log.Println(<span class="string">&quot;更新&quot;</span>, affected, <span class="string">&quot;条数据&quot;</span>)</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 指定列更新</span></span><br><span class="line">	affected, err = engine.ID(<span class="number">2</span>).Cols(<span class="string">&quot;UserName&quot;</span>).Update(user)</span><br><span class="line">	checkErr(err)</span><br><span class="line">	log.Println(<span class="string">&quot;更新&quot;</span>, affected, <span class="string">&quot;条数据&quot;</span>)</span><br><span class="line"></span><br><span class="line">	<span class="comment">// map更新</span></span><br><span class="line">	affected, err = engine.Table(<span class="built_in">new</span>(User)).ID(<span class="number">3</span>).Update(<span class="keyword">map</span>[<span class="type">string</span>]<span class="keyword">interface</span>&#123;&#125;&#123;<span class="string">&quot;UserPwd&quot;</span>: <span class="string">&quot;update&quot;</span>&#125;)</span><br><span class="line">	checkErr(err)</span><br><span class="line">	log.Println(<span class="string">&quot;更新&quot;</span>, affected, <span class="string">&quot;条数据&quot;</span>)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>使用map更新的时候,需要使用Table方法指定数据表</li>
+</ul>
+<p>###8. 删除数据<br>删除方法比较简单,指定ID删除</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">user := <span class="built_in">new</span>(User)</span><br><span class="line">affected, err = engine.ID(id).Delete(user)</span><br><span class="line">checkErr(err)</span><br><span class="line">log.Println(<span class="string">&quot;删除ID为&quot;</span>, id, <span class="string">&quot;的&quot;</span>, affected, <span class="string">&quot;条数据&quot;</span>)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>删除一般用的比较少,通常逻辑删除,xorm提供了一种软删除,可以查看doc</li>
+</ul>
+<p>###9. 事务支持<br>事务用的还是比较多的,xorm的事务也比较简单</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 事务</span></span><br><span class="line">session := engine.NewSession()</span><br><span class="line"><span class="keyword">defer</span> session.Close()</span><br><span class="line"></span><br><span class="line">err = session.Begin()</span><br><span class="line">checkErr(err)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 插入数据</span></span><br><span class="line">newUser := User&#123;</span><br><span class="line">	UserName: <span class="string">&quot;root&quot;</span>,</span><br><span class="line">	UserPwd:  <span class="string">&quot;test&quot;</span>,</span><br><span class="line">	Flag:     <span class="number">1</span>,</span><br><span class="line">&#125;</span><br><span class="line">affected, err = engine.Insert(&amp;newUser)</span><br><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">	session.Rollback()</span><br><span class="line">	checkErr(err)</span><br><span class="line">&#125;</span><br><span class="line">err = session.Commit()</span><br><span class="line">checkErr(err)</span><br><span class="line">log.Println(<span class="string">&quot;新插入&quot;</span>, affected, <span class="string">&quot;条数据,ID:&quot;</span>, newUser.ID)</span><br></pre></td></tr></table></figure>
+
+<p>###10 .总结<br>以上就是xorm的基本用法,只是列举了一些常用的东西,更多的请查看官方doc.<br>记录一个问题,在使用Table方法指定数据表的时候,如果直接传一个表明的字符串(“User”),查询出的数据不正确,不知道是不是用法有问题</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// map更新</span></span><br><span class="line">affected, err = engine.Table(<span class="built_in">new</span>(User)).ID(<span class="number">3</span>).Update(<span class="keyword">map</span>[<span class="type">string</span>]<span class="keyword">interface</span>&#123;&#125;&#123;<span class="string">&quot;UserPwd&quot;</span>: <span class="string">&quot;update&quot;</span>&#125;)</span><br></pre></td></tr></table></figure>
+<p>这种方式是正确的,下面这种结果不正确</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// map更新</span></span><br><span class="line">affected, err = engine.Table(<span class="string">&quot;User&quot;</span>).ID(<span class="number">3</span>).Update(<span class="keyword">map</span>[<span class="type">string</span>]<span class="keyword">interface</span>&#123;&#125;&#123;<span class="string">&quot;UserPwd&quot;</span>: <span class="string">&quot;update&quot;</span>&#125;)</span><br></pre></td></tr></table></figure>
+<p>记录一下</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Golang/">Golang</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/xorm/">xorm</a><a href="/tags/mysql/">mysql</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    <a href="https://beian.miit.gov.cn" target="_blank">蜀ICP备15015945号-2</a> | 
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> | 
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 <a href="https://github.com/zboyco" target="_blank">zboyco</a>
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

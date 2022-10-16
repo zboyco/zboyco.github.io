@@ -1,0 +1,165 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>.net Socket 客户端 | 白羊的空间</title>
+
+  
+  <meta name="author" content="zboyco">
+  
+
+  
+  <meta name="description" content="记录下这两天修改后的Socket客户端类，用在unity上的。
+服务器返回的消息采用 4+n 简单协议，即数据包的前4个字节代表真实数据长度.
+
+
+因为需求会切换服务器地址，所以支持切换服务器重新创建连接；
+创建一个新连接后，会立刻创建一个线程用于监听服务器返回数据；
+创建一个定时处理线程，当连接闲置15秒后，关闭当前线程；
+
+代码很简单，只有核心代码，稍微修改下可以直接使用:">
+  
+
+  
+  
+  <meta name="keywords" content="">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content=".net Socket 客户端"/>
+
+  <meta property="og:site_name" content="白羊的空间"/>
+
+  
+  <meta property="og:image" content="/images/favicon.ico"/>
+  
+
+  <link href="/images/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白羊的空间" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白羊的空间</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives">归档</a></li>
+      
+        <li><a href="/categories">分类</a></li>
+      
+        <li><a href="/tags">标签</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>.net Socket 客户端</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/net-socket-client/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-08-07T06:39:00.000Z">
+          2018-08-07
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="记录下这两天修改后的Socket客户端类，用在unity上的。"><a href="#记录下这两天修改后的Socket客户端类，用在unity上的。" class="headerlink" title="记录下这两天修改后的Socket客户端类，用在unity上的。"></a>记录下这两天修改后的Socket客户端类，用在unity上的。</h2><blockquote>
+<p>服务器返回的消息采用 4+n 简单协议，即数据包的前4个字节代表真实数据长度.</p>
+</blockquote>
+<ol>
+<li>因为需求会切换服务器地址，所以支持切换服务器重新创建连接；</li>
+<li>创建一个新连接后，会立刻创建一个线程用于监听服务器返回数据；</li>
+<li>创建一个定时处理线程，当连接闲置15秒后，关闭当前线程；</li>
+</ol>
+<p>代码很简单，只有核心代码，稍微修改下可以直接使用:</p>
+<span id="more"></span>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> DateTime lastAvtiveDateTime = DateTime.Now;</span><br><span class="line"><span class="keyword">static</span> Socket tcpClient;</span><br><span class="line"><span class="keyword">static</span> Thread tcpClientThread;</span><br><span class="line"><span class="keyword">static</span> <span class="built_in">bool</span> tcpRecvThreadRuning;</span><br><span class="line"><span class="keyword">static</span> IPEndPoint CurrentRemoteEP;</span><br><span class="line"><span class="keyword">static</span> <span class="built_in">bool</span> tcpIsWorking = <span class="literal">false</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="built_in">int</span> tcpCacheSeconds = <span class="number">15</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> 发送数据到指定服务器</span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;buffer&quot;&gt;</span><span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;remoteEP&quot;&gt;</span><span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">SendTcp</span>(<span class="params"><span class="built_in">byte</span>[] buffer, IPEndPoint remoteEP</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    lastAvtiveDateTime = DateTime.Now;</span><br><span class="line">    <span class="keyword">if</span> (tcpClient == <span class="literal">null</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        InitTcpClient();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (tcpClientThread == <span class="literal">null</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        tcpClientThread = <span class="keyword">new</span> Thread(<span class="keyword">new</span> ThreadStart(CloseTcpWork));</span><br><span class="line">        tcpClientThread.IsBackground = <span class="literal">true</span>;</span><br><span class="line">        tcpClientThread.Start();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (!tcpClient.Connected || remoteEP.ToString() != CurrentRemoteEP.ToString())</span><br><span class="line">    &#123;</span><br><span class="line">        CloseTcpClient();</span><br><span class="line">        CurrentRemoteEP = remoteEP;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (ConnectTo(CurrentRemoteEP))</span><br><span class="line">        &#123;</span><br><span class="line">            Debug.Log(<span class="string">&quot;###通讯报告###：连接服务器成功!&quot;</span>);</span><br><span class="line">            CreateRecvThread();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">        &#123;</span><br><span class="line">            OnError(<span class="keyword">new</span> Exception(<span class="string">&quot;###通讯报告###：创建服务器连接失败!&quot;</span>));</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    tcpIsWorking = <span class="literal">true</span>;<span class="comment">//防止连接在等待接收过程中被关闭</span></span><br><span class="line">    <span class="keyword">try</span></span><br><span class="line">    &#123;</span><br><span class="line">        tcpClient.Send(buffer);</span><br><span class="line">        Debug.Log(<span class="string">&quot;###通讯报告###：数据发送成功!&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">catch</span> (Exception ex)</span><br><span class="line">    &#123;</span><br><span class="line">        CloseTcpClient();</span><br><span class="line">        tcpIsWorking = <span class="literal">false</span>;</span><br><span class="line">        OnError(<span class="keyword">new</span> Exception(<span class="string">&quot;###通讯报告###：数据发送失败!&quot;</span>, ex));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">finally</span></span><br><span class="line">    &#123;</span><br><span class="line">        lastAvtiveDateTime = DateTime.Now;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> 初始化Socket连接</span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">InitTcpClient</span>()</span></span><br><span class="line">&#123;</span><br><span class="line">    tcpClient = <span class="keyword">new</span> Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> 创建连接</span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;remoteEP&quot;&gt;</span><span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;returns&gt;</span><span class="doctag">&lt;/returns&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="built_in">bool</span> <span class="title">ConnectTo</span>(<span class="params">IPEndPoint remoteEP</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">try</span></span><br><span class="line">    &#123;</span><br><span class="line">        tcpClient.Connect(remoteEP);</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">catch</span></span><br><span class="line">    &#123;</span><br><span class="line">        tcpClient.Close();</span><br><span class="line">        tcpClient = <span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> 创建数据接收线程</span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">CreateRecvThread</span>()</span></span><br><span class="line">&#123;</span><br><span class="line">    Thread tcpRecvThread = <span class="keyword">new</span> Thread(<span class="keyword">new</span> ThreadStart(Recv));</span><br><span class="line">    tcpRecvThread.IsBackground = <span class="literal">true</span>;</span><br><span class="line">    tcpRecvThreadRuning = <span class="literal">true</span>;</span><br><span class="line">    tcpRecvThread.Start();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> 数据接收工作</span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Recv</span>()</span></span><br><span class="line">&#123;</span><br><span class="line">    Debug.Log(<span class="string">&quot;###通讯报告###：数据接收线程已启动!&quot;</span>);</span><br><span class="line">    <span class="keyword">while</span> (tcpRecvThreadRuning)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (tcpIsWorking)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">try</span></span><br><span class="line">            &#123;</span><br><span class="line">                <span class="built_in">byte</span>[] recv_length = <span class="keyword">new</span> <span class="built_in">byte</span>[<span class="number">4</span>];</span><br><span class="line"></span><br><span class="line">                <span class="built_in">int</span> length = tcpClient.Receive(recv_length);</span><br><span class="line">                <span class="keyword">if</span> (length &lt; <span class="number">0</span>)</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="keyword">throw</span> <span class="keyword">new</span> Exception(<span class="string">&quot;###通讯报告###：连接出错!&quot;</span>);</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">else</span> <span class="keyword">if</span> (length == <span class="number">0</span>)</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="keyword">throw</span> <span class="keyword">new</span> Exception(<span class="string">&quot;###通讯报告###：连接已从远程关闭!&quot;</span>);</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">//else if (length == 3 &amp;&amp; recv_length.Take(3).ToArray().SequenceEqual(UnhandleBytes))</span></span><br><span class="line">                <span class="comment">//&#123;</span></span><br><span class="line">                <span class="comment">//    throw new Exception(&quot;###通讯报告###：请求协议错误!&quot;);</span></span><br><span class="line">                <span class="comment">//&#125;</span></span><br><span class="line">                <span class="keyword">else</span> <span class="keyword">if</span> (length == <span class="number">4</span>)</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="built_in">int</span> packageLen = BitConverter.ToInt32(recv_length, <span class="number">0</span>);</span><br><span class="line">                    <span class="built_in">byte</span>[] recv_data = <span class="keyword">new</span> <span class="built_in">byte</span>[packageLen];</span><br><span class="line">                    <span class="built_in">int</span> recvDataLength;</span><br><span class="line">                    <span class="keyword">using</span> (MemoryStream stream = <span class="keyword">new</span> MemoryStream())</span><br><span class="line">                    &#123;</span><br><span class="line">                        <span class="keyword">do</span></span><br><span class="line">                        &#123;</span><br><span class="line">                            recvDataLength = tcpClient.Receive(recv_data);</span><br><span class="line">                            <span class="keyword">if</span> (recvDataLength &gt; <span class="number">0</span>)</span><br><span class="line">                            &#123;</span><br><span class="line">                                stream.Write(recv_data, <span class="number">0</span>, recvDataLength);</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125; <span class="keyword">while</span> (stream.Length &lt; packageLen);</span><br><span class="line"></span><br><span class="line">                        Debug.Log(<span class="string">&quot;###通讯报告###：接收数据长度 &quot;</span> + stream.Length);</span><br><span class="line">                        <span class="keyword">if</span> (packageLen == stream.Length)</span><br><span class="line">                        &#123;</span><br><span class="line">                            lastAvtiveDateTime = DateTime.Now;</span><br><span class="line">                            tcpIsWorking = <span class="literal">false</span>;</span><br><span class="line">                            OnNewPackageReceived(stream.ToArray());</span><br><span class="line">                            <span class="keyword">continue</span>;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> Exception(<span class="string">&quot;###通讯报告###：接收数据长度不正确!&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">catch</span> (Exception ex)</span><br><span class="line">            &#123;</span><br><span class="line">                tcpClient.Close();</span><br><span class="line">                tcpClient = <span class="literal">null</span>;</span><br><span class="line">                Debug.Log(ex.Message);</span><br><span class="line">                tcpIsWorking = <span class="literal">false</span>;</span><br><span class="line">                OnError(ex);</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">        &#123;</span><br><span class="line">            Thread.Sleep(<span class="number">0</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    Debug.Log(<span class="string">&quot;###通讯报告###：数据接收线程已关闭!&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> 关闭当前连接</span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">CloseTcpClient</span>()</span></span><br><span class="line">&#123;</span><br><span class="line">    tcpRecvThreadRuning = <span class="literal">false</span>;</span><br><span class="line">    <span class="keyword">if</span> (tcpClient.Connected)</span><br><span class="line">    &#123;</span><br><span class="line">        tcpClient.Close();</span><br><span class="line">        tcpClient.Dispose();</span><br><span class="line">        Debug.Log(<span class="string">&quot;###通讯报告###：服务器连接已关闭!&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    InitTcpClient();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> 关闭连接线程工作</span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">CloseTcpWork</span>()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">while</span> (<span class="literal">true</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (!tcpIsWorking &amp;&amp; DateTime.Now.AddSeconds(-tcpCacheSeconds) &gt; lastAvtiveDateTime)</span><br><span class="line">        &#123;</span><br><span class="line">            CloseTcpClient();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (!tcpClient.Connected)</span><br><span class="line">        &#123;</span><br><span class="line">            Thread.Sleep(tcpCacheSeconds * <span class="number">1000</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">        &#123;</span><br><span class="line">            Thread.Sleep(<span class="number">1000</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> 错误操作</span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">OnError</span>(<span class="params">Exception e</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    Debug.Log(e.Message);</span><br><span class="line">    <span class="comment">//TODO</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> 收到新包操作</span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">OnNewPackageReceived</span>(<span class="params"><span class="built_in">byte</span>[] bytes</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    Debug.Log(<span class="string">&quot;###通讯报告###：数据接收成功!&quot;</span>);</span><br><span class="line">    <span class="comment">//TODO</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<hr>
+<p>记录一篇介绍socket的文章：<a target="_blank" rel="noopener" href="http://www.cnblogs.com/chenxizhang/archive/2011/09/10/2172994.html" title="你得学会并且学得会的Socket编程基础知识">你得学会并且学得会的Socket编程基础知识</a></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/CSharp/">CSharp</a>
+    </span>
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    <a href="https://beian.miit.gov.cn" target="_blank">蜀ICP备15015945号-2</a> | 
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> | 
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 <a href="https://github.com/zboyco" target="_blank">zboyco</a>
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

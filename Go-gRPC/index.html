@@ -1,0 +1,173 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Go gRPC体验 | 白羊的空间</title>
+
+  
+  <meta name="author" content="zboyco">
+  
+
+  
+  <meta name="description" content="本文源码地址: https://github.com/zboyco/go-test/blob/master/gRPC
+
+0 环境安装protobuf1https://github.com/protocolbuffers/protobuf/releases
+protoc-gen-go1go get -u github.com/golang/protobuf/protoc-gen-go
+gRPC1go get -u google.golang.org/grpc">
+  
+
+  
+  
+  <meta name="keywords" content="gRPC,RPC">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="Go gRPC体验"/>
+
+  <meta property="og:site_name" content="白羊的空间"/>
+
+  
+  <meta property="og:image" content="/images/favicon.ico"/>
+  
+
+  <link href="/images/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白羊的空间" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白羊的空间</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives">归档</a></li>
+      
+        <li><a href="/categories">分类</a></li>
+      
+        <li><a href="/tags">标签</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>Go gRPC体验</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/Go-gRPC/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-04-19T06:37:00.000Z">
+          2019-04-19
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>本文源码地址: <a target="_blank" rel="noopener" href="https://github.com/zboyco/go-test/blob/master/gRPC">https://github.com/zboyco/go-test/blob/master/gRPC</a></p>
+<hr>
+<h3 id="0-环境安装"><a href="#0-环境安装" class="headerlink" title="0 环境安装"></a>0 环境安装</h3><h4 id="protobuf"><a href="#protobuf" class="headerlink" title="protobuf"></a>protobuf</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/protocolbuffers/protobuf/releases</span><br></pre></td></tr></table></figure>
+<h4 id="protoc-gen-go"><a href="#protoc-gen-go" class="headerlink" title="protoc-gen-go"></a>protoc-gen-go</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go get -u github.com/golang/protobuf/protoc-gen-go</span><br></pre></td></tr></table></figure>
+<h4 id="gRPC"><a href="#gRPC" class="headerlink" title="gRPC"></a>gRPC</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go get -u google.golang.org/grpc</span><br></pre></td></tr></table></figure>
+
+<span id="more"></span>
+<h3 id="1-编写协议"><a href="#1-编写协议" class="headerlink" title="1. 编写协议"></a>1. 编写协议</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">syntax = &quot;proto3&quot;;</span><br><span class="line"></span><br><span class="line">package proto;</span><br><span class="line"></span><br><span class="line">message HelloReq &#123;</span><br><span class="line">    string name = 1;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">message HelloRes &#123;</span><br><span class="line">    string answer = 1;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">service greeter &#123;</span><br><span class="line">    rpc Hello (HelloReq) returns (HelloRes);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="2-生成Go代码"><a href="#2-生成Go代码" class="headerlink" title="2. 生成Go代码"></a>2. 生成Go代码</h3><p>使用<code>proto</code>配合<code>grpc</code>插件生成Go代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">protoc --go_out=plugins=grpc:. greeter.proto</span><br></pre></td></tr></table></figure>
+<ul>
+<li>在<code>go_out</code>参数中要使用<code>grpc</code>插件，若不使用生成的代码不会包含grpc方法.</li>
+</ul>
+<h3 id="3-编写服务-Server"><a href="#3-编写服务-Server" class="headerlink" title="3. 编写服务(Server)"></a>3. 编写服务(Server)</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;context&quot;</span></span><br><span class="line">	<span class="string">&quot;fmt&quot;</span></span><br><span class="line">	<span class="string">&quot;net&quot;</span></span><br><span class="line"></span><br><span class="line">	<span class="string">&quot;google.golang.org/grpc&quot;</span></span><br><span class="line"></span><br><span class="line">	<span class="string">&quot;github.com/zboyco/go-test/gRPC/proto&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> server <span class="keyword">struct</span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *server)</span></span> Hello(c context.Context, req *proto.HelloReq) (*proto.HelloRes, <span class="type">error</span>) &#123;</span><br><span class="line">	<span class="keyword">return</span> &amp;proto.HelloRes&#123;</span><br><span class="line">		Answer: <span class="string">&quot;Hello &quot;</span> + req.Name,</span><br><span class="line">	&#125;, <span class="literal">nil</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	lis, err := net.Listen(<span class="string">&quot;tcp&quot;</span>, <span class="string">&quot;:9043&quot;</span>)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		fmt.Println(err)</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">	s := grpc.NewServer()</span><br><span class="line">	proto.RegisterGreeterServer(s, &amp;server&#123;&#125;)</span><br><span class="line">	s.Serve(lis)</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="4-编写客户端-Client"><a href="#4-编写客户端-Client" class="headerlink" title="4. 编写客户端(Client)"></a>4. 编写客户端(Client)</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;context&quot;</span></span><br><span class="line">	<span class="string">&quot;fmt&quot;</span></span><br><span class="line"></span><br><span class="line">	<span class="string">&quot;github.com/zboyco/go-test/gRPC/proto&quot;</span></span><br><span class="line">	<span class="string">&quot;google.golang.org/grpc&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	conn, err := grpc.Dial(<span class="string">&quot;localhost:9043&quot;</span>, grpc.WithInsecure())</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		fmt.Println(err)</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">defer</span> conn.Close()</span><br><span class="line"></span><br><span class="line">	c := proto.NewGreeterClient(conn)</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="number">10</span>; i++ &#123;</span><br><span class="line">		res, err := c.Hello(context.TODO(),</span><br><span class="line">			&amp;proto.HelloReq&#123;</span><br><span class="line">				Name: fmt.Sprintf(<span class="string">&quot;baiyang-%v&quot;</span>, i),</span><br><span class="line">			&#125;,</span><br><span class="line">		)</span><br><span class="line">		<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">			fmt.Println(err)</span><br><span class="line">			<span class="keyword">return</span></span><br><span class="line">		&#125;</span><br><span class="line">		fmt.Println(res.Answer)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-运行结果"><a href="#5-运行结果" class="headerlink" title="5. 运行结果"></a>5. 运行结果</h3><p>先运行server，然后运行client</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">❯ go run main.go</span><br><span class="line">Hello baiyang-0</span><br><span class="line">Hello baiyang-1</span><br><span class="line">Hello baiyang-2</span><br><span class="line">Hello baiyang-3</span><br><span class="line">Hello baiyang-4</span><br><span class="line">Hello baiyang-5</span><br><span class="line">Hello baiyang-6</span><br><span class="line">Hello baiyang-7</span><br><span class="line">Hello baiyang-8</span><br><span class="line">Hello baiyang-9</span><br></pre></td></tr></table></figure>
+
+<h1 id="over"><a href="#over" class="headerlink" title="over"></a>over</h1>
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Golang/">Golang</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/gRPC/">gRPC</a><a href="/tags/RPC/">RPC</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    <a href="https://beian.miit.gov.cn" target="_blank">蜀ICP备15015945号-2</a> | 
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> | 
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 <a href="https://github.com/zboyco" target="_blank">zboyco</a>
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

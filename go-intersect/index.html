@@ -1,0 +1,157 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Go 求两个数组切片交集 | 白羊的空间</title>
+
+  
+  <meta name="author" content="zboyco">
+  
+
+  
+  <meta name="description" content="问题两个数组切片求交集">
+  
+
+  
+  
+  <meta name="keywords" content="">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="Go 求两个数组切片交集"/>
+
+  <meta property="og:site_name" content="白羊的空间"/>
+
+  
+  <meta property="og:image" content="/images/favicon.ico"/>
+  
+
+  <link href="/images/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白羊的空间" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白羊的空间</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives">归档</a></li>
+      
+        <li><a href="/categories">分类</a></li>
+      
+        <li><a href="/tags">标签</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>Go 求两个数组切片交集</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/go-intersect/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-04-15T09:30:00.000Z">
+          2019-04-15
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><p>两个数组切片求交集</p>
+<span id="more"></span>
+<h3 id="情况1"><a href="#情况1" class="headerlink" title="情况1"></a>情况1</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">s1 := []<span class="type">int</span>&#123;<span class="number">1</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">4</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">6</span>, <span class="number">2</span>&#125;</span><br><span class="line">s2 := []<span class="type">int</span>&#123;<span class="number">2</span>, <span class="number">4</span>, <span class="number">6</span>, <span class="number">3</span>, <span class="number">4</span>&#125;</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">2</span> <span class="number">4</span> <span class="number">6</span>]</span><br></pre></td></tr></table></figure>
+<h4 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h4><p>采用map记录s1的元素，然后遍历s2，存在于map中并且不重复的增加到新切片中.</p>
+<h4 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">intersect1</span><span class="params">(s1, s2 []<span class="type">int</span>)</span></span> ([]<span class="type">int</span>, <span class="type">error</span>) &#123;</span><br><span class="line">	<span class="keyword">if</span> s1 == <span class="literal">nil</span> || s2 == <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">nil</span>, errors.New(<span class="string">&quot;nil silce&quot;</span>)</span><br><span class="line">	&#125;</span><br><span class="line">	result := []<span class="type">int</span>&#123;&#125;</span><br><span class="line">	<span class="keyword">if</span> <span class="built_in">len</span>(s1) == <span class="number">0</span> || <span class="built_in">len</span>(s2) == <span class="number">0</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> result, <span class="literal">nil</span></span><br><span class="line">	&#125;</span><br><span class="line">	tempMap := <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="type">int</span>]<span class="type">bool</span>)</span><br><span class="line">	<span class="keyword">for</span> _, v := <span class="keyword">range</span> s1 &#123;</span><br><span class="line">		tempMap[v] = <span class="literal">true</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span> _, v := <span class="keyword">range</span> s2 &#123;</span><br><span class="line">		<span class="keyword">if</span> c, ok := tempMap[v]; ok &amp;&amp; c &#123;</span><br><span class="line">			result = <span class="built_in">append</span>(result, v)</span><br><span class="line">			tempMap[v] = <span class="literal">false</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> result, <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="情况2"><a href="#情况2" class="headerlink" title="情况2"></a>情况2</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">s1 := []<span class="type">int</span>&#123;<span class="number">1</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">4</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">6</span>, <span class="number">2</span>&#125;</span><br><span class="line">s2 := []<span class="type">int</span>&#123;<span class="number">2</span>, <span class="number">4</span>, <span class="number">6</span>, <span class="number">3</span>, <span class="number">4</span>&#125;</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">2</span> <span class="number">4</span> <span class="number">6</span> <span class="number">4</span>]</span><br></pre></td></tr></table></figure>
+<h4 id="思路-1"><a href="#思路-1" class="headerlink" title="思路"></a>思路</h4><p>依然采用map记录s1的元素，不过需要记录元素出现的次数，然后遍历s2，存在于map中并且不重复的增加到新切片中.</p>
+<h4 id="代码-1"><a href="#代码-1" class="headerlink" title="代码"></a>代码</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">intersect2</span><span class="params">(s1, s2 []<span class="type">int</span>)</span></span> ([]<span class="type">int</span>, <span class="type">error</span>) &#123;</span><br><span class="line">	<span class="keyword">if</span> s1 == <span class="literal">nil</span> || s2 == <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">nil</span>, errors.New(<span class="string">&quot;nil silce&quot;</span>)</span><br><span class="line">	&#125;</span><br><span class="line">	result := []<span class="type">int</span>&#123;&#125;</span><br><span class="line">	<span class="keyword">if</span> <span class="built_in">len</span>(s1) == <span class="number">0</span> || <span class="built_in">len</span>(s2) == <span class="number">0</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> result, <span class="literal">nil</span></span><br><span class="line">	&#125;</span><br><span class="line">	tempMap := <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="type">int</span>]<span class="type">int</span>)</span><br><span class="line">	<span class="keyword">for</span> _, v := <span class="keyword">range</span> s1 &#123;</span><br><span class="line">		tempMap[v]++</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span> _, v := <span class="keyword">range</span> s2 &#123;</span><br><span class="line">		<span class="keyword">if</span> c, ok := tempMap[v]; ok &amp;&amp; c &gt; <span class="number">0</span> &#123;</span><br><span class="line">			result = <span class="built_in">append</span>(result, v)</span><br><span class="line">			tempMap[v]--</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> result, <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="备注"><a href="#备注" class="headerlink" title="备注"></a>备注</h1><p>两种情况均可以使用for循环嵌套来实现，不过对于出现次数的处理需要思考，并且时间复杂度也比是用map的方式要高。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Golang/">Golang</a>
+    </span>
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    <a href="https://beian.miit.gov.cn" target="_blank">蜀ICP备15015945号-2</a> | 
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> | 
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 <a href="https://github.com/zboyco" target="_blank">zboyco</a>
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

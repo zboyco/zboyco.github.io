@@ -1,0 +1,158 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>React 引用 jQuery | 白羊的空间</title>
+
+  
+  <meta name="author" content="zboyco">
+  
+
+  
+  <meta name="description" content="原由计划用 React 做一个前台展示网站，设计用到了jQuery Smoove这个插件，所以在网上找了下怎么在 React 中引入jQuery,并让插件可以正常使用.
+安装 jQuerynpm install jquery
+
+注意，全是小写字母,不能写成 jQuery，会安装成功，但无法编译通过。">
+  
+
+  
+  
+  <meta name="keywords" content="">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="React 引用 jQuery"/>
+
+  <meta property="og:site_name" content="白羊的空间"/>
+
+  
+  <meta property="og:image" content="/images/favicon.ico"/>
+  
+
+  <link href="/images/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白羊的空间" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白羊的空间</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives">归档</a></li>
+      
+        <li><a href="/categories">分类</a></li>
+      
+        <li><a href="/tags">标签</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>React 引用 jQuery</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/react-jquery/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-09-04T14:25:00.000Z">
+          2018-09-04
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="原由"><a href="#原由" class="headerlink" title="原由"></a>原由</h1><p>计划用 React 做一个前台展示网站，设计用到了jQuery Smoove这个插件，所以在网上找了下怎么在 React 中引入jQuery,并让插件可以正常使用.</p>
+<h2 id="安装-jQuery"><a href="#安装-jQuery" class="headerlink" title="安装 jQuery"></a>安装 jQuery</h2><p><code>npm install jquery</code></p>
+<blockquote>
+<p>注意，全是小写字母,不能写成 jQuery，会安装成功，但无法编译通过。</p>
+</blockquote>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><ol>
+<li>直接使用<br>如果直接使用 jQuery 而不使用其他基于 jq 的插件的话，那么直接在 react 文件里 import 即可:<br><code>import $ from &#39;jquery&#39;;</code></li>
+<li>为插件服务<br>如果有其他基于 jq 的插件，则需要在 webpack 中添加全局设置(我使用的 create-react-app 初始化的项目).<br>找到webpack配置路径：<br><code>node_modules/react-scripts/config/webpack.config.dev.js(webpack.config.prod.js)</code><br>在 plugins 属性中添加以下代码即可：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">new webpack.ProvidePlugin(&#123;</span><br><span class="line">    $:&quot;jquery&quot;, </span><br><span class="line">    jQuery:&quot;jquery&quot;, </span><br><span class="line">    &quot;window.jQuery&quot;:&quot;jquery&quot;</span><br><span class="line">&#125;),</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>大功告成！</p>
+<blockquote>
+<p>create-react-app 初始化的项目在node_modules，直接修改的话重新安装包就被覆盖了，如果有需要的话，可以执行 yarn eject，把引用的包本地化后再修改，或者使用其他脚手架初始化项目也可。</p>
+</blockquote>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/React/">React</a>
+    </span>
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    <a href="https://beian.miit.gov.cn" target="_blank">蜀ICP备15015945号-2</a> | 
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> | 
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 <a href="https://github.com/zboyco" target="_blank">zboyco</a>
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,195 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>[转载]Go项目的目录结构 | 白羊的空间</title>
+
+  
+  <meta name="author" content="zboyco">
+  
+
+  
+  <meta name="description" content="项目目录结构如何组织，一般语言都是没有规定。但 Go 语言这方面做了规定，这样可以保持一致性
+1、一般的，一个 Go 项目在 GOPATH 下，会有如下三个目录：123|--bin|--pkg|--src
+
+其中，bin存放编译后的可执行文件；pkg 存放编译后的包文件；src 存放项目源文件。一般，bin 和 pkg 目录可以不创建，go 命令会自动创建（如 go install），只需要创建src目录即可。对于 pkg 目录，曾经有人问：我把 Go 中的包放入 pkg 下面，怎么不行啊？他直接把 Go 包的源文件放入了 pkg 中。这显然是不对的。pkg 中的文件是 Go 编译生成的，而不是手动放进去的。（一般文件后缀.a）对于 src 目录，存放源文件，Go 中源文件以包（package）的形式组织。通常，新建一个包就在 src 目录中新建一个文件夹。
+2、举例说明">
+  
+
+  
+  
+  <meta name="keywords" content="go">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="[转载]Go项目的目录结构"/>
+
+  <meta property="og:site_name" content="白羊的空间"/>
+
+  
+  <meta property="og:image" content="/images/favicon.ico"/>
+  
+
+  <link href="/images/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白羊的空间" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白羊的空间</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives">归档</a></li>
+      
+        <li><a href="/categories">分类</a></li>
+      
+        <li><a href="/tags">标签</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>[转载]Go项目的目录结构</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/go-project-structure/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-08-02T16:41:22.000Z">
+          2018-08-03
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>项目目录结构如何组织，一般语言都是没有规定。但 Go 语言这方面做了规定，这样可以保持一致性</p>
+<h3 id="1、一般的，一个-Go-项目在-GOPATH-下，会有如下三个目录："><a href="#1、一般的，一个-Go-项目在-GOPATH-下，会有如下三个目录：" class="headerlink" title="1、一般的，一个 Go 项目在 GOPATH 下，会有如下三个目录："></a>1、一般的，一个 Go 项目在 GOPATH 下，会有如下三个目录：</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">|--bin</span><br><span class="line">|--pkg</span><br><span class="line">|--src</span><br></pre></td></tr></table></figure>
+
+<p>其中，bin存放编译后的可执行文件；pkg 存放编译后的包文件；src 存放项目源文件。一般，bin 和 pkg 目录可以不创建，go 命令会自动创建（如 go install），只需要创建src目录即可。<br>对于 pkg 目录，曾经有人问：我把 Go 中的包放入 pkg 下面，怎么不行啊？他直接把 Go 包的源文件放入了 pkg 中。这显然是不对的。pkg 中的文件是 Go 编译生成的，而不是手动放进去的。（一般文件后缀.a）<br>对于 src 目录，存放源文件，Go 中源文件以包（package）的形式组织。通常，新建一个包就在 src 目录中新建一个文件夹。</p>
+<h3 id="2、举例说明"><a href="#2、举例说明" class="headerlink" title="2、举例说明"></a>2、举例说明</h3><span id="more"></span>
+<p>比如：我新建一个项目，test，开始的目录结构如下：</p>
+<p><code>test--|--src</code></p>
+<p>为了编译方便，我在其中增加了一个 install.sh 文件，目录结构：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">test/</span><br><span class="line">|-- install.sh</span><br><span class="line">`-- src</span><br></pre></td></tr></table></figure>
+
+<p>其中install的内容如下：（linux下）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">#!/usr/bin/env bash</span><br><span class="line"> </span><br><span class="line">if [ ! -f install.sh ]; then</span><br><span class="line">    echo &#x27;install must be run within its container folder&#x27; 1&gt;&amp;2</span><br><span class="line">    exit 1</span><br><span class="line">fi</span><br><span class="line"> </span><br><span class="line">CURDIR=`pwd`</span><br><span class="line">OLDGOPATH=&quot;$GOPATH&quot;</span><br><span class="line">export GOPATH=&quot;$CURDIR&quot;</span><br><span class="line"> </span><br><span class="line">gofmt -w src</span><br><span class="line"> </span><br><span class="line">go install test</span><br><span class="line"> </span><br><span class="line">export GOPATH=&quot;$OLDGOPATH&quot;</span><br><span class="line"> </span><br><span class="line">echo &#x27;finished&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>之所以加上这个 install.sh，是不用配置 GOPATH（避免新增一个GO项目就要往 GOPATH 中增加一个路径）</p>
+<p>接下来，增加一个包：config 和一个 main 程序。目录结构如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">test</span><br><span class="line">|-- install.sh</span><br><span class="line">`-- src</span><br><span class="line">    |-- config</span><br><span class="line">    |   `-- config.go</span><br><span class="line">    `-- test</span><br><span class="line">        `-- main.go</span><br></pre></td></tr></table></figure>
+
+<p>注意，config.go 中的 package 名称最好和目录 config 一致，而文件名可以随便。main.go 表示 main 包，文件名建议为 main.go。（注意：不一致时，生成的.a文件名和目录名一致，这样，在import 时，应该是目录名，而引用包时，需要包名。例如：目录为myconfig，包名为config，则生产的静态包文件是：myconfig.a，引用该包：import “myconfig”，使用包中成员：config.LoadConfig()）</p>
+<p>config.go 和 main.go 的代码如下：</p>
+<p>config.go 代码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">package config</span><br><span class="line">    func LoadConfig() &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>main.go 代码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"> </span><br><span class="line">import (</span><br><span class="line">    &quot;config&quot;</span><br><span class="line">    &quot;fmt&quot;</span><br><span class="line">)</span><br><span class="line"> </span><br><span class="line">func main() &#123;</span><br><span class="line">    config.LoadConfig()</span><br><span class="line">    fmt.Println(&quot;Hello, GO!&quot;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>接下来，在项目根目录执行.&#x2F;install.sh</p>
+<p>这时候的目录结构为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">test</span><br><span class="line">|-- bin</span><br><span class="line">|   `-- test</span><br><span class="line">|-- install.sh</span><br><span class="line">|-- pkg</span><br><span class="line">|   `-- linux_amd64</span><br><span class="line">|       `-- config.a</span><br><span class="line">`-- src</span><br><span class="line">    |-- config</span><br><span class="line">    |   `-- config.go</span><br><span class="line">    `-- test</span><br><span class="line">        `-- main.go</span><br><span class="line"> </span><br></pre></td></tr></table></figure>
+
+<p>#（linux_amd64表示我使用的操作系统和架构，你的可能不一样）<br>其中 config.a 是包 config 编译后生成的；bin&#x2F;test 是生成的二进制文件</p>
+<p>这个时候可以执行：bin&#x2F;test 了。会输出：Hello, GO!</p>
+<h3 id="3、补充说明"><a href="#3、补充说明" class="headerlink" title="3、补充说明"></a>3、补充说明</h3><p>1）包可以多层目录，比如：net&#x2F;http 包，表示源文件在 src&#x2F;net&#x2F;http 目录下面，不过源文件中的包名是最后一个目录的名字，如 http<br>而在 import 包时，必须完整的路径，如：import “net&#x2F;http”</p>
+<p>2）有时候会见到 local import（不建议使用），语法类似这样：</p>
+<p><code>import &quot;./config&quot;</code></p>
+<p>当代码中有这样的语句时，很多时候都会见到类似这样的错误：</p>
+<p><code>local import &quot;./config&quot; in non-local package</code></p>
+<p>我所了解的这种导入方式的使用是：当写一个简单的测试脚本，想要使用 go run 命令时，可以使用这种导入方式。<br>比如上面的例子，把 test&#x2F;main.go 移到 src 目录中，test 目录删除，修改 main.go 中的import “config” 为 import “.&#x2F;config”，然后可以在 src 目录下执行：</p>
+<p><code>go run main.go</code></p>
+<p>可见，local import 不依赖于 GOPATH</p>
+<h3 id="4、Windows下的install-bat"><a href="#4、Windows下的install-bat" class="headerlink" title="4、Windows下的install.bat"></a>4、Windows下的install.bat</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">@echo off</span><br><span class="line"> </span><br><span class="line">setlocal</span><br><span class="line"> </span><br><span class="line">if exist install.bat goto ok</span><br><span class="line">echo install.bat must be run from its folder</span><br><span class="line">goto end</span><br><span class="line"> </span><br><span class="line">:ok</span><br><span class="line"> </span><br><span class="line">set OLDGOPATH=%GOPATH%</span><br><span class="line">set GOPATH=%~dp0</span><br><span class="line"> </span><br><span class="line">gofmt -w src</span><br><span class="line"> </span><br><span class="line">go install test</span><br><span class="line"> </span><br><span class="line">:end</span><br><span class="line">echo finished</span><br><span class="line"> </span><br></pre></td></tr></table></figure>
+<p>参考：</p>
+<p><a target="_blank" rel="noopener" href="http://blog.studygolang.com/2012/12/Go%E9%A1%B9%E7%9B%AE%E7%9A%84%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84">http://blog.studygolang.com/2012/12/Go项目的目录结构</a></p>
+<p>转载自:<a target="_blank" rel="noopener" href="http://www.cnblogs.com/52php/p/6246827.html">http://www.cnblogs.com/52php/p/6246827.html</a></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Golang/">Golang</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/go/">go</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    <a href="https://beian.miit.gov.cn" target="_blank">蜀ICP备15015945号-2</a> | 
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> | 
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 <a href="https://github.com/zboyco" target="_blank">zboyco</a>
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

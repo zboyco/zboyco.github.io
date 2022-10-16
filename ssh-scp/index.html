@@ -1,0 +1,161 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>SSH 传输文件 | 白羊的空间</title>
+
+  
+  <meta name="author" content="zboyco">
+  
+
+  
+  <meta name="description" content="传输本地文件到远程1scp C:\Users\BaiYang\Desktop\docker-compose.yml root@192.168.2.99:/root/docker/nsq
+
+如果需要指定端口，加入-P参数1scp -P 222
+
+远程下载文件到本地1scp root@192.168.2">
+  
+
+  
+  
+  <meta name="keywords" content="ssh,scp">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="SSH 传输文件"/>
+
+  <meta property="og:site_name" content="白羊的空间"/>
+
+  
+  <meta property="og:image" content="/images/favicon.ico"/>
+  
+
+  <link href="/images/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白羊的空间" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白羊的空间</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives">归档</a></li>
+      
+        <li><a href="/categories">分类</a></li>
+      
+        <li><a href="/tags">标签</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>SSH 传输文件</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/ssh-scp/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-08-27T10:39:00.000Z">
+          2019-08-27
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h3 id="传输本地文件到远程"><a href="#传输本地文件到远程" class="headerlink" title="传输本地文件到远程"></a>传输本地文件到远程</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp C:\Users\BaiYang\Desktop\docker-compose.yml root@192.168.2.99:/root/docker/nsq</span><br></pre></td></tr></table></figure>
+<ul>
+<li>如果需要指定端口，加入<code>-P</code>参数<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp -P 222</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="远程下载文件到本地"><a href="#远程下载文件到本地" class="headerlink" title="远程下载文件到本地"></a>远程下载文件到本地</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp root@192.168.2.99:/root/docker/nsq/docker-compose.yml C:\Users\BaiYang\Desktop</span><br></pre></td></tr></table></figure>
+
+<h3 id="传输本地目录到远程"><a href="#传输本地目录到远程" class="headerlink" title="传输本地目录到远程"></a>传输本地目录到远程</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp -r C:\Users\BaiYang\Desktop\test root@192.168.2.99:/root/docker</span><br></pre></td></tr></table></figure>
+
+<h3 id="远程下载目录到本地"><a href="#远程下载目录到本地" class="headerlink" title="远程下载目录到本地"></a>远程下载目录到本地</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp -r root@192.168.2.99:/root/docker/test C:\Users\BaiYang\Desktop</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/默认分类/">默认分类</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/ssh/">ssh</a><a href="/tags/scp/">scp</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    <a href="https://beian.miit.gov.cn" target="_blank">蜀ICP备15015945号-2</a> | 
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> | 
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 <a href="https://github.com/zboyco" target="_blank">zboyco</a>
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

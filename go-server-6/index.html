@@ -1,0 +1,175 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Go实现简单的Socket服务端笔记(六) | 白羊的空间</title>
+
+  
+  <meta name="author" content="zboyco">
+  
+
+  
+  <meta name="description" content="增加AppSession结构体OnMessage返回AppSession结构体,提供Send方法,服务器可以主动向客户端发送数据
+本文代码查看github:https://github.com/zboyco/go-server/tree/step-6
+新建一个AppSession结构体,将客户端会话放在AppSession中,方便扩展和管理
+
+在server目录中增加client.go文件代码如下:
+
+12345678910111213package serverimport &amp;quot;net&amp;quot;//客户端结构体type AppSession struct &amp;#123;	conn net.Conn //socket连接&amp;#125;func (client *AppSession) Send(buf []byte) &amp;#123;	client.conn.Write(buf)&amp;#125;
+
+
+修改socket.go">
+  
+
+  
+  
+  <meta name="keywords" content="Socket">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="Go实现简单的Socket服务端笔记(六)"/>
+
+  <meta property="og:site_name" content="白羊的空间"/>
+
+  
+  <meta property="og:image" content="/images/favicon.ico"/>
+  
+
+  <link href="/images/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白羊的空间" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白羊的空间</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives">归档</a></li>
+      
+        <li><a href="/categories">分类</a></li>
+      
+        <li><a href="/tags">标签</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>Go实现简单的Socket服务端笔记(六)</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/go-server-6/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-12-21T08:35:00.000Z">
+          2018-12-21
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h4 id="增加AppSession结构体"><a href="#增加AppSession结构体" class="headerlink" title="增加AppSession结构体"></a>增加AppSession结构体</h4><p>OnMessage返回AppSession结构体,提供Send方法,服务器可以主动向客户端发送数据</p>
+<p>本文代码查看github:<br><a target="_blank" rel="noopener" href="https://github.com/zboyco/go-server/tree/step-6">https://github.com/zboyco/go-server/tree/step-6</a></p>
+<p>新建一个AppSession结构体,将客户端会话放在AppSession中,方便扩展和管理</p>
+<ol>
+<li>在server目录中增加client.go文件<br>代码如下:</li>
+</ol>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> server</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;net&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//客户端结构体</span></span><br><span class="line"><span class="keyword">type</span> AppSession <span class="keyword">struct</span> &#123;</span><br><span class="line">	conn net.Conn <span class="comment">//socket连接</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(client *AppSession)</span></span> Send(buf []<span class="type">byte</span>) &#123;</span><br><span class="line">	client.conn.Write(buf)</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>修改socket.go<span id="more"></span></li>
+</ol>
+<p>代码如下:</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> server</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;fmt&quot;</span></span><br><span class="line">	<span class="string">&quot;net&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment">//服务结构</span></span><br><span class="line"><span class="keyword">type</span> Server <span class="keyword">struct</span> &#123;</span><br><span class="line">	ip        <span class="type">string</span></span><br><span class="line">	port      <span class="type">int</span></span><br><span class="line">	OnError   <span class="function"><span class="keyword">func</span><span class="params">(<span class="type">error</span>)</span></span></span><br><span class="line">	OnMessage <span class="function"><span class="keyword">func</span><span class="params">(*AppSession, []<span class="type">byte</span>)</span></span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//新建一个服务</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">New</span><span class="params">(ip <span class="type">string</span>, port <span class="type">int</span>)</span></span> *Server &#123;</span><br><span class="line">	<span class="keyword">return</span> &amp;Server&#123;</span><br><span class="line">		ip:   ip,</span><br><span class="line">		port: port,</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//开始监听</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(server *Server)</span></span> Start() &#123;</span><br><span class="line">	<span class="comment">//定义一个本机端口</span></span><br><span class="line">	localAddress, _ := net.ResolveTCPAddr(<span class="string">&quot;tcp4&quot;</span>, fmt.Sprintf(<span class="string">&quot;%s:%d&quot;</span>, server.ip, server.port))</span><br><span class="line"></span><br><span class="line">	<span class="comment">//监听端口</span></span><br><span class="line">	tcpListener, err := net.ListenTCP(<span class="string">&quot;tcp&quot;</span>, localAddress)</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		fmt.Println(<span class="string">&quot;监听出错, &quot;</span>, err)</span><br><span class="line">		<span class="keyword">if</span> server.OnError != <span class="literal">nil</span> &#123;</span><br><span class="line">			server.OnError(err)</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//程序返回后关闭socket</span></span><br><span class="line">	<span class="keyword">defer</span> tcpListener.Close()</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> &#123;</span><br><span class="line">		fmt.Println(<span class="string">&quot;等待客户连接...&quot;</span>)</span><br><span class="line"></span><br><span class="line">		<span class="comment">//开始接收连接</span></span><br><span class="line">		conn, err := tcpListener.Accept()</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">			fmt.Println(<span class="string">&quot;客户连接失败, &quot;</span>, err)</span><br><span class="line">			<span class="keyword">if</span> server.OnError != <span class="literal">nil</span> &#123;</span><br><span class="line">				server.OnError(err)</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">continue</span></span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="comment">//启用goroutine处理</span></span><br><span class="line">		<span class="keyword">go</span> handleClient(server, conn)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//读取数据</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">handleClient</span><span class="params">(server *Server, conn net.Conn)</span></span> &#123;</span><br><span class="line">	<span class="comment">//获取连接地址</span></span><br><span class="line">	remoteAddr := conn.RemoteAddr()</span><br><span class="line"></span><br><span class="line">	fmt.Println(<span class="string">&quot;客户地址:&quot;</span>, remoteAddr)</span><br><span class="line"></span><br><span class="line">	<span class="comment">//定义一个数据接收Buffer</span></span><br><span class="line">	<span class="keyword">var</span> buf [<span class="number">10240</span>]<span class="type">byte</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> &#123;</span><br><span class="line">		fmt.Println(<span class="string">&quot;等待接收数据...&quot;</span>)</span><br><span class="line">		<span class="comment">//读取数据,io.Reader 需要传入一个byte切片</span></span><br><span class="line">		n, err := conn.Read(buf[<span class="number">0</span>:])</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">			fmt.Println(<span class="string">&quot;数据接收错误, &quot;</span>, err)</span><br><span class="line">			<span class="keyword">if</span> server.OnError != <span class="literal">nil</span> &#123;</span><br><span class="line">				server.OnError(err)</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">return</span></span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> server.OnMessage == <span class="literal">nil</span> &#123;</span><br><span class="line">			fmt.Println(<span class="string">&quot;错误,未找到数据处理方法!&quot;</span>)</span><br><span class="line">			<span class="keyword">continue</span></span><br><span class="line">		&#125;</span><br><span class="line">		server.OnMessage(&amp;AppSession&#123;</span><br><span class="line">			conn: conn,</span><br><span class="line">		&#125;, buf[<span class="number">0</span>:n])</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>主要修改了handleClient最后调用onmessage方法,传入了一个AppSession的指针</p>
+<ol start="3">
+<li>修改main.go<br>修改onMessage参数类型为AppSession</li>
+</ol>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;fmt&quot;</span></span><br><span class="line">	<span class="string">&quot;go-server/server&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	fmt.Println(<span class="string">&quot;hello golang!!!&quot;</span>)</span><br><span class="line"></span><br><span class="line">	mainServer := server.New(<span class="string">&quot;127.0.0.1&quot;</span>, <span class="number">9043</span>)</span><br><span class="line"></span><br><span class="line">	mainServer.OnMessage = onMessage</span><br><span class="line"></span><br><span class="line">	mainServer.OnError = onError</span><br><span class="line"></span><br><span class="line">	mainServer.Start()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//接收数据方法</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">onMessage</span><span class="params">(client *server.AppSession, bytes []<span class="type">byte</span>)</span></span> &#123;</span><br><span class="line">	<span class="comment">//将bytes转为字符串</span></span><br><span class="line">	result := <span class="type">string</span>(bytes)</span><br><span class="line"></span><br><span class="line">	<span class="comment">//输出结果</span></span><br><span class="line">	fmt.Println(<span class="string">&quot;接收到数据:&quot;</span>, result)</span><br><span class="line"></span><br><span class="line">	client.Send([]<span class="type">byte</span>(<span class="string">&quot;Got!&quot;</span>))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//接收错误方法</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">onError</span><span class="params">(err <span class="type">error</span>)</span></span> &#123;</span><br><span class="line">	<span class="comment">//输出结果</span></span><br><span class="line">	fmt.Println(<span class="string">&quot;错误: &quot;</span>, err)</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Golang/">Golang</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/Socket/">Socket</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    <a href="https://beian.miit.gov.cn" target="_blank">蜀ICP备15015945号-2</a> | 
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> | 
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 <a href="https://github.com/zboyco" target="_blank">zboyco</a>
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

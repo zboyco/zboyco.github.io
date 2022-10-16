@@ -1,0 +1,180 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Go gin使用swagger生成API文档 | 白羊的空间</title>
+
+  
+  <meta name="author" content="zboyco">
+  
+
+  
+  <meta name="description" content="本文代码github: https://github.com/zboyco/go-test/blob/master/gin-swagger/main.go
+
+1. 前言swagger 用于生成、描述、调用和可视化 RESTful 风格的API文档,这里记录下在go中使用swagger生成api文档的方法.
+2. 库12github.com/swaggo/gin-swaggergithub.com/swaggo/gin-swagger/swaggerFiles
+以上两个库都需要使用,另外还需要一个swag工具用来生成docs文件.
+1github.com/swaggo/swag
+验证swag是否安装成功
+1swag -v
+
+3. 注释swaggo通过注释来生成swagger需要的信息,详细的注释格式可以参考https://swaggo.github.io/swaggo.io ,这里只记录下简单的用法.">
+  
+
+  
+  
+  <meta name="keywords" content="go,gin,swagger">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="Go gin使用swagger生成API文档"/>
+
+  <meta property="og:site_name" content="白羊的空间"/>
+
+  
+  <meta property="og:image" content="/images/favicon.ico"/>
+  
+
+  <link href="/images/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白羊的空间" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白羊的空间</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives">归档</a></li>
+      
+        <li><a href="/categories">分类</a></li>
+      
+        <li><a href="/tags">标签</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>Go gin使用swagger生成API文档</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/go-gin-swagger/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-01-21T08:28:00.000Z">
+          2019-01-21
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>本文代码github: <a target="_blank" rel="noopener" href="https://github.com/zboyco/go-test/blob/master/gin-swagger/main.go">https://github.com/zboyco/go-test/blob/master/gin-swagger/main.go</a></p>
+<hr>
+<h3 id="1-前言"><a href="#1-前言" class="headerlink" title="1. 前言"></a>1. 前言</h3><p>swagger 用于生成、描述、调用和可视化 RESTful 风格的API文档,这里记录下在go中使用swagger生成api文档的方法.</p>
+<h3 id="2-库"><a href="#2-库" class="headerlink" title="2. 库"></a>2. 库</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">github.com/swaggo/gin-swagger</span><br><span class="line">github.com/swaggo/gin-swagger/swaggerFiles</span><br></pre></td></tr></table></figure>
+<p>以上两个库都需要使用,另外还需要一个swag工具用来生成docs文件.</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">github.com/swaggo/swag</span><br></pre></td></tr></table></figure>
+<p>验证swag是否安装成功</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">swag -v</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-注释"><a href="#3-注释" class="headerlink" title="3. 注释"></a>3. 注释</h3><p>swaggo通过注释来生成swagger需要的信息,详细的注释格式可以参考<a target="_blank" rel="noopener" href="https://swaggo.github.io/swaggo.io">https://swaggo.github.io/swaggo.io</a> ,这里只记录下简单的用法.</p>
+<span id="more"></span>
+<h4 id="3-1-项目信息"><a href="#3-1-项目信息" class="headerlink" title="3.1. 项目信息"></a>3.1. 项目信息</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// @title Swagger Example API</span></span><br><span class="line"><span class="comment">// @version 1.0</span></span><br><span class="line"><span class="comment">// @description This is a sample server.</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// @BasePath /</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-2-接口信息"><a href="#3-2-接口信息" class="headerlink" title="3.2. 接口信息"></a>3.2. 接口信息</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// @Summary 获取文章</span></span><br><span class="line"><span class="comment">// @Produce  json</span></span><br><span class="line"><span class="comment">// @Param name query string true &quot;Name&quot;</span></span><br><span class="line"><span class="comment">// @Param state query int false &quot;State&quot;</span></span><br><span class="line"><span class="comment">// @Param created_by query int false &quot;CreatedBy&quot;</span></span><br><span class="line"><span class="comment">// @Success 200 &#123;string&#125; json &quot;&#123;&quot;code&quot;:200,&quot;data&quot;:&#123;&#125;,&quot;msg&quot;:&quot;ok&quot;&#125;&quot;</span></span><br><span class="line"><span class="comment">// @Router /news [get]</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">index</span><span class="params">(c *gin.Context)</span></span> &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-使用"><a href="#4-使用" class="headerlink" title="4. 使用"></a>4. 使用</h3><h4 id="4-1-首先引入包"><a href="#4-1-首先引入包" class="headerlink" title="4.1. 首先引入包"></a>4.1. 首先引入包</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;github.com/swaggo/gin-swagger&quot;</span></span><br><span class="line"><span class="string">&quot;github.com/swaggo/gin-swagger/swaggerFiles&quot;</span></span><br></pre></td></tr></table></figure>
+<h4 id="4-2-gin引擎添加GET方法"><a href="#4-2-gin引擎添加GET方法" class="headerlink" title="4.2. gin引擎添加GET方法"></a>4.2. gin引擎添加GET方法</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// use ginSwagger middleware to</span></span><br><span class="line">r.GET(<span class="string">&quot;/swagger/*any&quot;</span>, ginSwagger.WrapHandler(swaggerFiles.Handler))</span><br></pre></td></tr></table></figure>
+<h4 id="4-3-生成docs"><a href="#4-3-生成docs" class="headerlink" title="4.3. 生成docs"></a>4.3. 生成docs</h4><p>控制台执行</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">swag init</span><br></pre></td></tr></table></figure>
+<h4 id="4-4-引入docs"><a href="#4-4-引入docs" class="headerlink" title="4.4. 引入docs"></a>4.4. 引入docs</h4><p>引入swag生成的docs文件</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> _ <span class="string">&quot;./docs&quot;</span></span><br></pre></td></tr></table></figure>
+<h4 id="4-5-运行"><a href="#4-5-运行" class="headerlink" title="4.5. 运行"></a>4.5. 运行</h4><p>运行项目,浏览<a target="_blank" rel="noopener" href="http://localhost:8080/swagger/index.html">http://localhost:8080/swagger/index.html</a> 即可访问API文档.</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Golang/">Golang</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/go/">go</a><a href="/tags/gin/">gin</a><a href="/tags/swagger/">swagger</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    <a href="https://beian.miit.gov.cn" target="_blank">蜀ICP备15015945号-2</a> | 
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> | 
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 <a href="https://github.com/zboyco" target="_blank">zboyco</a>
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

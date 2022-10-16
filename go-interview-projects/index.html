@@ -1,0 +1,184 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>记录下golang可能的一些项目问题 | 白羊的空间</title>
+
+  
+  <meta name="author" content="zboyco">
+  
+
+  
+  <meta name="description" content="虚拟助手app
+介绍下项目。该项目是一个移动端养成类的app，相似的有日本的《makes》，功能比较简单，就是通过用户和虚拟人物日常的对话和交互累计经验和资源，使用资源购买道具装扮虚拟人物，然后解锁更多的交互内容、方式和场景，同步实现一些备忘录和闹钟功能的app。
+
+介绍下项目架构。
+
+为什么采用w">
+  
+
+  
+  
+  <meta name="keywords" content="">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="记录下golang可能的一些项目问题"/>
+
+  <meta property="og:site_name" content="白羊的空间"/>
+
+  
+  <meta property="og:image" content="/images/favicon.ico"/>
+  
+
+  <link href="/images/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白羊的空间" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白羊的空间</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives">归档</a></li>
+      
+        <li><a href="/categories">分类</a></li>
+      
+        <li><a href="/tags">标签</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>记录下golang可能的一些项目问题</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/go-interview-projects/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-04-15T08:29:17.000Z">
+          2019-04-15
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h3 id="虚拟助手app"><a href="#虚拟助手app" class="headerlink" title="虚拟助手app"></a>虚拟助手app</h3><ol>
+<li><p>介绍下项目。<br>该项目是一个移动端养成类的app，相似的有日本的《makes》，功能比较简单，就是通过用户和虚拟人物日常的对话和交互累计经验和资源，使用资源购买道具装扮虚拟人物，然后解锁更多的交互内容、方式和场景，同步实现一些备忘录和闹钟功能的app。</p>
+</li>
+<li><p>介绍下项目架构。</p>
+</li>
+<li><p>为什么采用web api实现？<br>因为该项目主要是用户和虚拟人物的交互，没有用户对用户的交互需求，对即时性相应要求并不高，所以采用web api的方式实现，配合JWT协议，利用gin中间件可以方便的实现权限验证，开发效率高，并且gin也比较稳定。</p>
+</li>
+<li><p>为什么使用redis作为缓存？</p>
+<ol>
+<li>直接操作数据库相对较慢，redis存储在内存中，提高访问速度</li>
+<li>高并发，redis的承受能力高于数据库，使用redis可以减小数据库的压力</li>
+<li>redis支持分布式缓存和持久化</li>
+<li>redis是单线程的，操作具有原子性</li>
+<li>支持的数据类型多</li>
+</ol>
+</li>
+<li><p>redis和mysql的数据一致性问题怎么解决？</p>
+<ol>
+<li>读：读redis，如果redis没有再读取mysql并写入redis</li>
+<li>写：更新mysql–&gt;异步删redis</li>
+<li>redis设置短过期时间</li>
+<li>串行化对同一数据的处理</li>
+</ol>
+</li>
+<li><p>为什么采用protobuf协议？</p>
+<ol>
+<li>protobuf序列化后数据大小是<code>json</code>格式的十分之一，是<code>xml</code>格式的二十分之一，适合网络传输，减少数据量，减少网络IO</li>
+<li>解析效率快</li>
+<li>较复杂，数据本身不具有可读性</li>
+</ol>
+</li>
+<li><p>什么情况下使用nsq队列？怎么使用？</p>
+</li>
+<li><p>高可用有没有接触？如何保证高可用？</p>
+</li>
+<li><p>JWT有什么优势？有什么缺点？</p>
+<ol>
+<li>服务端不用保存会话信息</li>
+<li>实现单点登录</li>
+<li>增加了请求头开销</li>
+<li>续签和注销不方便</li>
+</ol>
+</li>
+</ol>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    <a href="https://beian.miit.gov.cn" target="_blank">蜀ICP备15015945号-2</a> | 
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> | 
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 <a href="https://github.com/zboyco" target="_blank">zboyco</a>
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

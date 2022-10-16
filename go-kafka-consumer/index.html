@@ -1,0 +1,170 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Go使用Kafka消息队列(消费者) | 白羊的空间</title>
+
+  
+  <meta name="author" content="zboyco">
+  
+
+  
+  <meta name="description" content="本文代码github: https://github.com/zboyco/go-test/blob/master/kafka/consumer/main.go
+
+1.介绍因为sarama本身没有实现消费者分组订阅的功能,所以我们采用sarama-cluster第三方库,sarama-cluster是在sarama基础上再封装了一些方法,实现了分组等一些其他功能.
+2.引用项目地址sarama : github.com/Shopify/saramasarama-cluster : github.com/bsm/sarama-cluster">
+  
+
+  
+  
+  <meta name="keywords" content="kafka,go">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="Go使用Kafka消息队列(消费者)"/>
+
+  <meta property="og:site_name" content="白羊的空间"/>
+
+  
+  <meta property="og:image" content="/images/favicon.ico"/>
+  
+
+  <link href="/images/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白羊的空间" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白羊的空间</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives">归档</a></li>
+      
+        <li><a href="/categories">分类</a></li>
+      
+        <li><a href="/tags">标签</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>Go使用Kafka消息队列(消费者)</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/go-kafka-consumer/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-01-18T03:52:00.000Z">
+          2019-01-18
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>本文代码github: <a target="_blank" rel="noopener" href="https://github.com/zboyco/go-test/blob/master/kafka/consumer/main.go">https://github.com/zboyco/go-test/blob/master/kafka/consumer/main.go</a></p>
+<hr>
+<h3 id="1-介绍"><a href="#1-介绍" class="headerlink" title="1.介绍"></a>1.介绍</h3><p>因为<code>sarama</code>本身没有实现消费者分组订阅的功能,所以我们采用<code>sarama-cluster</code>第三方库,<code>sarama-cluster</code>是在<code>sarama</code>基础上再封装了一些方法,实现了分组等一些其他功能.</p>
+<h3 id="2-引用项目地址"><a href="#2-引用项目地址" class="headerlink" title="2.引用项目地址"></a>2.引用项目地址</h3><p>sarama : <code>github.com/Shopify/sarama</code><br>sarama-cluster : <code>github.com/bsm/sarama-cluster</code></p>
+<span id="more"></span>
+<h3 id="3-使用"><a href="#3-使用" class="headerlink" title="3.使用"></a>3.使用</h3><p>3.1 配置</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">config := cluster.NewConfig()</span><br><span class="line"><span class="comment">// 返回错误</span></span><br><span class="line">config.Consumer.Return.Errors = <span class="literal">true</span></span><br><span class="line"><span class="comment">// offsets提交间隔</span></span><br><span class="line">config.Consumer.Offsets.CommitInterval = <span class="number">1</span> * time.Second</span><br><span class="line"><span class="comment">// 默认从最新的offsets开始获取</span></span><br><span class="line">config.Consumer.Offsets.Initial = sarama.OffsetNewest</span><br></pre></td></tr></table></figure>
+<p>3.2 新建消费者实例</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">consumer, err := cluster.NewConsumer([]<span class="type">string</span>&#123;<span class="string">&quot;localhost:9092&quot;</span>&#125;, <span class="string">&quot;consumer-group1&quot;</span>, []<span class="type">string</span>&#123;<span class="string">&quot;test&quot;</span>&#125;, config)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>NewConsumer(代理地址,组ID,话题,配置)</li>
+</ul>
+<p>3.3 消费消息</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> &#123;</span><br><span class="line">	<span class="keyword">select</span> &#123;</span><br><span class="line">	<span class="keyword">case</span> msg, ok := &lt;-consumer.Messages():</span><br><span class="line">		<span class="keyword">if</span> ok &#123;</span><br><span class="line">			log.Printf(<span class="string">&quot;%s : %s/%d/%d\t%s\t%s\n&quot;</span>, consumerId, msg.Topic, msg.Partition, msg.Offset, msg.Key, msg.Value)</span><br><span class="line">			consumer.MarkOffset(msg, <span class="string">&quot;&quot;</span>) <span class="comment">// 提交offset</span></span><br><span class="line">		&#125;</span><br><span class="line">	<span class="keyword">case</span> &lt;-signals:</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>其中<code>signals</code>通道用来接收系统消息<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">signals := <span class="built_in">make</span>(<span class="keyword">chan</span> os.Signal, <span class="number">1</span>)</span><br><span class="line">signal.Notify(signals, os.Interrupt)</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="4-结语"><a href="#4-结语" class="headerlink" title="4.结语"></a>4.结语</h3><p>这里只介绍了<code>sarama-cluster</code>实现消费者的方法,生产者 参考另一篇文章<a target="_blank" rel="noopener" href="https://sheep.dobit.top/archives/go-kafka-producer.html" title="Go使用Kafka消息队列(生产者)">Go使用Kafka消息队列(生产者)</a></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/Golang/">Golang</a>, <a href="/categories/Golang/Kafka/">Kafka</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/kafka/">kafka</a><a href="/tags/go/">go</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    <a href="https://beian.miit.gov.cn" target="_blank">蜀ICP备15015945号-2</a> | 
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> | 
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 <a href="https://github.com/zboyco" target="_blank">zboyco</a>
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

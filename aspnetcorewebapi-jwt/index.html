@@ -1,0 +1,149 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>AspNet Core WebAPI 集成JWT权限验证初始项目 | 白羊的空间</title>
+
+  
+  <meta name="author" content="zboyco">
+  
+
+  
+  <meta name="description" content="AspNetCoreWebAPI-JWT-AuthorizeAsp.Net Core WebAPI with JWT Authorization.项目代码：https://github.com/zboyco/AspNetCoreWebAPI-JWT-Authorize初始化 Asp.Net Core WebAPI 项目
+集成JWT权限验证集成Swagger接口控制台">
+  
+
+  
+  
+  <meta name="keywords" content="">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="AspNet Core WebAPI 集成JWT权限验证初始项目"/>
+
+  <meta property="og:site_name" content="白羊的空间"/>
+
+  
+  <meta property="og:image" content="/images/favicon.ico"/>
+  
+
+  <link href="/images/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白羊的空间" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白羊的空间</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives">归档</a></li>
+      
+        <li><a href="/categories">分类</a></li>
+      
+        <li><a href="/tags">标签</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>AspNet Core WebAPI 集成JWT权限验证初始项目</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/aspnetcorewebapi-jwt/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-08-13T03:52:00.000Z">
+          2018-08-13
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h1 id="AspNetCoreWebAPI-JWT-Authorize"><a href="#AspNetCoreWebAPI-JWT-Authorize" class="headerlink" title="AspNetCoreWebAPI-JWT-Authorize"></a>AspNetCoreWebAPI-JWT-Authorize</h1><p>Asp.Net Core WebAPI with JWT Authorization.<br>项目代码：<a target="_blank" rel="noopener" href="https://github.com/zboyco/AspNetCoreWebAPI-JWT-Authorize">https://github.com/zboyco/AspNetCoreWebAPI-JWT-Authorize</a><br>初始化 Asp.Net Core WebAPI 项目</p>
+<h3 id="集成JWT权限验证"><a href="#集成JWT权限验证" class="headerlink" title="集成JWT权限验证"></a>集成JWT权限验证</h3><h3 id="集成Swagger接口控制台"><a href="#集成Swagger接口控制台" class="headerlink" title="集成Swagger接口控制台"></a>集成Swagger接口控制台</h3><span id="more"></span>
+<h2 id="JWT-密钥配置在appsettings-json中"><a href="#JWT-密钥配置在appsettings-json中" class="headerlink" title="JWT 密钥配置在appsettings.json中"></a>JWT 密钥配置在appsettings.json中</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;Logging&quot;: &#123;</span><br><span class="line">    &quot;LogLevel&quot;: &#123;</span><br><span class="line">      &quot;Default&quot;: &quot;Warning&quot;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;AllowedHosts&quot;: &quot;*&quot;,</span><br><span class="line">  &quot;SecurityKey&quot;: &quot;B8E01701-5125-4B69-AB00-7730F5BFB3CF&quot;, //JWT SecurityKey</span><br><span class="line">  &quot;Domain&quot;: &quot;yourdomain.com&quot; //iss and aud</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="clone项目，修改密钥后可直接使用"><a href="#clone项目，修改密钥后可直接使用" class="headerlink" title="clone项目，修改密钥后可直接使用"></a>clone项目，修改密钥后可直接使用</h1><p>在需要权限验证的Controller 或者 Action 上添加[Authorize]标签或者指定角色的[Authorize(Roles &#x3D; “Client,Admin”)]标签即可</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">HttpGet</span>]</span><br><span class="line">[<span class="meta">Authorize</span>]<span class="comment">//[Authorize(Roles = &quot;Client,Admin&quot;)]</span></span><br><span class="line"><span class="keyword">public</span> ActionResult&lt;IEnumerable&lt;<span class="built_in">string</span>&gt;&gt; Get()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">string</span>[] &#123; <span class="string">&quot;value1&quot;</span>, <span class="string">&quot;value2&quot;</span> &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/CSharp/">CSharp</a>, <a href="/categories/CSharp/NET-Core/">.NET Core</a>
+    </span>
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    <a href="https://beian.miit.gov.cn" target="_blank">蜀ICP备15015945号-2</a> | 
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> | 
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 <a href="https://github.com/zboyco" target="_blank">zboyco</a>
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,181 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>leetcode 24 | 白羊的空间</title>
+
+  
+  <meta name="author" content="zboyco">
+  
+
+  
+  <meta name="description" content="力扣24题的两种解法可以采用递归和非递归两种思路解题，其实两种思路类似，都是分块两两解决。">
+  
+
+  
+  
+  <meta name="keywords" content="leetcode">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="leetcode 24"/>
+
+  <meta property="og:site_name" content="白羊的空间"/>
+
+  
+  <meta property="og:image" content="/images/favicon.ico"/>
+  
+
+  <link href="/images/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="白羊的空间" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">白羊的空间</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives">归档</a></li>
+      
+        <li><a href="/categories">分类</a></li>
+      
+        <li><a href="/tags">标签</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>leetcode 24</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/leetcode-24/" rel="bookmark">
+        <time class="entry-date published" datetime="2019-11-13T08:08:33.000Z">
+          2019-11-13
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h2 id="力扣24题的两种解法"><a href="#力扣24题的两种解法" class="headerlink" title="力扣24题的两种解法"></a>力扣24题的两种解法</h2><p>可以采用递归和非递归两种思路解题，其实两种思路类似，都是分块两两解决。</p>
+<span id="more"></span>
+<h3 id="递归方法"><a href="#递归方法" class="headerlink" title="递归方法"></a>递归方法</h3><ol>
+<li>首先假设<code>swapPairs</code>方法已经存在并能解决问题；<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">swapPairs</span><span class="params">(head *ListNode)</span></span> *ListNode&#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>找到结束条件<br>因为是两两交换，那么head不存在或者head的下一个节点不存在就说明已经没有可以交换的节点了，直接返回head即可;<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> head == <span class="literal">nil</span> || head.Next == <span class="literal">nil</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> head</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>单次交换步骤  <ol>
+<li>找到head的下一节点 <code>next := head.Next</code></li>
+<li>将head的下一节点设置为<code>next</code>节点后面的节点，我们把<code>next</code>节点后面的节点<code>next.Next</code>单独看成一个链表的头节点，那么只需要用<code>swapPairs</code>处理后面的节点即可:<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">head.Next := swapPairs(next.Next)</span><br></pre></td></tr></table></figure></li>
+<li>最后把<code>next</code>节点的下一个节点指向<code>head</code>节点就交换完成了:<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">next.Next = head</span><br></pre></td></tr></table></figure></li>
+</ol>
+</li>
+<li>找到返回值<br>因为<code>swapPairs</code>方法的目的是两两交换，那么交换后，<code>next</code>节点就是交换后的头节点了，返回<code>next</code>节点即可：<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> next</span><br></pre></td></tr></table></figure>
+下面是完整代码：<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for singly-linked list.</span></span><br><span class="line"><span class="comment"> * type ListNode struct &#123;</span></span><br><span class="line"><span class="comment"> *     Val int</span></span><br><span class="line"><span class="comment"> *     Next *ListNode</span></span><br><span class="line"><span class="comment"> * &#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">swapPairs</span><span class="params">(head *ListNode)</span></span> *ListNode &#123;</span><br><span class="line">	<span class="keyword">if</span> head == <span class="literal">nil</span> || head.Next == <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> head</span><br><span class="line">	&#125;</span><br><span class="line">	next := head.Next</span><br><span class="line">	head.Next = swapPairs(next.Next)</span><br><span class="line">	next.Next = head</span><br><span class="line">	<span class="keyword">return</span> next</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="非递归方法"><a href="#非递归方法" class="headerlink" title="非递归方法"></a>非递归方法</h3><p>非递归采用三个指针，分别</p>
+<ol>
+<li>指向当前组的第一个节点的<code>curr</code></li>
+<li>指向<code>curr</code>上一个节点的<code>prev</code></li>
+<li>指向下一组第一个节点的<code>next</code></li>
+</ol>
+<h4 id="循环开始条件-当前节点不为空并且下一节点也不为空："><a href="#循环开始条件-当前节点不为空并且下一节点也不为空：" class="headerlink" title="循环开始条件,当前节点不为空并且下一节点也不为空："></a>循环开始条件,当前节点不为空并且下一节点也不为空：</h4><figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curr != <span class="literal">nil</span> &amp;&amp; curr.Next != <span class="literal">nil</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="单次循环交换步骤"><a href="#单次循环交换步骤" class="headerlink" title="单次循环交换步骤"></a>单次循环交换步骤</h4><ol>
+<li>记录下一组第一个节点<code>next</code>:</li>
+<li>把<code>prev</code>下一个节点指向<code>curr</code>的下一个节点</li>
+<li>把<code>curr.Next</code>下一个节点指向<code>curr</code>节点</li>
+<li>把<code>curr</code>的下一节点指向下一组的第一个节点完成交换</li>
+<li>修改<code>prev</code>指针指向<code>curr</code>，即为下一组第一个节点的上一个节点</li>
+<li>修改<code>curr</code>指针指向<code>next</code>，即为下一组第一个节点</li>
+<li>循环完成</li>
+</ol>
+<p>完整代码如下:</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">swapPairs</span><span class="params">(head *ListNode)</span></span> *ListNode &#123;</span><br><span class="line">	forward := &amp;ListNode&#123;Next: head&#125;</span><br><span class="line">	prev := forward</span><br><span class="line">	curr := forward.Next</span><br><span class="line">	<span class="keyword">for</span> curr != <span class="literal">nil</span> &amp;&amp; curr.Next != <span class="literal">nil</span> &#123;</span><br><span class="line">		next := curr.Next.Next <span class="comment">// 记录下一组第一个节点`next`:</span></span><br><span class="line">        </span><br><span class="line">		prev.Next = curr.Next  <span class="comment">// 把`prev`下一个节点指向`curr`的下一个节点</span></span><br><span class="line">		curr.Next.Next = curr  <span class="comment">// 把`curr.Next`下一个节点指向`curr`节点</span></span><br><span class="line">		curr.Next = next       <span class="comment">// 把`curr`的下一节点指向下一组的第一个节点完成交换</span></span><br><span class="line">        </span><br><span class="line">		prev = curr            <span class="comment">// 修改`prev`指针指向`curr`，即为下一组第一个节点的上一个节点</span></span><br><span class="line">		curr = next            <span class="comment">// 修改`curr`指针指向`next`，即为下一组第一个节点</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> forward.Next</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+      
+
+    <span class="post-categories">
+      <i class="icon-categories"></i>
+        <a href="/categories/leetcode/">leetcode</a>
+    </span>
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/leetcode/">leetcode</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    <a href="https://beian.miit.gov.cn" target="_blank">蜀ICP备15015945号-2</a> | 
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> | 
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2022 <a href="https://github.com/zboyco" target="_blank">zboyco</a>
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>
